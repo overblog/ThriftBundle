@@ -5,13 +5,11 @@ namespace Overblog\ThriftBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Server THRIFT
- *
- * @link https://github.com/yuxel/thrift-examples
- * @link http://svn.apache.org/repos/asf/thrift/trunk/
  */
 
 use Thrift\Server\TServerSocket;
@@ -19,24 +17,28 @@ use Thrift\Factory\TTransportFactory;
 use Thrift\Factory\TBinaryProtocolFactory;
 use Thrift\Server\TForkingServer;
 
-use Overblog\ThriftBundle\Model\Comment\Processor\CommentProcessor;
-
 class ServerCommand extends ContainerAwareCommand
 {
     protected function configure()
 	{
         $this->setName('thrift:server')
 		  ->setDescription('Start Thrift Server');
+
+        $this->addArgument('config', InputArgument::REQUIRED, 'Config key');
+
+        $this->addOption('host', 't', InputOption::VALUE_REQUIRED, 'Host to listen on', 'localhost');
+        $this->addOption('port', 'p', InputOption::VALUE_REQUIRED, 'Port to listen on', 9090);
 	}
 
     protected function execute(InputInterface $input, OutputInterface $output)
 	{
-        $handler = $this->getContainer()->get('overblog_api.extension.comment');
-        $processor = new CommentProcessor($handler);
+        $services = $this->getContainer()->getParameter('thrift.services');
+        $config = $services[$input->getArgument('config')];
 
-        header('Content-Type: application/x-thrift');
+        $handler = $this->getContainer()->get($config['service']);
+        $processor = new $config['processor']($handler);
 
-        $transport = new TServerSocket();
+        $transport = new TServerSocket($input->getOption('host'), $input->getOption('port'));
         $outputTransportFactory = $inputTransportFactory = new TTransportFactory($transport);
         $outputProtocolFactory = $inputProtocolFactory = new TBinaryProtocolFactory();
 

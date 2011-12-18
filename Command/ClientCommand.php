@@ -12,10 +12,9 @@ use Thrift\Protocol\TBinaryProtocolAccelerated;
 
 use Thrift\Transport\TSocket;
 
-use Overblog\ThriftBundle\Model\Comment\Client\CommentClient;
-use Overblog\ThriftBundle\Model\Comment\Definition\CommentUser;
-use Overblog\ThriftBundle\Model\Comment\Definition\Comment;
-
+use OverblogComment\InternalApiBundle\Model\Comment\Client\CommentClient;
+use OverblogComment\InternalApiBundle\Model\Comment\Definition\CommentUser;
+use OverblogComment\InternalApiBundle\Model\Comment\Definition\Comment;
 
 class ClientCommand extends ContainerAwareCommand
 {
@@ -31,16 +30,19 @@ class ClientCommand extends ContainerAwareCommand
 
         try
         {
+            $client = $this->getContainer()->get('thrift')->getClient('comment');
+
+
+
             //$socket = new TSocket('localhost', 9090);
-            //$socket = new THttpClient('internal.comment.ob-ng-dev.com', 80, '/test.php');
-            $socket = new THttpClient('internal.comment.ob-ng-dev.com', 80, '/thrift');
+            //$socket = new THttpClient('internal.comment.ob-ng-dev.com', 80, '/thrift');
 
-            $transport = new TBufferedTransport($socket, 1024, 1024);
-            $protocol = new TBinaryProtocolAccelerated($transport);
-
-            $client = new CommentClient($protocol);
-
-            $transport->open();
+//            $transport = new TBufferedTransport($socket, 1024, 1024);
+//            $protocol = new TBinaryProtocolAccelerated($transport);
+//
+//            $client = new CommentClient($protocol);
+//
+//            $transport->open();
 
             $user = new CommentUser();
             $user->token = 121354984651354647;

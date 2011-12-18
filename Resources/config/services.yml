@@ -1,1 +1,8 @@
+parameters:
+  thrift.class: Overblog\ThriftBundle\Client\ThriftClient
+  clients: %thrift.clients%
+
 services:
+  thrift:
+    class: %thrift.class%
+    arguments: [%clients%]

@@ -21,18 +21,29 @@ class CompileCommand extends ContainerAwareCommand
         $this->setName('thrift:compile')
 		  ->setDescription('Compile Thrift Model for PHP');
 
+        $this->addArgument('bundleName', InputArgument::REQUIRED, 'Bundle where the Definition is located');
         $this->addArgument('definition', InputArgument::REQUIRED, 'Definition class name');
 
         $this->addOption('language', 'l', InputOption::VALUE_REQUIRED, 'Developement language', 'php');
-        $this->addOption('options', 'o', InputOption::VALUE_REQUIRED, 'Developement language options', 'oop,namespace,server,autoload');
+        $this->addOption('options', 'o', InputOption::VALUE_REQUIRED, 'Developement language options',
+                'oop,namespace,server,autoload');
+        $this->addOption('bundleNameOut', null, InputOption::VALUE_OPTIONAL,
+                'Bundle where the Model will be located (default is the same than the definitions');
 	}
 
     protected function execute(InputInterface $input, OutputInterface $output)
 	{
-        $basePath  = __DIR__ . '/..';
+        $bundleName      = $input->getArgument('bundleName');
+        $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
+        $bundlePath      = $bundle->getPath();
 
-        $definitionPath = $basePath . '/Definition/' . $input->getArgument('definition') . '.thrift';
-        $modelPath = $basePath . '/Model';
+        $definitionPath  = $bundlePath . '/Definition/' . $input->getArgument('definition') . '.thrift';
+
+        $bundleName      = ($input->getOption('bundleNameOut')) ? $input->getOption('bundleNameOut') : $input->getArgument('bundleName');
+        $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
+        $bundlePath      = $bundle->getPath();
+
+        $modelPath       = $bundlePath . '/Model/';
 
         exec(sprintf('rm -rf %s/%s/*', $modelPath, $input->getArgument('definition')));
 
@@ -52,19 +63,6 @@ class CompileCommand extends ContainerAwareCommand
         else
         {
             $output->writeln(sprintf('<info>%s</info>', implode("\n", $sortie)));
-
-            $filePath = sprintf('%s/%s/%s.php',
-                $modelPath,
-                $input->getArgument('definition'),
-                $input->getArgument('definition')
-            );
-
-            //Patch bad file path
-//            $type = file_get_contents($filePath);
-//
-//            $type = preg_replace('#/packages/#', '/../Model/', $type);
-//
-//            file_put_contents($filePath, $type);
         }
     }
 }

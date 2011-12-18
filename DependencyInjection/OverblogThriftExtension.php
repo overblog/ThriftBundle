@@ -19,11 +19,18 @@ class OverblogThriftExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        /*
-         * TODO : use proper symfony configuration for validation
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        */
+
+        $container->setParameter(
+			'thrift.services',
+			$config['services']
+		);
+
+        $container->setParameter(
+			'thrift.clients',
+			$config['clients']
+		);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

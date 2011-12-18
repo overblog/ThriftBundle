@@ -20,9 +20,30 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('overblog_thrift_bundle');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('services')
+                    ->requiresAtLeastOneElement()
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('processor')->isRequired()->end()
+                            ->scalarNode('service')->isRequired()->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('clients')
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('client')->isRequired()->end()
+                            ->scalarNode('type')->defaultValue('http')->end()
+                            ->scalarNode('host')->isRequired()->end()
+                            ->scalarNode('port')->defaultValue(80)->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
