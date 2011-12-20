@@ -24,8 +24,8 @@ class CompileCommand extends ContainerAwareCommand
         $this->addArgument('bundleName', InputArgument::REQUIRED, 'Bundle where the Definition is located');
         $this->addArgument('definition', InputArgument::REQUIRED, 'Definition class name');
 
-        $this->addOption('language', 'l', InputOption::VALUE_REQUIRED, 'Developement language', 'php');
-        $this->addOption('server', InputOption::VALUE_NONE, 'Generate server classes');
+        $this->addOption('server', null, InputOption::VALUE_NONE, 'Generate server classes');
+        $this->addOption('namespace', null, InputOption::VALUE_REQUIRED, 'Namespace prefix');
 
         $this->addOption('bundleNameOut', null, InputOption::VALUE_OPTIONAL,
                 'Bundle where the Model will be located (default is the same than the definitions');
@@ -47,11 +47,16 @@ class CompileCommand extends ContainerAwareCommand
 
         $options = $input->getOption('server') ? 'oop,namespace,server,autoload' : 'oop,namespace,autoload';
 
+        //Add namespace prefix if needed
+        if($input->getOption('namespace'))
+        {
+            $options.= ',nsglobal=' . escapeshellarg($input->getOption('namespace'));
+        }
+
         exec(sprintf('rm -rf %s/%s/*', $modelPath, $input->getArgument('definition')));
 
-        exec(sprintf('%s -r -v --gen %s:%s --out %s %s 2>&1',
+        exec(sprintf('%s -r -v --gen php:%s --out %s %s 2>&1',
             self::THRIFT_EXEC,
-            $input->getOption('language'),
             $options,
             $modelPath,
             $definitionPath
