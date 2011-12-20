@@ -25,8 +25,8 @@ class CompileCommand extends ContainerAwareCommand
         $this->addArgument('definition', InputArgument::REQUIRED, 'Definition class name');
 
         $this->addOption('language', 'l', InputOption::VALUE_REQUIRED, 'Developement language', 'php');
-        $this->addOption('options', 'o', InputOption::VALUE_REQUIRED, 'Developement language options',
-                'oop,namespace,server,autoload');
+        $this->addOption('server', InputOption::VALUE_NONE, 'Generate server classes');
+
         $this->addOption('bundleNameOut', null, InputOption::VALUE_OPTIONAL,
                 'Bundle where the Model will be located (default is the same than the definitions');
 	}
@@ -45,12 +45,14 @@ class CompileCommand extends ContainerAwareCommand
 
         $modelPath       = $bundlePath . '/Model/';
 
+        $options = $input->getOption('server') ? 'oop,namespace,server,autoload' : 'oop,namespace,autoload';
+
         exec(sprintf('rm -rf %s/%s/*', $modelPath, $input->getArgument('definition')));
 
         exec(sprintf('%s -r -v --gen %s:%s --out %s %s 2>&1',
             self::THRIFT_EXEC,
             $input->getOption('language'),
-            $input->getOption('options'),
+            $options,
             $modelPath,
             $definitionPath
         ), $sortie, $return);
