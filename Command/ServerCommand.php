@@ -8,14 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Server THRIFT
- */
-
-use Thrift\Server\TServerSocket;
-use Thrift\Factory\TTransportFactory;
-use Thrift\Factory\TBinaryProtocolFactory;
-use Thrift\Server\TForkingServer;
+use Overblog\ThriftBundle\Server\SocketServer;
 
 class ServerCommand extends ContainerAwareCommand
 {
@@ -35,21 +28,13 @@ class ServerCommand extends ContainerAwareCommand
         $services = $this->getContainer()->getParameter('thrift.services');
         $config = $services[$input->getArgument('config')];
 
-        $handler = $this->getContainer()->get($config['service']);
-        $processor = new $config['processor']($handler);
-
-        $transport = new TServerSocket($input->getOption('host'), $input->getOption('port'));
-        $outputTransportFactory = $inputTransportFactory = new TTransportFactory($transport);
-        $outputProtocolFactory = $inputProtocolFactory = new TBinaryProtocolFactory();
-
-        $server = new TForkingServer(
-            $processor,
-            $transport,
-            $inputTransportFactory,
-            $outputTransportFactory,
-            $inputProtocolFactory,
-            $outputProtocolFactory
+        $processor = new SocketServer(
+            $this->getContainer()->get($config['processor']),
+            $config
         );
-        $server->serve();
+
+        $processor->getHeader();
+
+        $processor->run($input->getOption('host'), $input->getOption('port'));
     }
 }

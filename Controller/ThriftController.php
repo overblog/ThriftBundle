@@ -2,13 +2,8 @@
 namespace Overblog\ThriftBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 
-use Thrift\Transport\TBufferedTransport;
-use Thrift\Transport\TPhpStream;
-use Thrift\Protocol\TBinaryProtocolAccelerated;
-
-use Overblog\ThriftBundle\Model\Comment\Processor\CommentProcessor;
+use Overblog\ThriftBundle\Server\HttpServer;
 
 class ThriftController extends Controller
 {
@@ -25,18 +20,16 @@ class ThriftController extends Controller
         $services = $this->container->getParameter('thrift.services');
         $config = $services[$this->getRequest()->get('config')];
 
-        $handler = $this->get($config['service']);
-        $processor = new $config['processor']($handler);
+        $processor = new HttpServer(
+            $this->get($config['processor']),
+            $config
+        );
 
-        header('Content-Type: application/x-thrift');
+        $processor->getHeader();
 
-        $transport = new TBufferedTransport(new TPhpStream(TPhpStream::MODE_R | TPhpStream::MODE_W));
-        $protocol = new TBinaryProtocolAccelerated($transport, true, true);
+        $processor->run();
 
-        $transport->open();
-        $processor->process($protocol, $protocol);
-        $transport->close();
-
-        die();
+        // Much faster than return a Symfony Response
+        exit(0);
     }
 }

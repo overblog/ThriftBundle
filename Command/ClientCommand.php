@@ -32,18 +32,6 @@ class ClientCommand extends ContainerAwareCommand
         {
             $client = $this->getContainer()->get('thrift')->getClient('comment');
 
-
-
-            //$socket = new TSocket('localhost', 9090);
-            //$socket = new THttpClient('internal.comment.ob-ng-dev.com', 80, '/thrift');
-
-//            $transport = new TBufferedTransport($socket, 1024, 1024);
-//            $protocol = new TBinaryProtocolAccelerated($transport);
-//
-//            $client = new CommentClient($protocol);
-//
-//            $transport->open();
-
             $user = new CommentUser();
             $user->token = 121354984651354647;
             $user->origin = 'Overblog';
