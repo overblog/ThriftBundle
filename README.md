@@ -40,7 +40,7 @@ Installation and setup
             'Overblog'         => __DIR__.'/../vendor/bundles',
         ));
 
-3) Create you Service.Thrift and add it in a bundle.
+3) Create you Service.Thrift and add it in a Definition directory in your bundle.
 
 4) Generate your Model
 
