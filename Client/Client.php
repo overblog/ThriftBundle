@@ -2,11 +2,29 @@
 
 namespace Overblog\ThriftBundle\Client;
 
+/**
+ * Abstract class for create a client
+ * @author Xavier HAUSHERR
+ */
+
 abstract class Client
 {
+    /**
+     * Config handler
+     * @var array
+     */
     protected $config;
+
+    /**
+     * Socket instance
+     * @var Thrift\Transport\TSocket
+     */
     protected $socket;
 
+    /**
+     * Register dependencies
+     * @param array $config
+     */
     public function __construct(Array $config)
     {
         $this->config = $config;

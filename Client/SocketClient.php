@@ -7,6 +7,11 @@ use Overblog\ThriftBundle\Client\Client;
 use Thrift\Transport\TSocket;
 use Thrift\Transport\TSocketPool;
 
+/**
+ * Socket Client
+ * @author Xavier HAUSHERR
+ */
+
 class SocketClient extends Client
 {
     /**

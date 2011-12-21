@@ -5,6 +5,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Overblog\ThriftBundle\Server\HttpServer;
 
+/**
+ * Http Server controller
+ * @author Xavier HAUSHERR
+ */
+
 class ThriftController extends Controller
 {
     /**

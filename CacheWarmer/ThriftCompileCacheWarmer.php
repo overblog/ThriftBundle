@@ -7,16 +7,29 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 
+/**
+ * Generate Thrift model in cache warmer
+ * @author Xavier HAUSHERR
+ */
+
 class ThriftCompileCacheWarmer implements CacheWarmerInterface
 {
     private $container;
 
+    /**
+     * Register dependencies
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->config = $this->container->getParameter('thrift.config.compiler');
     }
 
+    /**
+     * Generate model
+     * @param string $cacheDir
+     */
     public function warmUp($cacheDir)
     {
         $compiler = new ThriftCompiler();
@@ -47,6 +60,10 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
         }
     }
 
+    /**
+     * This warm is not an option
+     * @return boolean
+     */
     public function isOptional()
     {
         return false;

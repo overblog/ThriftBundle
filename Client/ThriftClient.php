@@ -9,11 +9,29 @@ use Thrift\Transport\TNullTransport;
 use Thrift\Transport\TFramedTransport;
 use Thrift\Transport\TBufferedTransport;
 
+/**
+ * Build client
+ * @author Xavier HAUSHERR
+ */
+
 class ThriftClient
 {
+    /**
+     * Config
+     * @var array
+     */
     protected $clients = array();
+
+    /**
+     * Handler instances
+     * @var array
+     */
     protected $handler = array();
 
+    /**
+     * Register Dependencies
+     * @param array $clients
+     */
     public function __construct(Array $clients)
     {
         $this->clients = $clients;

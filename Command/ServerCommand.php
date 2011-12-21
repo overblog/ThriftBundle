@@ -10,8 +10,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Overblog\ThriftBundle\Server\SocketServer;
 
+/**
+ * Socket server command
+ * @author Xavier HAUSHERR
+ */
+
 class ServerCommand extends ContainerAwareCommand
 {
+    /**
+     * Configure the command
+     */
     protected function configure()
 	{
         $this->setName('thrift:server')
@@ -23,6 +31,11 @@ class ServerCommand extends ContainerAwareCommand
         $this->addOption('port', 'p', InputOption::VALUE_REQUIRED, 'Port to listen on', 9090);
 	}
 
+    /**
+     * Execute server
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
 	{
         $services = $this->getContainer()->getParameter('thrift.config.services');

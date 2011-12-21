@@ -6,6 +6,11 @@ use Overblog\ThriftBundle\Client\Client;
 
 use Thrift\Transport\THttpClient;
 
+/**
+ * HTTP Client
+ * @author Xavier HAUSHERR
+ */
+
 class HttpClient extends Client
 {
     /**

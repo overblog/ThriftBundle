@@ -4,6 +4,11 @@ namespace Overblog\ThriftBundle\Compiler;
 
 use Overblog\ThriftBundle\Exception\ConfigurationException;
 
+/**
+ * Thrift compiler
+ * @author Xavier HAUSHERR
+ */
+
 class ThriftCompiler
 {
     /**

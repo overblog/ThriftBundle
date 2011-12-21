@@ -2,6 +2,11 @@
 
 namespace Overblog\ThriftBundle\Server;
 
+/**
+ * Abstract class to create a server
+ * @author Xavier HAUSHERR
+ */
+
 abstract class Server
 {
     /**

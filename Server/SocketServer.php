@@ -8,6 +8,11 @@ use Thrift\Server\TServerSocket;
 use Thrift\Factory\TTransportFactory;
 use Thrift\Factory\TBinaryProtocolFactory;
 
+/**
+ * Socket Server class
+ * @author Xavier HAUSHERR
+ */
+
 class SocketServer extends Server
 {
     /**

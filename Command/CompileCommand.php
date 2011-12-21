@@ -9,10 +9,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 
+/**
+ * Compile command to generate thrift model
+ * @author Xavier HAUSHERR
+ */
+
 class CompileCommand extends ContainerAwareCommand
 {
-    protected $thriftRelativePath = '/InternalApiBundle/Thrift';
-
+    /**
+     * Configure the command
+     */
     protected function configure()
 	{
         $this->setName('thrift:compile')
@@ -28,6 +34,11 @@ class CompileCommand extends ContainerAwareCommand
                 'Bundle where the Model will be located (default is the same than the definitions');
 	}
 
+    /**
+     * Execute compilation
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
 	{
         $compiler = new ThriftCompiler();
