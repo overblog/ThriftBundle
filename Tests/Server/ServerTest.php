@@ -4,7 +4,7 @@
  *
  * @author Xavier HAUSHERR
  */
-namespace Overblog\ThriftBundle\Test\Server;
+namespace Overblog\ThriftBundle\Tests\Server;
 
 
 class ServerTest extends \PHPUnit_Framework_TestCase

@@ -40,16 +40,31 @@ Installation and setup
             'Overblog'         => __DIR__.'/../vendor/bundles',
         ));
 
-3) Create you Service.Thrift and add it in a Definition directory in your bundle.
+3) Create you Service.Thrift and add it in a "ThriftDefinition" directory in your bundle.
 
-4) Generate your Model
+4) You can generate your Model with this command to test
 
     php app/console thrift:compile CompleteBundleName Service
+
+Register the warmer command
+----------------------
+
+1) Add the compiler config to your config.yml project:
+
+    #app/config/config.yml
+        overblog_thrift:
+          compiler:
+            *service_name*:
+              bundleNameIn: BundleWhereDefinitionAreStore
+              bundleNameOut: BundleWhereModelWillbeStored
+              server: true
+
+(You can safely add *ThriftModel* to your git ignore)
 
 To use server
 ----------------------
 
-1) Create your handler (Implements the interface located in Model/Service/Client/ModelInterface.php) and register it in your bundle:
+1) Create your handler (Implements the interface located in ThriftModel/Service/Client/ModelInterface.php) and register it in your bundle:
 
     #Bundle/Ressources/config/services.yml
         services:
@@ -64,7 +79,7 @@ To use server
             class: BundleName\Model\Service\Processor\ServiceProcessor
             arguments: [@thrift.handler.service]
 
-3) Add the config server to yout config.yml project:
+3) Add the config server to your config.yml project:
 
     #app/config/config.yml
         overblog_thrift:
@@ -93,7 +108,7 @@ To use client
     #app/config/config.yml
         clients:
           *client_name*:
-            client: BundleName\Model\Service\Client\ServiceClient
+            client: BundleName\ThriftModel\Service\Client\ServiceClient
             type: http
             hosts:
               *host_name*:
@@ -105,7 +120,7 @@ To use client
     #app/config/config.yml
         clients:
           *client_name*:
-            client: BundleName\Model\Service\Client\ServiceClient
+            client: BundleName\ThriftModel\Service\Client\ServiceClient
             type: socket
             hosts:
               *host_name*:
@@ -117,7 +132,7 @@ To use client
     #app/config/config.yml
         clients:
           *client_name*:
-            client: BundleName\Model\Service\Client\ServiceClient
+            client: BundleName\ThriftModel\Service\Client\ServiceClient
             type: socket
             hosts:
               *host_name*:
