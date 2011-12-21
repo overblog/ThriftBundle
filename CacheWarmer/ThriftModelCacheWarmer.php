@@ -11,7 +11,7 @@ class ThriftModelCacheWarmer implements CacheWarmerInterface
 {
     public function warmUp($cacheDir)
     {
-        die('THRIFT');
+        
     }
 
     public function isOptional()

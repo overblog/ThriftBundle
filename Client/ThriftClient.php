@@ -2,9 +2,7 @@
 
 namespace Overblog\ThriftBundle\Client;
 
-use Thrift\Transport\TSocket;
-use Thrift\Transport\TSocketPool;
-use Thrift\Transport\THttpClient;
+use Overblog\ThriftBundle\Exception\ConfigurationException;
 
 use Thrift\Transport\TMemoryBuffer;
 use Thrift\Transport\TNullTransport;
@@ -21,79 +19,47 @@ class ThriftClient
         $this->clients = $clients;
     }
 
+    /**
+     * Return client
+     * @param string $name
+     * @return Thrift\Transport\TSocket
+     */
     public function getClient($name)
     {
         if(!isset($this->handler[$name]))
         {
             if(isset($this->clients[$name]))
             {
-                $nbHosts = count($this->clients[$name]['hosts']);
+                //Initialisation du client
+                $clientClass = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->clients[$name]['type'])));
 
-                /**
-                 * Initialisation du socket
-                 */
-                switch($this->clients[$name]['type'])
-                {
-                    case 'socket':
-                        if($nbHosts == 1)
-                        {
-                            $host = current($this->clients[$name]['hosts']);
+                $client = new $clientClass($this->clients[$name]);
+                $socket = $client->getSocket();
 
-                            $socket = new TSocket($host['host'], $host['port']);
-                        }
-                        else
-                        {
-                            $hosts = array();
-                            $ports = array();
+                $transport = new TBufferedTransport($socket, 1024, 1024);
 
-                            foreach($this->clients[$name]['hosts'] as $host)
-                            {
-                                $hosts[] = $host['host'];
-                                $ports[] = $host['port'];
-                            }
+                $protocol = new $this->clients[$name]['protocol']($transport);
+                $client = new $this->clients[$name]['client']($protocol);
 
-                            $socket = new TSocketPool($hosts, $ports);
-                        }
+                $transport->open();
 
-                        break;
-
-                    case 'http':
-                    default:
-
-                        if($nbHosts > 1)
-                        {
-                            throw new \Exception('Http client can onlt take one host');
-                        }
-
-                        $host = current($this->clients[$name]['hosts']);
-
-                        $url = parse_url($this->clients[$name]['type'] . '://' . $host['host']);
-
-                        $socket = new THttpClient($url['host'], $host['port'], $url['path']);
-                        break;
-                }
-
-                $client = array();
-
-                $client['transport'] = new TBufferedTransport($socket, 1024, 1024);
-
-                $protocol = new $this->clients[$name]['protocol']($client['transport']);
-
-                $client['client'] = new $this->clients[$name]['client']($protocol);
-
-                $client['transport']->open();
-
-                $this->handler[$name] = $client;
+                $this->handler[$name] = array(
+                    'transport' => $transport,
+                    'client' => $client
+                );
             }
             else
             {
-                throw new \Exception(sprintf('Unknow client "%s"', $name));
+                throw new ConfigurationException(sprintf('Unknow client "%s"', $name));
             }
         }
 
         return $this->handler[$name]['client'];
     }
 
+    /**
+     * Close every connections
+     */
     public function __destruct()
     {
         foreach($this->handler as $client)

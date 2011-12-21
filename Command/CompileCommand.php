@@ -7,13 +7,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Overblog\ThriftBundle\Compiler\ThriftCompiler;
+
 class CompileCommand extends ContainerAwareCommand
 {
-    /**
-     * Thrift Exec Path
-     */
-    const THRIFT_EXEC = '/usr/local/bin/thrift';
-
     protected $thriftRelativePath = '/InternalApiBundle/Thrift';
 
     protected function configure()
@@ -33,43 +30,41 @@ class CompileCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
 	{
+        $compiler = new ThriftCompiler();
+        $definition = $input->getArgument('definition');
+
         $bundleName      = $input->getArgument('bundleName');
         $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
         $bundlePath      = $bundle->getPath();
 
-        $definitionPath  = $bundlePath . '/Definition/' . $input->getArgument('definition') . '.thrift';
+        $definitionPath  = $bundlePath . '/Definition/' . $definition . '.thrift';
 
         $bundleName      = ($input->getOption('bundleNameOut')) ? $input->getOption('bundleNameOut') : $input->getArgument('bundleName');
         $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
         $bundlePath      = $bundle->getPath();
 
-        $modelPath       = $bundlePath . '/Model/';
+        //Set Path
+        $compiler->setModelPath(sprintf('%s/Model', $bundlePath));
 
-        $options = $input->getOption('server') ? 'oop,namespace,server,autoload' : 'oop,namespace,autoload';
+        // Empty old model
+        $compiler->emptyModelPath($definition);
 
         //Add namespace prefix if needed
         if($input->getOption('namespace'))
         {
-            $options.= ',nsglobal=' . escapeshellarg($input->getOption('namespace'));
+            $compiler->setNamespacePrefix($input->getOption('namespace'));
         }
 
-        exec(sprintf('rm -rf %s/%s/*', $modelPath, $input->getArgument('definition')));
-
-        exec(sprintf('%s -r -v --gen php:%s --out %s %s 2>&1',
-            self::THRIFT_EXEC,
-            $options,
-            $modelPath,
-            $definitionPath
-        ), $sortie, $return);
+        $return = $compiler->compile($definitionPath, $input->getOption('server'));
 
         //Error
         if(1 === $return)
         {
-            $output->writeln(sprintf('<error>%s</error>', implode("\n", $sortie)));
+            $output->writeln(sprintf('<error>%s</error>', implode("\n", $compiler->getLastOutput())));
         }
         else
         {
-            $output->writeln(sprintf('<info>%s</info>', implode("\n", $sortie)));
+            $output->writeln(sprintf('<info>%s</info>', implode("\n", $compiler->getLastOutput())));
         }
     }
 }
