@@ -12,9 +12,9 @@ use Thrift\Protocol\TBinaryProtocolAccelerated;
 
 use Thrift\Transport\TSocket;
 
-use OverblogComment\InternalApiBundle\Model\Comment\Client\CommentClient;
-use OverblogComment\InternalApiBundle\Model\Comment\Definition\CommentUser;
-use OverblogComment\InternalApiBundle\Model\Comment\Definition\Comment;
+use OverblogComment\InternalApiBundle\ThriftModel\Comment\Client\CommentClient;
+use OverblogComment\InternalApiBundle\ThriftModel\Comment\Definition\CommentUser;
+use OverblogComment\InternalApiBundle\ThriftModel\Comment\Definition\Comment;
 
 class ClientCommand extends ContainerAwareCommand
 {

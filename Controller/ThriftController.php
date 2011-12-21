@@ -17,7 +17,7 @@ class ThriftController extends Controller
             throw new \Exception('Unable to get config name');
         }
 
-        $services = $this->container->getParameter('thrift.services');
+        $services = $this->container->getParameter('thrift.config.services');
         $config = $services[$this->getRequest()->get('config')];
 
         $processor = new HttpServer(

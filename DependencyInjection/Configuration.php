@@ -22,6 +22,17 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('compiler')
+                    ->requiresAtLeastOneElement()
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('bundleNameIn')->isRequired()->end()
+                            ->scalarNode('bundleNameOut')->end()
+                            ->booleanNode('server')->defaultValue(true)->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('services')
                     ->requiresAtLeastOneElement()
                     ->useAttributeAsKey('name')

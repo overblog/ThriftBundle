@@ -1,0 +1,26 @@
+<?php
+
+namespace Overblog\ThriftBundle\Client;
+
+use Overblog\ThriftBundle\Client\Client;
+
+use Thrift\Transport\THttpClient;
+
+class HttpClient extends Client
+{
+    /**
+     * Instanciate Socket Client
+     *
+     * @return Thrift\Transport\THttpClient
+     */
+    protected function createSocket()
+    {
+        $host = current($this->config['hosts']);
+
+        $url = parse_url($this->config['type'] . '://' . $host['host']);
+
+        $socket = new THttpClient($url['host'], $host['port'], $url['path']);
+
+        return $socket;
+    }
+}

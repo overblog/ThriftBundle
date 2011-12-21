@@ -23,12 +23,17 @@ class OverblogThriftExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter(
-			'thrift.services',
+			'thrift.config.compiler',
+			$config['compiler']
+		);
+
+        $container->setParameter(
+			'thrift.config.services',
 			$config['services']
 		);
 
         $container->setParameter(
-			'thrift.clients',
+			'thrift.config.clients',
 			$config['clients']
 		);
 

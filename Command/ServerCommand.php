@@ -25,7 +25,7 @@ class ServerCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
 	{
-        $services = $this->getContainer()->getParameter('thrift.services');
+        $services = $this->getContainer()->getParameter('thrift.config.services');
         $config = $services[$input->getArgument('config')];
 
         $processor = new SocketServer(

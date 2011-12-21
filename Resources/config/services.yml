@@ -1,8 +1,15 @@
 parameters:
   thrift.class: Overblog\ThriftBundle\Client\ThriftClient
-  clients: %thrift.clients%
+  thrift.compile_warmer.class: Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer
+  clients: %thrift.config.clients%
 
 services:
   thrift:
     class: %thrift.class%
     arguments: [%clients%]
+
+  thrift.compile_warmer:
+    class: %thrift.compile_warmer.class%
+    arguments: [@service_container]
+    tags:
+      - { name: "kernel.cache_warmer", priority: "10" }

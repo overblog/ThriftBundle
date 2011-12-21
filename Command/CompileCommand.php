@@ -37,14 +37,14 @@ class CompileCommand extends ContainerAwareCommand
         $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
         $bundlePath      = $bundle->getPath();
 
-        $definitionPath  = $bundlePath . '/Definition/' . $definition . '.thrift';
+        $definitionPath  = $bundlePath . '/ThriftDefinition/' . $definition . '.thrift';
 
         $bundleName      = ($input->getOption('bundleNameOut')) ? $input->getOption('bundleNameOut') : $input->getArgument('bundleName');
         $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
         $bundlePath      = $bundle->getPath();
 
         //Set Path
-        $compiler->setModelPath(sprintf('%s/Model', $bundlePath));
+        $compiler->setModelPath(sprintf('%s/ThriftModel', $bundlePath));
 
         // Empty old model
         $compiler->emptyModelPath($definition);
