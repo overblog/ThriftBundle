@@ -6,20 +6,12 @@
  */
 namespace Overblog\ThriftBundle\Tests\Compiler;
 
+use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
+
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 
-class CompilerTest extends \PHPUnit_Framework_TestCase
+class CompilerTest extends ThriftBundleTestCase
 {
-    protected $modelPath;
-    protected $definitionPath;
-    protected $namespace = 'Overblog\ThriftBundle\Tests';
-
-    protected function setUp()
-    {
-        $this->modelPath = __DIR__ . '/../ThriftModel';
-        $this->definitionPath = __DIR__ . '/../ThriftDefinition/Test.thrift';
-    }
-
     public function testCompile()
     {
         $compiler = new ThriftCompiler();
@@ -82,10 +74,5 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 		);
 
         $compiler->setExecPath(__DIR__);
-    }
-
-    protected function tearDown()
-    {
-        exec(sprintf('rm -rf %s 2>&1 > /dev/null', $this->modelPath));
     }
 }

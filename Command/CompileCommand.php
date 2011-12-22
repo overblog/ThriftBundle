@@ -44,7 +44,7 @@ class CompileCommand extends ContainerAwareCommand
 	{
         $compiler = new ThriftCompiler();
 
-        if(($path = $this->getOption('path')))
+        if(($path = $input->getOption('path')))
         {
             $compiler->setExecPath($path);
         }
