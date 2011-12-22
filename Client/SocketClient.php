@@ -19,7 +19,7 @@ class SocketClient extends Client
      *
      * @return Thrift\Transport\TSocket
      */
-    protected function getSocket()
+    protected function createSocket()
     {
         $nbHosts = count($this->config['hosts']);
 
