@@ -41,11 +41,6 @@ class ThriftCompiler
      */
     protected $lastOutput;
 
-    public function __construct()
-    {
-        $this->checkExec();
-    }
-
     /**
      * Return Thrift path
      * @return string
@@ -53,6 +48,22 @@ class ThriftCompiler
     protected function getExecPath()
     {
         return $this->thriftPath . $this->thriftExec;
+    }
+
+    /**
+     * Set exec path
+     * @param string $path
+     */
+    public function setExecPath($path)
+    {
+        if('/' !== substr($path, -1))
+        {
+            $path .= '/';
+        }
+
+        $this->thriftPath = $path;
+
+        return $this->checkExec();
     }
 
     /**

@@ -54,10 +54,11 @@ Register the warmer command
     #app/config/config.yml
         overblog_thrift:
           compiler:
-            *service_name*:
-              bundleNameIn: BundleWhereDefinitionAreStore
-              bundleNameOut: BundleWhereModelWillbeStored
-              server: true
+            services:
+              *service_name*:
+                bundleNameIn: BundleWhereDefinitionAreStore
+                bundleNameOut: BundleWhereModelWillbeStored
+                server: true
 
 (You can safely add *ThriftModel* to your git ignore)
 

@@ -33,9 +33,10 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
     public function warmUp($cacheDir)
     {
         $compiler = new ThriftCompiler();
+        $compiler->setExecPath($this->config['path']);
 
         // We compile for every Service
-        foreach($this->config as $definition => $config)
+        foreach($this->config['services'] as $definition => $config)
         {
             $bundleName      = $config['bundleNameIn'];
             $bundle          = $this->container->get('kernel')->getBundle($bundleName);

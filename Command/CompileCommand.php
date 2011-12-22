@@ -29,6 +29,7 @@ class CompileCommand extends ContainerAwareCommand
 
         $this->addOption('server', null, InputOption::VALUE_NONE, 'Generate server classes');
         $this->addOption('namespace', null, InputOption::VALUE_REQUIRED, 'Namespace prefix');
+        $this->addOption('path', null, InputOption::VALUE_REQUIRED, 'Thrift exec path');
 
         $this->addOption('bundleNameOut', null, InputOption::VALUE_OPTIONAL,
                 'Bundle where the Model will be located (default is the same than the definitions');
@@ -42,6 +43,12 @@ class CompileCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
 	{
         $compiler = new ThriftCompiler();
+
+        if(($path = $this->getOption('path')))
+        {
+            $compiler->setExecPath($path);
+        }
+
         $definition = $input->getArgument('definition');
 
         $bundleName      = $input->getArgument('bundleName');

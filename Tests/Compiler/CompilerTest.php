@@ -24,6 +24,10 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
     {
         $compiler = new ThriftCompiler();
 
+        $this->assertTrue($compiler->setExecPath('/usr/local/bin', 'Work without /'));
+
+        $this->assertTrue($compiler->setExecPath('/usr/local/bin/', 'Work with /'));
+
         $compiler->setModelPath($this->modelPath);
 
         $this->assertFalse($compiler->emptyModelPath('Test'), 'Return false because Definition directory does not exists');
@@ -59,6 +63,25 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
                 sprintf('Generating "php:oop,namespace,autoload,nsglobal=%s,server"', $this->namespace)
             )
         );
+
+        // Unknow definition
+        $this->setExpectedException('Overblog\ThriftBundle\Exception\ConfigurationException',
+			sprintf('Unable to find Thrift definition at path "%s"', $this->definitionPath . 'UNKNOWN')
+		);
+
+        $compiler->compile($this->definitionPath . 'UNKNOWN', true);
+    }
+
+    public function testExec()
+    {
+        $compiler = new ThriftCompiler();
+
+        // Bad exec path
+        $this->setExpectedException('Overblog\ThriftBundle\Exception\ConfigurationException',
+			'Unable to find Thrift executable'
+		);
+
+        $compiler->setExecPath(__DIR__);
     }
 
     protected function tearDown()
