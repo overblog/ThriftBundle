@@ -34,7 +34,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('services')
-                    ->requiresAtLeastOneElement()
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()

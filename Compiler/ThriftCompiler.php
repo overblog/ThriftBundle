@@ -158,6 +158,9 @@ class ThriftCompiler
             $this->addServerCompile();
         }
 
+        //Reset output
+        $this->lastOutput = null;
+
         exec(sprintf('%s -r -v --gen php:%s --out %s %s 2>&1',
             $this->getExecPath(),
             $this->compileOptions(),
