@@ -93,9 +93,9 @@ To use server
 4) If you wan't to use Thrift over HTTP Transport, register controller
 
     #app/config/routing.yml
-        thrift_server:
-          pattern:  /thrift
-          defaults: { _controller: OverblogThriftBundle:Thrift:server, config: *service_name* }
+        OverblogThriftBundle:
+          resource: "@OverblogThriftBundle/Resources/config/routing.yml"
+          prefix:   /
 
 5) Or you can start the socket version with the command:
 
