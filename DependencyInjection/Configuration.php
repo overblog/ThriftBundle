@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('bundleNameIn')->isRequired()->end()
                                     ->scalarNode('bundleNameOut')->end()
-                                    ->booleanNode('server')->defaultValue(true)->end()
+                                    ->booleanNode('server')->defaultValue(false)->end()
                                 ->end()
                             ->end()
                          ->end()
