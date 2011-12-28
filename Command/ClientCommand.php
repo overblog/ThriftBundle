@@ -30,7 +30,7 @@ class ClientCommand extends ContainerAwareCommand
 
         try
         {
-            $client = $this->getContainer()->get('thrift')->getClient('comment');
+            $client = $this->getContainer()->get('thrift')->getClient('comment_socket');
 
             $user = new CommentUser();
             $user->token = 121354984651354647;

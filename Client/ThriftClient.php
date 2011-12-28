@@ -9,6 +9,8 @@ use Thrift\Transport\TNullTransport;
 use Thrift\Transport\TFramedTransport;
 use Thrift\Transport\TBufferedTransport;
 
+use Overblog\ThriftBundle\Factory\ThriftFactory;
+
 /**
  * Build client
  * @author Xavier HAUSHERR
@@ -57,7 +59,7 @@ class ThriftClient
                 $transport = new TBufferedTransport($socket, 1024, 1024);
 
                 $protocol = new $this->clients[$name]['protocol']($transport);
-                $client = new $this->clients[$name]['client']($protocol);
+                $client = ThriftFactory::getInstance($this->clients[$name]['client'], $protocol);
 
                 $transport->open();
 

@@ -42,6 +42,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
+                            ->scalarNode('service')->isRequired()->end()
                             ->scalarNode('processor')->isRequired()->end()
                             ->scalarNode('protocol')->defaultValue('Thrift\Protocol\TBinaryProtocolAccelerated')->end()
                             ->booleanNode('fork')->defaultValue(true)->end()

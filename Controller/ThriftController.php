@@ -4,6 +4,7 @@ namespace Overblog\ThriftBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Overblog\ThriftBundle\Server\HttpServer;
+use Overblog\ThriftBundle\Factory\ThriftFactory;
 
 /**
  * Http Server controller
@@ -31,14 +32,14 @@ class ThriftController extends Controller
 
         $config = $services[$extensionName];
 
-        $processor = new HttpServer(
-            $this->get($config['processor']),
+        $server = new HttpServer(
+            ThriftFactory::getInstance($config['processor'], $this->container->get($config['service'])),
             $config
         );
 
-        $processor->getHeader();
+        $server->getHeader();
 
-        $processor->run();
+        $server->run();
 
         // Much faster than return a Symfony Response
         exit(0);
