@@ -12,7 +12,6 @@ class ThriftFactory
 {
     protected $cacheDir;
     protected $debug;
-    private $fileLoaded = false;
 
     /**
      * Inject dependencies
@@ -30,13 +29,8 @@ class ThriftFactory
      */
     protected function loadFiles()
     {
-        if(!$this->fileLoaded)
-        {
-            require($this->cacheDir . '/ThriftModel/Comment/Comment.php');
-            require($this->cacheDir . '/ThriftModel/Comment/Types.php');
-
-            $this->fileLoaded = true;
-        }
+        require_once($this->cacheDir . '/ThriftModel/Comment/Comment.php');
+        require_once($this->cacheDir . '/ThriftModel/Comment/Types.php');
     }
 
     /**
