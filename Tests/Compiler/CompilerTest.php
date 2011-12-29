@@ -36,7 +36,7 @@ class CompilerTest extends ThriftBundleTestCase
                 sprintf('Scanning %s for includes', realpath($this->definitionPath)),
                 sprintf('Parsing %s for types', realpath($this->definitionPath)),
                 sprintf('Program: %s', realpath($this->definitionPath)),
-                sprintf('Generating "php:oop,namespace,autoload,nsglobal=%s"', $this->namespace)
+                sprintf('Generating "php:oop,namespace,nsglobal=%s"', $this->namespace)
             )
         );
 
@@ -52,7 +52,7 @@ class CompilerTest extends ThriftBundleTestCase
                 sprintf('Scanning %s for includes', realpath($this->definitionPath)),
                 sprintf('Parsing %s for types', realpath($this->definitionPath)),
                 sprintf('Program: %s', realpath($this->definitionPath)),
-                sprintf('Generating "php:oop,namespace,autoload,nsglobal=%s,server"', $this->namespace)
+                sprintf('Generating "php:oop,namespace,nsglobal=%s,server"', $this->namespace)
             )
         );
 

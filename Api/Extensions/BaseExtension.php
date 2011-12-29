@@ -12,6 +12,7 @@
 namespace Overblog\ThriftBundle\Api\Extensions;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Overblog\ThriftBundle\Factory\ThriftFactory;
 
 /**
  * Symfony extension for Thrift Extension
@@ -30,8 +31,13 @@ class BaseExtension
      *
      * @var type
      */
-
     protected $_container;
+
+    /**
+     * Thrift Factory
+     * @var type
+     */
+    protected $factory;
 
     /**
      * Constructor
@@ -39,9 +45,10 @@ class BaseExtension
      * @param ContainerInterface $container
      */
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, ThriftFactory $factory)
     {
         $this->_container = $container;
+        $this->factory = $factory;
     }
 
     /**
@@ -55,5 +62,16 @@ class BaseExtension
     public function get($service)
     {
         return $this->_container->get($service);
+    }
+
+    /**
+     * Get instance of Thrift Model classes
+     * @param string $classe
+     * @param mixed $param
+     * @return mixed
+     */
+    public function getInstance($classe, $param = null)
+    {
+        return $this->factory->getInstance($classe, $param);
     }
 }

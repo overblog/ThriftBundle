@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Overblog\ThriftBundle\Server\SocketServer;
-use Overblog\ThriftBundle\Factory\ThriftFactory;
 
 /**
  * Socket server command
@@ -43,7 +42,7 @@ class ServerCommand extends ContainerAwareCommand
         $config = $services[$input->getArgument('config')];
 
         $server = new SocketServer(
-            ThriftFactory::getInstance($config['processor'], $this->getContainer()->get($config['service'])),
+            $this->getContainer()->get('thrift.factory')->getInstance($config['processor'], $this->getContainer()->get($config['service'])),
             $config
         );
 

@@ -22,14 +22,14 @@ class ClientCommand extends ContainerAwareCommand
         {
             $client = $this->getContainer()->get('thrift')->getClient('comment');
 
-            $user = $this->getContainer()->get('thrift')->getInstance('OverblogComment\InternalApiBundle\ThriftModel\Comment\Definition\CommentUser');
+            $user = $this->getContainer()->get('thrift')->getInstance('ThriftModel\Comment\CommentUser');
             $user->token = 121354984651354647;
             $user->origin = 'Overblog';
             $user->name = 'Name 1';
             $user->email = 'foo@bar.com';
             $user->ip = ip2long('127.0.0.7');
 
-            $comment = $this->getContainer()->get('thrift')->getInstance('OverblogComment\InternalApiBundle\ThriftModel\Comment\Definition\Comment');
+            $comment = $this->getContainer()->get('thrift')->getInstance('ThriftModel\Comment\Comment');
             $comment->id_element = 1;
             $comment->id_element_parent = 1;
             $comment->comment = 'Test de commentaire';
@@ -46,6 +46,8 @@ class ClientCommand extends ContainerAwareCommand
 
             $dislike = $client->dislike($commentId);
             var_dump($dislike, (microtime(true) - $time_start));
+
+            //var_dump($client->getCommentsByIdElement(2, null, null, null, null, null, null, null));
 
 //            $initializePopularity = $client->initializePopularity(1);
 //            var_dump($initializePopularity, (microtime(true) - $time_start));

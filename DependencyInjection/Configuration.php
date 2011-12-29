@@ -31,7 +31,6 @@ class Configuration implements ConfigurationInterface
                             ->prototype('array')
                                 ->children()
                                     ->scalarNode('bundleNameIn')->isRequired()->end()
-                                    ->scalarNode('bundleNameOut')->end()
                                     ->booleanNode('server')->defaultValue(false)->end()
                                 ->end()
                             ->end()

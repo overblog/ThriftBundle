@@ -19,6 +19,12 @@ use Overblog\ThriftBundle\Factory\ThriftFactory;
 class ThriftClient
 {
     /**
+     * Thrift factory
+     * @var ThriftFactory
+     */
+    protected $factory;
+
+    /**
      * Config
      * @var array
      */
@@ -34,8 +40,9 @@ class ThriftClient
      * Register Dependencies
      * @param array $clients
      */
-    public function __construct(Array $clients)
+    public function __construct(ThriftFactory $factory, Array $clients)
     {
+        $this->factory = $factory;
         $this->clients = $clients;
     }
 
@@ -85,7 +92,7 @@ class ThriftClient
      */
     public function getInstance($classe, $param = null)
     {
-        return ThriftFactory::getInstance($classe, $param);
+        return $this->factory->getInstance($classe, $param);
     }
 
     /**
