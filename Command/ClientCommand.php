@@ -6,16 +6,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Thrift\Transport\THttpClient;
-use Thrift\Transport\TBufferedTransport;
-use Thrift\Protocol\TBinaryProtocolAccelerated;
-
-use Thrift\Transport\TSocket;
-
-use OverblogComment\InternalApiBundle\ThriftModel\Comment\Client\CommentClient;
-use OverblogComment\InternalApiBundle\ThriftModel\Comment\Definition\CommentUser;
-use OverblogComment\InternalApiBundle\ThriftModel\Comment\Definition\Comment;
-
 class ClientCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -30,16 +20,16 @@ class ClientCommand extends ContainerAwareCommand
 
         try
         {
-            $client = $this->getContainer()->get('thrift')->getClient('comment_socket');
+            $client = $this->getContainer()->get('thrift')->getClient('comment');
 
-            $user = new CommentUser();
+            $user = $this->getContainer()->get('thrift')->getInstance('OverblogComment\InternalApiBundle\ThriftModel\Comment\Definition\CommentUser');
             $user->token = 121354984651354647;
             $user->origin = 'Overblog';
             $user->name = 'Name 1';
             $user->email = 'foo@bar.com';
             $user->ip = ip2long('127.0.0.7');
 
-            $comment = new Comment();
+            $comment = $this->getContainer()->get('thrift')->getInstance('OverblogComment\InternalApiBundle\ThriftModel\Comment\Definition\Comment');
             $comment->id_element = 1;
             $comment->id_element_parent = 1;
             $comment->comment = 'Test de commentaire';

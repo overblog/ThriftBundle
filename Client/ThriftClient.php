@@ -59,7 +59,7 @@ class ThriftClient
                 $transport = new TBufferedTransport($socket, 1024, 1024);
 
                 $protocol = new $this->clients[$name]['protocol']($transport);
-                $client = ThriftFactory::getInstance($this->clients[$name]['client'], $protocol);
+                $client = $this->getInstance($this->clients[$name]['client'], $protocol);
 
                 $transport->open();
 
@@ -75,6 +75,17 @@ class ThriftClient
         }
 
         return $this->handler[$name]['client'];
+    }
+
+    /**
+     * Get instance of Thrift Model classes
+     * @param string $classe
+     * @param mixed $param
+     * @return mixed
+     */
+    public function getInstance($classe, $param = null)
+    {
+        return ThriftFactory::getInstance($classe, $param);
     }
 
     /**
