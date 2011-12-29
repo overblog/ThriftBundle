@@ -40,15 +40,22 @@ class BaseExtension
     protected $factory;
 
     /**
+     * Service name
+     * @var string
+     */
+    protected $service;
+
+    /**
      * Constructor
      *
      * @param ContainerInterface $container
      */
 
-    public function __construct(ContainerInterface $container, ThriftFactory $factory)
+    public function __construct(ContainerInterface $container, ThriftFactory $factory, $service)
     {
         $this->_container = $container;
         $this->factory = $factory;
+        $this->service = $service;
     }
 
     /**
@@ -66,13 +73,12 @@ class BaseExtension
 
     /**
      * Get instance of Thrift Model classes
-     * @param string $service
      * @param string $classe
      * @param mixed $param
      * @return mixed
      */
-    public function getInstance($service, $classe, $param = null)
+    public function getInstance($classe, $param = null)
     {
-        return $this->factory->getInstance($service, $classe, $param);
+        return $this->factory->getInstance($this->service, $classe, $param);
     }
 }
