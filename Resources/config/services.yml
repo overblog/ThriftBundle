@@ -2,19 +2,19 @@ parameters:
   thrift.class: Overblog\ThriftBundle\Client\ThriftClient
   thrift.compile_warmer.class: Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer
   thrift.factory: Overblog\ThriftBundle\Factory\ThriftFactory
-  clients: %thrift.config.clients%
 
 services:
   thrift:
     class: %thrift.class%
-    arguments: [@thrift.factory, %clients%]
+    arguments: [@thrift.factory, %thrift.config.clients%]
 
   thrift.compile_warmer:
     class: %thrift.compile_warmer.class%
-    arguments: [@service_container]
+    arguments: [@service_container, %thrift.config.compiler.path%, %thrift.config.services%]
+    public: false
     tags:
       - { name: "kernel.cache_warmer", priority: "10" }
 
   thrift.factory:
     class: %thrift.factory%
-    arguments: [%kernel.cache_dir%, %kernel.debug%]
+    arguments: [%kernel.cache_dir%, %thrift.config.services%, %kernel.debug%]

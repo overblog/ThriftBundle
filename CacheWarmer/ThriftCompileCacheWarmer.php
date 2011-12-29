@@ -16,16 +16,21 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
 {
     private $container;
     private $cacheDir;
+    private $path;
+    private $services;
 
     /**
      * Register dependencies
      * @param ContainerInterface $container
+     * @param Array $config
+     * @param Array $services
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, $path, Array $services)
     {
         $this->container = $container;
         $this->cacheDir = $this->container->get('kernel')->getCacheDir();
-        $this->config = $this->container->getParameter('thrift.config.compiler');
+        $this->path = $path;
+        $this->services = $services;
     }
 
     /**
@@ -35,22 +40,22 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
     public function warmUp($cacheDir)
     {
         $compiler = new ThriftCompiler();
-        $compiler->setExecPath($this->config['path']);
+        $compiler->setExecPath($this->path);
 
         // We compile for every Service
-        foreach($this->config['services'] as $definition => $config)
+        foreach($this->services as $config)
         {
             $bundleName      = $config['bundleNameIn'];
             $bundle          = $this->container->get('kernel')->getBundle($bundleName);
             $bundlePath      = $bundle->getPath();
 
-            $definitionPath  = $bundlePath . '/ThriftDefinition/' . $definition . '.thrift';
+            $definitionPath  = $bundlePath . '/ThriftDefinition/' . $config['definition'] . '.thrift';
 
             //Set Path
             $compiler->setModelPath(sprintf('%s/ThriftModel', $this->cacheDir));
 
             // Empty old model
-            $compiler->emptyModelPath($definition);
+            $compiler->emptyModelPath($config['definition']);
 
             $compiler->compile($definitionPath, $config['server']);
         }

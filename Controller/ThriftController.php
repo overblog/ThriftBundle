@@ -22,18 +22,22 @@ class ThriftController extends Controller
             throw $this->createNotFoundException('Unable to get config name');
         }
 
-        $services = $this->container->getParameter('thrift.config.services');
+        $servers = $this->container->getParameter('thrift.config.servers');
 
-        if(!isset($services[$extensionName]))
+        if(!isset($servers[$extensionName]))
         {
             throw $this->createNotFoundException(sprintf('Unknown config "%s"', $extensionName));
         }
 
-        $config = $services[$extensionName];
+        $server = $servers[$extensionName];
 
         $server = new HttpServer(
-            $this->container->get('thrift.factory')->getInstance($config['processor'], $this->container->get($config['service'])),
-            $config
+            $this->container->get('thrift.factory')->getInstance(
+                $server['service'],
+                sprintf('%sProcessor', $server['service_config']['definition']),
+                $this->container->get($server['handler'])
+            ),
+            $server['service_config']
         );
 
         $server->getHeader();

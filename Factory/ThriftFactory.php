@@ -11,6 +11,7 @@ namespace Overblog\ThriftBundle\Factory;
 class ThriftFactory
 {
     protected $cacheDir;
+    protected $services;
     protected $debug;
 
     /**
@@ -18,30 +19,39 @@ class ThriftFactory
      * @param string $cacheDir
      * @param boolean $debug
      */
-    public function __construct($cacheDir, $debug = false)
+    public function __construct($cacheDir, Array $services, $debug = false)
     {
         $this->cacheDir = $cacheDir;
+        $this->services = $services;
         $this->debug = $debug;
     }
 
     /**
      * Load Thrift cache Files
      */
-    protected function loadFiles()
+    protected function loadFiles($service)
     {
-        require_once($this->cacheDir . '/ThriftModel/Comment/Comment.php');
-        require_once($this->cacheDir . '/ThriftModel/Comment/Types.php');
+        $path = $this->cacheDir .
+                DIRECTORY_SEPARATOR .
+                str_replace('\\', DIRECTORY_SEPARATOR, $this->services[$service]['namespace']) .
+                DIRECTORY_SEPARATOR;
+
+        require_once($path . $this->services[$service]['definition'] . '.php');
+        require_once($path . 'Types.php');
     }
 
     /**
      * Return an instance of a Thrift Model Class
+     * @param string $service
      * @param string $classe
      * @param mixed $param
      * @return Object
      */
-    public function getInstance($classe, $param = null)
+    public function getInstance($service, $classe, $param = null)
     {
-        $this->loadFiles();
+        $this->loadFiles($service);
+
+        $classe = $this->services[$service]['namespace'] . '\\' . $classe;
 
         if(is_null($param))
         {

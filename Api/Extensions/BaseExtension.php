@@ -66,12 +66,13 @@ class BaseExtension
 
     /**
      * Get instance of Thrift Model classes
+     * @param string $service
      * @param string $classe
      * @param mixed $param
      * @return mixed
      */
-    public function getInstance($classe, $param = null)
+    public function getInstance($service, $classe, $param = null)
     {
-        return $this->factory->getInstance($classe, $param);
+        return $this->factory->getInstance($service, $classe, $param);
     }
 }
