@@ -24,7 +24,7 @@ use Overblog\ThriftBundle\Factory\ThriftFactory;
  * @author     Yannick Le Guédart <yannick@overblog.com>
  */
 
-class BaseExtension
+abstract class BaseExtension
 {
     /**
      * Injected SF2 container
@@ -40,22 +40,15 @@ class BaseExtension
     protected $factory;
 
     /**
-     * Service name
-     * @var string
-     */
-    protected $service;
-
-    /**
      * Constructor
      *
      * @param ContainerInterface $container
      */
 
-    public function __construct(ContainerInterface $container, ThriftFactory $factory, $service)
+    public function __construct(ContainerInterface $container, ThriftFactory $factory)
     {
         $this->_container = $container;
         $this->factory = $factory;
-        $this->service = $service;
     }
 
     /**
@@ -79,6 +72,11 @@ class BaseExtension
      */
     public function getInstance($classe, $param = null)
     {
-        return $this->factory->getInstance($this->service, $classe, $param);
+        return $this->factory->getInstance($this->getServiceName(), $classe, $param);
     }
+
+    /**
+     * Return the Thrift Service Name to use
+     */
+    abstract protected function getServiceName();
 }

@@ -51,8 +51,6 @@ class ThriftFactory
     {
         $this->loadFiles($service);
 
-        $classe = $this->services[$service]['namespace'] . '\\' . $classe;
-
         if(is_null($param))
         {
             return new $classe();
@@ -61,5 +59,35 @@ class ThriftFactory
         {
             return new $classe($param);
         }
+    }
+
+    /**
+     * Return a processor instance
+     * @param string $service
+     * @param mixed $handler
+     * @return Object
+     */
+    public function getProcessorInstance($service, $handler)
+    {
+        $this->loadFiles($service);
+
+        $classe = sprintf('%s\%sProcessor', $this->services[$service]['namespace'], $this->services[$service]['definition']);
+
+        return new $classe($handler);
+    }
+
+    /**
+     * Return a client instance
+     * @param string $service
+     * @param Thrift\Protocol\TProtocol $transport
+     * @return Object
+     */
+    public function getClientInstance($service, $protocol)
+    {
+        $this->loadFiles($service);
+
+        $classe = sprintf('%s\%sClient', $this->services[$service]['namespace'], $this->services[$service]['definition']);
+
+        return new $classe($protocol);
     }
 }

@@ -88,8 +88,8 @@ class ThriftClient
 
             $transport = new TBufferedTransport($socket, 1024, 1024);
 
-            $client = $this->create(
-                sprintf('%sClient', $service['definition']), 
+            $client = $this->factory->getClientInstance(
+                $this->clients[$name]['service'],
                 new $service['protocol']($transport)
             );
 

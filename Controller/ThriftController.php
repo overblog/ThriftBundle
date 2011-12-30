@@ -32,11 +32,10 @@ class ThriftController extends Controller
         $server = $servers[$extensionName];
 
         $server = new HttpServer(
-            $this->container->get('thrift.factory')->getInstance(
-                $server['service'],
-                sprintf('%sProcessor', $server['service_config']['definition']),
-                $this->container->get($server['handler'])
-            ),
+              $this->container->get('thrift.factory')->getProcessorInstance(
+                  $server['service'],
+                  $this->container->get($server['handler'])
+              ),
             $server['service_config']
         );
 

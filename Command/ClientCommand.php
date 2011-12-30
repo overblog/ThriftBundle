@@ -23,14 +23,14 @@ class ClientCommand extends ContainerAwareCommand
             $service = $this->getContainer()->get('thrift')->getService('comment');
             $client = $service->getClient();
 
-            $user = $service->create('CommentUser');
+            $user = $service->create('ThriftModel\Comment\CommentUser');
             $user->token = 121354984651354647;
             $user->origin = 'Overblog';
             $user->name = 'Name 1';
             $user->email = 'foo@bar.com';
             $user->ip = ip2long('127.0.0.7');
 
-            $comment = $service->create('Comment');
+            $comment = $service->create('ThriftModel\Comment\Comment');
             $comment->id_element = 1;
             $comment->id_element_parent = 1;
             $comment->comment = 'Test de commentaire';
