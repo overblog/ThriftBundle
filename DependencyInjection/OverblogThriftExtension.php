@@ -23,23 +23,8 @@ class OverblogThriftExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('thrift.config.compiler.path', $config['compiler']['path']);
-
         $container->setParameter('thrift.config.services', $config['services']);
-
-        //Servers
-        foreach($config['servers'] as $name => $service)
-        {
-            $config['servers'][$name]['service_config'] = $config['services'][$service['service']];
-        }
-
         $container->setParameter('thrift.config.servers', $config['servers']);
-
-        //Clients
-        foreach($config['clients'] as $name => $client)
-        {
-            $config['clients'][$name]['service_config'] = $config['services'][$client['service']];
-        }
-
         $container->setParameter('thrift.config.clients', $config['clients']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

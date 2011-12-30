@@ -70,6 +70,47 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+            ->end()
+            //Server validation
+            ->validate()
+                ->ifTrue( function($v) {
+                    foreach($v['servers'] as $name => $server)
+                    {
+                        if(!isset($v['services'][$server['service']])) return true;
+                    }
+
+                    return false;
+                })
+                ->thenInvalid('Unknow service in servers configuration.')
+            ->end()
+            ->validate()
+                ->ifTrue( function($v) {
+                    foreach($v['clients'] as $name => $client)
+                    {
+                        if(!isset($v['services'][$client['service']])) return true;
+                    }
+
+                    return false;
+                })
+                ->thenInvalid('Unknow service in clients configuration.')
+            ->end()
+            ->validate()
+                ->always()
+                ->then( function($v) {
+                    //Servers
+                    foreach($v['servers'] as $name => $server)
+                    {
+                        $v['servers'][$name]['service_config'] = $v['services'][$server['service']];
+                    }
+
+                    //Clients
+                    foreach($v['clients'] as $name => $client)
+                    {
+                        $v['clients'][$name]['service_config'] = $v['services'][$client['service']];
+                    }
+
+                    return $v;
+                })
             ->end();
 
         return $treeBuilder;
