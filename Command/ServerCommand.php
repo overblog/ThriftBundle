@@ -43,11 +43,10 @@ class ServerCommand extends ContainerAwareCommand
         $server = $servers[$config];
 
         $server = new SocketServer(
-            $this->getContainer()->get('thrift.factory')->getInstance(
-                $server['service'],
-                sprintf('%sProcessor', $server['service_config']['definition']),
-                $this->getContainer()->get($server['handler'])
-            ),
+            $this->getContainer()->get('thrift.factory')->getProcessorInstance(
+                  $server['service'],
+                  $this->getContainer()->get($server['handler'])
+              ),
             $server
         );
 
