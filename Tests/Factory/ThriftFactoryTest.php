@@ -32,6 +32,11 @@ class ThriftFactoryTest extends ThriftBundleTestCase
         );
 
         $this->assertInstanceOf(
+            'ThriftModel\Test\Test',
+            $factory->getInstance('test', 'ThriftModel\Test\Test', array())
+        );
+
+        $this->assertInstanceOf(
             'ThriftModel\Test\State',
             $factory->getInstance('test', 'ThriftModel\Test\State')
         );
@@ -44,11 +49,6 @@ class ThriftFactoryTest extends ThriftBundleTestCase
         $this->assertInstanceOf(
             'ThriftModel\Test\TestProcessor',
             $factory->getProcessorInstance('test', null)
-        );
-
-        $this->assertInstanceOf(
-            'ThriftModel\Test\TestProcessor',
-            $factory->getProcessorInstance('test', array())
         );
 
         $this->assertInstanceOf(
