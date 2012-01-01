@@ -90,4 +90,42 @@ class ThriftClientTest extends ThriftBundleTestCase
 
         $this->assertInstanceOf('ThriftModel\Test\TestClient', $thriftClient->getClient());
     }
+
+    public function testMultiSocketClient()
+    {
+        $thriftClient = new ThriftClient($this->factory, array(
+            'service' => 'test',
+            'type' => 'socket',
+            'hosts' => array(
+                'test' => array(
+                    'host' => 'localhost',
+                    'port' => 9090
+                ),
+                'test2' => array(
+                    'host' => 'localhost',
+                    'port' => 9091
+                )
+            ),
+            'service_config' => array(
+                'definition' => 'Test',
+                'namespace' => 'ThriftModel\Test',
+                'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated'
+            )
+        ));
+
+        $this->assertInstanceOf(
+            'ThriftModel\Test\Test',
+            $thriftClient->getFactory('ThriftModel\Test\Test')
+        );
+
+        // Server doesn't exists
+        try
+        {
+            $thriftClient->getClient();
+        }
+        catch(\Exception $e)
+        {
+            $this->assertInstanceOf('Thrift\Exception\TException', $e);
+        }
+    }
 }
