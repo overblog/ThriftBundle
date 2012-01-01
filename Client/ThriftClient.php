@@ -92,7 +92,10 @@ class ThriftClient
      */
     public function __destruct()
     {
-        $this->transport->close();
+        if(!is_null($this->transport))
+        {
+            $this->transport->close();
+        }
     }
 
     /**
