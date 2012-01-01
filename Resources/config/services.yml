@@ -1,13 +1,9 @@
 parameters:
-  thrift.class: Overblog\ThriftBundle\Client\ThriftClient
+  thrift.client.class: Overblog\ThriftBundle\Client\ThriftClient
   thrift.compile_warmer.class: Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer
   thrift.factory: Overblog\ThriftBundle\Factory\ThriftFactory
 
 services:
-  thrift:
-    class: %thrift.class%
-    arguments: [@thrift.factory, %thrift.config.clients%]
-
   thrift.compile_warmer:
     class: %thrift.compile_warmer.class%
     arguments: [@service_container, %thrift.config.compiler.path%, %thrift.config.services%]

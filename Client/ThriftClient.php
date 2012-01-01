@@ -25,50 +25,29 @@ class ThriftClient
     protected $factory;
 
     /**
-     * Config
+     * Client config
      * @var array
      */
-    protected $clients = array();
+    protected $config = array();
 
     /**
-     * Handler instances
-     * @var array
+     * Client instance
      */
-    protected $handler = array();
+    protected $client;
 
     /**
-     * Current conf
-     * @var string
+     * Transport instance
      */
-    protected $currentConf;
+    protected $transport;
 
     /**
      * Register Dependencies
      * @param array $clients
      */
-    public function __construct(ThriftFactory $factory, Array $clients)
+    public function __construct(ThriftFactory $factory, Array $config)
     {
         $this->factory = $factory;
-        $this->clients = $clients;
-    }
-
-    /**
-     * Set configuration
-     * @param sting $name
-     * @return ThriftClient
-     */
-    public function getService($name)
-    {
-        if(isset($this->clients[$name]))
-        {
-            $this->currentConf = $name;
-        }
-        else
-        {
-            throw new ConfigurationException(sprintf('Unknow configuration "%s"', $name));
-        }
-
-        return $this;
+        $this->config = $config;
     }
 
     /**
@@ -77,31 +56,24 @@ class ThriftClient
      */
     public function getClient()
     {
-        $name = $this->checkCurrentConf();
-
-        if(!isset($this->handler[$name]))
+        if(is_null($this->client))
         {
-            $service = $this->clients[$name]['service_config'];
+            $service = $this->config['service_config'];
 
             //Initialisation du client
-            $socket = $this->clientFactory($name)->getSocket();
+            $socket = $this->clientFactory($this->config['service'])->getSocket();
 
-            $transport = new TBufferedTransport($socket, 1024, 1024);
+            $this->transport = new TBufferedTransport($socket, 1024, 1024);
 
-            $client = $this->factory->getClientInstance(
-                $this->clients[$name]['service'],
-                new $service['protocol']($transport)
+            $this->client = $this->factory->getClientInstance(
+                $this->config['service'],
+                new $service['protocol']($this->transport)
             );
 
-            $transport->open();
-
-            $this->handler[$name] = array(
-                'transport' => $transport,
-                'client' => $client
-            );
+            $this->transport->open();
         }
 
-        return $this->handler[$name]['client'];
+        return $this->client;
     }
 
     /**
@@ -110,11 +82,9 @@ class ThriftClient
      * @param mixed $param
      * @return mixed
      */
-    public function create($classe, $param = null)
+    public function getFactory($classe, $param = null)
     {
-        $name = $this->checkCurrentConf();
-
-        return $this->factory->getInstance($this->clients[$name]['service'], $classe, $param);
+        return $this->factory->getInstance($this->config['service'], $classe, $param);
     }
 
     /**
@@ -122,24 +92,7 @@ class ThriftClient
      */
     public function __destruct()
     {
-        foreach($this->handler as $client)
-        {
-            $client['transport']->close();
-        }
-    }
-
-    /**
-     * Check if configuration has been correctly set
-     * @return string
-     */
-    protected function checkCurrentConf()
-    {
-        if(empty($this->currentConf))
-        {
-            throw new ConfigurationException('Unable to get client');
-        }
-
-        return $this->currentConf;
+        $this->transport->close();
     }
 
     /**
@@ -149,8 +102,8 @@ class ThriftClient
      */
     protected function clientFactory($name)
     {
-        $class = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->clients[$name]['type'])));
+        $class = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->config['type'])));
 
-        return new $class($this->clients[$name]);
+        return new $class($this->config);
     }
 }
