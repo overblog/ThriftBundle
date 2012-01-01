@@ -47,6 +47,11 @@ class ThriftFactoryTest extends ThriftBundleTestCase
         );
 
         $this->assertInstanceOf(
+            'ThriftModel\Test\TestProcessor',
+            $factory->getProcessorInstance('test', array())
+        );
+
+        $this->assertInstanceOf(
             'ThriftModel\Test\TestClient',
             $factory->getClientInstance('test', null)
         );
