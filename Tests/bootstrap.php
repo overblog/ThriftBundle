@@ -6,6 +6,7 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader();
 $loader->registerNamespace('Symfony', $_SERVER['SYMFONY']);
+$loader->registerNamespace('Thrift', $_SERVER['THRIFT']);
 $loader->register();
 
 spl_autoload_register(function($class)

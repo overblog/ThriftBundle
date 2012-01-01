@@ -1,3 +1,6 @@
 [submodule "Fixtures/symfony"]
 	path = Fixtures/symfony
 	url = git://github.com/symfony/symfony.git
+[submodule "Fixtures/thrift"]
+	path = Fixtures/thrift
+	url = git://github.com/ebuzzing/OverblogThrift.git

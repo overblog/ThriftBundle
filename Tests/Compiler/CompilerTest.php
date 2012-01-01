@@ -1,15 +1,14 @@
 <?php
+namespace Overblog\ThriftBundle\Tests\Compiler;
+
+use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
+use Overblog\ThriftBundle\Compiler\ThriftCompiler;
+
 /**
  * UNIT TEST
  *
  * @author Xavier HAUSHERR
  */
-namespace Overblog\ThriftBundle\Tests\Compiler;
-
-use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
-
-use Overblog\ThriftBundle\Compiler\ThriftCompiler;
-
 class CompilerTest extends ThriftBundleTestCase
 {
     public function testCompile()

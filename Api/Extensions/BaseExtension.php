@@ -45,10 +45,10 @@ abstract class BaseExtension
      * @param ContainerInterface $container
      */
 
-    public function __construct(ContainerInterface $container, ThriftFactory $factory)
+    public function __construct(ContainerInterface $container)
     {
         $this->_container = $container;
-        $this->factory = $factory;
+        $this->factory = $container->get('thrift.factory');
     }
 
     /**
