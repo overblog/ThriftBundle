@@ -18,6 +18,6 @@ exception InvalidValueException {
 service Test {
     void ping(),
     Test get(1: i32 id) throws (1: InvalidValueException e),
-    list<Test> getList(1: i32 id_element) throws (1: InvalidValueException e),
+    list<Test> getList(1: i32 id) throws (1: InvalidValueException e),
     i32 create(1: Test test) throws (1: InvalidValueException e)
 }

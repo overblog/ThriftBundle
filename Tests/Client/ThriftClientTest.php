@@ -4,6 +4,12 @@ namespace Overblog\ThriftBundle\Tests\Client;
 use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
 use Overblog\ThriftBundle\Factory\ThriftFactory;
 use Overblog\ThriftBundle\Client\ThriftClient;
+use Overblog\ThriftBundle\Tests\Client\TestHandler;
+
+use Thrift\Server\TServerSocket;
+use Thrift\Factory\TTransportFactory;
+use Thrift\Factory\TBinaryProtocolFactory;
+use Thrift\Server\TSimpleServer;
 
 /**
  * UNIT TEST
@@ -60,9 +66,9 @@ class ThriftClientTest extends ThriftBundleTestCase
         $thriftClient->getClient()->ping();
     }
 
-    public function testSocketClient()
+    protected function createSocketServer()
     {
-        $thriftClient = new ThriftClient($this->factory, array(
+        return new ThriftClient($this->factory, array(
             'service' => 'test',
             'type' => 'socket',
             'hosts' => array(
@@ -77,11 +83,11 @@ class ThriftClientTest extends ThriftBundleTestCase
                 'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated'
             )
         ));
+    }
 
-        $this->assertInstanceOf(
-            'ThriftModel\Test\Test',
-            $thriftClient->getFactory('ThriftModel\Test\Test')
-        );
+    public function testSocketClient__NoServer()
+    {
+        $thriftClient = $this->createSocketServer();
 
         // Server doesn't exists
         $this->setExpectedException('Thrift\Exception\TException',
@@ -89,6 +95,127 @@ class ThriftClientTest extends ThriftBundleTestCase
 		);
 
         $this->assertInstanceOf('ThriftModel\Test\TestClient', $thriftClient->getClient());
+    }
+
+    public function testSocketClient()
+    {
+        $thriftClient = $this->createSocketServer();
+
+        $this->assertInstanceOf(
+            'ThriftModel\Test\Test',
+            $thriftClient->getFactory('ThriftModel\Test\Test')
+        );
+
+        //$pid = pcntl_fork();
+        $handler = new TestHandler($this->factory);
+        $processor = $this->factory->getProcessorInstance('test', $handler);
+
+        $this->assertInstanceOf(
+            'ThriftModel\Test\TestProcessor',
+            $processor
+        );
+
+        $transport = new TServerSocket('localhost', 9090);
+        $outputTransportFactory = $inputTransportFactory = new TTransportFactory($transport);
+        $outputProtocolFactory = $inputProtocolFactory = new TBinaryProtocolFactory();
+
+        $server = new TSimpleServer(
+            $processor,
+            $transport,
+            $inputTransportFactory,
+            $outputTransportFactory,
+            $inputProtocolFactory,
+            $outputProtocolFactory
+        );
+
+        $pid = pcntl_fork();
+
+        if ($pid > 0)
+        {
+            //Wait for the server to launch
+            sleep(2);
+
+            $client = $thriftClient->getClient();
+            $this->assertInstanceOf('ThriftModel\Test\TestClient', $client);
+
+            // Void Method
+            $this->assertNull($client->ping());
+
+            // Return test object
+            $test = $client->get(1);
+            $this->assertInstanceOf('ThriftModel\Test\Test', $test);
+            $this->assertEquals(1, $test->id);
+            $this->assertEquals('TEST', $test->content);
+
+            // Wrong ID return Exception
+            try
+            {
+                $response = $client->get(-1);;
+            }
+            catch(\Exception $e)
+            {
+                $this->assertInstanceOf('ThriftModel\Test\InvalidValueException', $e);
+            }
+
+            // Return array of test object
+            $test = $client->getList(1);
+            $this->assertInternalType('array', $test);
+            $this->assertCount(2, $test);
+            $this->assertContainsOnly('ThriftModel\Test\Test', $test);
+            $this->assertEquals(1, $test[0]->id);
+            $this->assertEquals('TEST', $test[0]->content);
+            $this->assertEquals(1, $test[1]->id);
+            $this->assertEquals('TEST2', $test[1]->content);
+
+            // Wrong ID return Exception
+            try
+            {
+                $response = $client->getList(-1);;
+            }
+            catch(\Exception $e)
+            {
+                $this->assertInstanceOf('ThriftModel\Test\InvalidValueException', $e);
+            }
+
+            //Create test
+            $testObject = $this->factory->getInstance('test', 'ThriftModel\Test\Test', array(
+                'content' => 'OK'
+            ));
+
+            $test = $client->create($testObject);
+            $this->assertTrue((bool)$test);
+
+            $testObject->content = '';
+
+            // Wrong ID return Exception
+            try
+            {
+                $response = $client->create($testObject);;
+            }
+            catch(\Exception $e)
+            {
+                $this->assertInstanceOf('ThriftModel\Test\InvalidValueException', $e);
+            }
+
+            posix_kill($pid, SIGTERM);
+
+            pcntl_wait($status, WNOHANG);
+        }
+        elseif ($pid === 0)
+        {
+            $server->serve();
+            $transport->close();
+
+            posix_kill($pid, SIGTERM);
+
+            exit(0);
+        }
+    }
+
+
+    protected function onNotSuccessfulTest(\Exception $e)
+    {
+        parent::onNotSuccessfulTest($e);
     }
 
     public function testMultiSocketClient()
