@@ -20,33 +20,43 @@ class ClientCommand extends ContainerAwareCommand
 
         try
         {
-            $service = $this->getContainer()->get('thrift.client.comment');
+            $service = $this->getContainer()->get('thrift.client.user_socket');
             $client = $service->getClient();
 
-            $user = $service->getFactory('ThriftModel\Comment\CommentUser');
-            $user->token = 121354984651354647;
-            $user->origin = 'Overblog';
-            $user->name = 'Name 1';
-            $user->email = 'foo@bar.com';
-            $user->ip = ip2long('127.0.0.7');
+            $user = $client->getUserById(1);
 
-            $comment = $service->getFactory('ThriftModel\Comment\Comment');
-            $comment->id_element = 1;
-            $comment->id_element_parent = 1;
-            $comment->comment = 'Test de commentaire';
-            $comment->user = $user;
+            var_dump($user);
 
-            $commentId = $client->createComment($comment);
 
-            var_dump($commentId, (microtime(true) - $time_start));
 
-            $commentId = 1;
 
-            $like = $client->like($commentId);
-            var_dump($like, (microtime(true) - $time_start));
-
-            $dislike = $client->dislike($commentId);
-            var_dump($dislike, (microtime(true) - $time_start));
+//            $service = $this->getContainer()->get('thrift.client.comment');
+//            $client = $service->getClient();
+//
+//            $user = $service->getFactory('ThriftModel\Comment\CommentUser');
+//            $user->token = 121354984651354647;
+//            $user->origin = 'Overblog';
+//            $user->name = 'Name 1';
+//            $user->email = 'foo@bar.com';
+//            $user->ip = ip2long('127.0.0.7');
+//
+//            $comment = $service->getFactory('ThriftModel\Comment\Comment');
+//            $comment->id_element = 1;
+//            $comment->id_element_parent = 1;
+//            $comment->comment = 'Test de commentaire';
+//            $comment->user = $user;
+//
+//            $commentId = $client->createComment($comment);
+//
+//            var_dump($commentId, (microtime(true) - $time_start));
+//
+//            $commentId = 1;
+//
+//            $like = $client->like($commentId);
+//            var_dump($like, (microtime(true) - $time_start));
+//
+//            $dislike = $client->dislike($commentId);
+//            var_dump($dislike, (microtime(true) - $time_start));
 
             //var_dump($client->getCommentsByIdElement(2, null, null, null, null, null, null, null));
 

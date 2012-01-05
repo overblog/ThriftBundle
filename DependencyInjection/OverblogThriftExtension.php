@@ -32,18 +32,19 @@ class OverblogThriftExtension extends Extension
         $container->setParameter('thrift.config.servers', $config['servers']);
 
         //Register clients
-        foreach($config['clients']as $client)
+        foreach($config['clients'] as $name => $client)
         {
-            $this->loadClient($client, $container);
+            $this->loadClient($name, $client, $container);
         }
     }
 
     /**
      * Create client service
+     * @param string $name
      * @param array $client
      * @param ContainerBuilder $container
      */
-    public function loadClient(Array $client, ContainerBuilder $container)
+    public function loadClient($name, Array $client, ContainerBuilder $container)
     {
         $clientDef = new Definition(
             $container->getParameter('thrift.client.class')
@@ -53,7 +54,7 @@ class OverblogThriftExtension extends Extension
         $clientDef->addArgument($client);
 
         $container->setDefinition(
-            sprintf('thrift.client.%s', $client['service']),
+            sprintf('thrift.client.%s', $name),
             $clientDef
         );
     }
