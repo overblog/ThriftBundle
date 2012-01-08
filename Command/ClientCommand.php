@@ -23,7 +23,7 @@ class ClientCommand extends ContainerAwareCommand
             $service = $this->getContainer()->get('thrift.client.user_socket');
             $client = $service->getClient();
 
-            $user = $client->getUserById(1);
+            $user = $client->getUserByEmail ('nyan@cat.com');
 
             var_dump($user);
 

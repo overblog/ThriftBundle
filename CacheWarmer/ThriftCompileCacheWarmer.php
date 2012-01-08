@@ -34,6 +34,20 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
     }
 
     /**
+     * Return definition path
+     * @param string $bundleName
+     * @param string $definition
+     * @return string
+     */
+    public function getDefinitionPath($bundleName, $definition)
+    {
+        $bundle = $this->container->get('kernel')->getBundle($bundleName);
+        $bundlePath      = $bundle->getPath();
+
+        return $bundlePath . '/ThriftDefinition/' . $definition . '.thrift';
+    }
+
+    /**
      * Generate model
      * @param string $cacheDir
      */
@@ -45,11 +59,10 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
         // We compile for every Service
         foreach($this->services as $config)
         {
-            $bundleName      = $config['bundleNameIn'];
-            $bundle          = $this->container->get('kernel')->getBundle($bundleName);
-            $bundlePath      = $bundle->getPath();
-
-            $definitionPath  = $bundlePath . '/ThriftDefinition/' . $config['definition'] . '.thrift';
+            $definitionPath  = $this->getDefinitionPath(
+                $config['bundleNameIn'],
+                $config['definition']
+            );
 
             //Set Path
             $compiler->setModelPath(sprintf('%s/ThriftModel', $this->cacheDir));

@@ -27,14 +27,24 @@ class ThriftFactory
     }
 
     /**
+     * Return cache dir for namespace
+     * @param type $namespace
+     * @return type
+     */
+    protected function getCacheDir($namespace)
+    {
+        return  $this->cacheDir .
+                DIRECTORY_SEPARATOR .
+                str_replace('\\', DIRECTORY_SEPARATOR, $namespace) .
+                DIRECTORY_SEPARATOR;
+    }
+
+    /**
      * Load Thrift cache Files
      */
     protected function loadFiles($service)
     {
-        $path = $this->cacheDir .
-                DIRECTORY_SEPARATOR .
-                str_replace('\\', DIRECTORY_SEPARATOR, $this->services[$service]['namespace']) .
-                DIRECTORY_SEPARATOR;
+        $path = $this->getCacheDir($this->services[$service]['namespace']);
 
         require_once($path . $this->services[$service]['definition'] . '.php');
         require_once($path . 'Types.php');
