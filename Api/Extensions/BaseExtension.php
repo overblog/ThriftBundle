@@ -76,37 +76,7 @@ abstract class BaseExtension
     }
 
     /**
-     * Return the Code Exception class name to use
-     * @return string
-     */
-    protected function getCodeExceptionClassName()
-    {
-        return 'Overblog\ThriftBundle\Exception\Code';
-    }
-
-    /**
-     * Generate Invalid value Exception
-     * @param string $errorKey
-     * @return InvalidValueException
-     */
-    protected function generateException($errorKey)
-    {
-        $codeClass = $this->getCodeExceptionClassName();
-        $code = constant($codeClass . '::' . $errorKey);
-
-        return $this->getInstance($this->getExceptionClassName(), array(
-            'code' => $code,
-            'message' => $codeClass::$_errorMessage[$code]
-        ));
-    }
-
-    /**
      * Return the Thrift Service Name to use
      */
     abstract protected function getServiceName();
-
-    /**
-     * Return the Thrift Exception class name to use
-     */
-    abstract protected function getExceptionClassName();
 }

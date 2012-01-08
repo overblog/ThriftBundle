@@ -23,7 +23,7 @@ class ClientCommand extends ContainerAwareCommand
             $service = $this->getContainer()->get('thrift.client.user_socket');
             $client = $service->getClient();
 
-            $user = $client->getUserById(1456789);
+            $user = $client->getUserById(1);
 
             var_dump($user);
 
@@ -63,10 +63,9 @@ class ClientCommand extends ContainerAwareCommand
 //            $initializePopularity = $client->initializePopularity(1);
 //            var_dump($initializePopularity, (microtime(true) - $time_start));
         }
-        catch(\Exception $e)
+        catch(Overblog\InternalApiBundle\Thrift\packages\Comment\InvalidValueException $e)
         {
-            $output->writeln($e->getCode());
-            $output->writeln($e->getMessage());
+            $output->writeln($e->error_msg);
         }
     }
 }
