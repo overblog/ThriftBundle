@@ -63,9 +63,10 @@ class ClientCommand extends ContainerAwareCommand
 //            $initializePopularity = $client->initializePopularity(1);
 //            var_dump($initializePopularity, (microtime(true) - $time_start));
         }
-        catch(Overblog\InternalApiBundle\Thrift\packages\Comment\InvalidValueException $e)
+        catch(\Exception $e)
         {
-            $output->writeln($e->error_msg);
+            $output->writeln($e->getCode());
+            $output->writeln($e->getMessage());
         }
     }
 }
