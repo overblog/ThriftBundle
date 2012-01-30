@@ -51,19 +51,6 @@ abstract class BaseExtension
         $this->factory = $container->get('thrift.factory');
     }
 
-    public function __call($name, $arguments)
-    {
-        return 
-            call_user_func_array(
-                array(
-                    $this,
-                    "execute$name"
-                ),
-                $arguments
-            );
-    }
-    
-
     /**
      * Returns a service from the injected container
      *
