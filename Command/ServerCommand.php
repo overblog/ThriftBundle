@@ -40,6 +40,13 @@ class ServerCommand extends ContainerAwareCommand
 	{
         $servers = $this->getContainer()->getParameter('thrift.config.servers');
         $config = $input->getArgument('config');
+
+        if(!isset($servers[$config]))
+        {
+            $output->writeln(sprintf('<error>Unknow service: %s</error>', $config));
+            return false;
+        }
+
         $server = $servers[$config];
 
         $server = new SocketServer(
