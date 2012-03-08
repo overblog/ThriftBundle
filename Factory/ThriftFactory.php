@@ -47,7 +47,7 @@ class ThriftFactory
         $path = $this->getCacheDir($this->services[$service]['namespace']);
 
         require_once($path . $this->services[$service]['definition'] . '.php');
-        require_once($path . 'Types.php');
+        require_once($path . $this->services[$service]['definition'] . '_types.php');
     }
 
     /**

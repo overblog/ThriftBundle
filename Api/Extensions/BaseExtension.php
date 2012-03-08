@@ -58,10 +58,21 @@ abstract class BaseExtension
      *
      * @return mixed
      */
-
     public function get($service)
     {
         return $this->_container->get($service);
+    }
+
+    /**
+     * Returns a parameter from the injected container
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getParameter($name)
+    {
+        return $this->_container->getParameter($name);
     }
 
     /**
