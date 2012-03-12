@@ -31,13 +31,26 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('services')
                     ->requiresAtLeastOneElement()
                     ->useAttributeAsKey('name')
+                    ->addDefaultsIfNotSet()
                     ->prototype('array')
                         ->children()
                             ->scalarNode('definition')->isRequired()->end()
                             ->scalarNode('namespace')->isRequired()->end()
-                            ->scalarNode('bundleNameIn')->isRequired()->end()
+                            ->scalarNode('bundleNameIn')->defaultNull()->end()
+                            ->scalarNode('definitionPath')->defaultNull()->end()
                             ->scalarNode('protocol')->defaultValue('Thrift\Protocol\TBinaryProtocolAccelerated')->end()
-                            ->booleanNode('server')->defaultValue(false)->end()
+                            ->booleanNode('server')->defaultFalse()->end()
+                        ->end()
+                        ->validate()
+                            ->ifTrue( function($v) {
+                                if(empty($v['bundleNameIn']) && empty($v['definitionPath']))
+                                {
+                                    return true;
+                                }
+
+                                return false;
+                            })
+                            ->thenInvalid('bundleNameIn or definitionPath must be set')
                         ->end()
                     ->end()
                 ->end()
@@ -47,7 +60,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('service')->isRequired()->end()
                             ->scalarNode('handler')->isRequired()->end()
-                            ->booleanNode('fork')->defaultValue(true)->end()
+                            ->booleanNode('fork')->defaultTrue()->end()
                         ->end()
                     ->end()
                 ->end()
