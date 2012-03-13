@@ -77,6 +77,7 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('host')->isRequired()->end()
                                         ->scalarNode('port')->defaultValue(80)->end()
+                                        ->scalarNode('recvTimeout')->defaultNull()->end()
                                     ->end()
                                 ->end()
                             ->end()

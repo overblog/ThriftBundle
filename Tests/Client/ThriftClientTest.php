@@ -74,7 +74,8 @@ class ThriftClientTest extends ThriftBundleTestCase
             'hosts' => array(
                 'test' => array(
                     'host' => 'localhost',
-                    'port' => 9090
+                    'port' => 9090,
+                    'recvTimeout' => 1000
                 )
             ),
             'service_config' => array(
