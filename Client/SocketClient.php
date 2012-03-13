@@ -28,6 +28,8 @@ class SocketClient extends Client
             $host = current($this->config['hosts']);
 
             $socket = new TSocket($host['host'], $host['port']);
+            if (!empty($host['recvTimeout']))
+                $socket->setRecvTimeout($host['recvTimeout']);
         }
         else
         {
@@ -41,6 +43,8 @@ class SocketClient extends Client
             }
 
             $socket = new TSocketPool($hosts, $ports);
+            if (!empty($host['recvTimeout']))
+                $socket->setRecvTimeout($host['recvTimeout']);
         }
 
         return $socket;
