@@ -64,14 +64,10 @@ class ThriftFactory
         
         $path = $this->getCacheDir($m[1]);
     
-        var_dump( $m, $classe, $service ) ; 
-    
         if(file_exists($path . $this->services[$service]['definition'] . '.php'))
             require_once($path . $this->services[$service]['definition'] . '.php');
         
         require_once($path . 'Types.php');
-
-          
 
         if(is_null($param))
         {
