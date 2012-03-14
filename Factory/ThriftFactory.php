@@ -59,7 +59,19 @@ class ThriftFactory
      */
     public function getInstance($service, $classe, $param = null)
     {
-        $this->loadFiles($service);
+        //$this->loadFiles($service);
+        preg_match('#^(.+)\\\.+?$#', $classe, $m);
+        
+        $path = $this->getCacheDir($m[1]);
+    
+        var_dump( $m, $classe, $service ) ; 
+    
+        if(file_exists($path . $this->services[$service]['definition'] . '.php'))
+            require_once($path . $this->services[$service]['definition'] . '.php');
+        
+        require_once($path . 'Types.php');
+
+          
 
         if(is_null($param))
         {
