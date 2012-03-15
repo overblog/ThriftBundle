@@ -14,6 +14,8 @@ class ThriftFactory
     protected $services;
     protected $debug;
 
+    private $memoryDef = array();
+
     /**
      * Inject dependencies
      * @param string $cacheDir
@@ -42,12 +44,24 @@ class ThriftFactory
     /**
      * Load Thrift cache Files
      */
-    protected function loadFiles($service)
+    protected function loadFiles($service, $classe)
     {
-        $path = $this->getCacheDir($this->services[$service]['namespace']);
+        preg_match('#^(.+)\\\.+?$#', $classe, $m);
 
-        require_once($path . $this->services[$service]['definition'] . '.php');
+        $path = $this->getCacheDir($m[1]);
+
+        if(
+            !array_key_exists($path.$service, $this->memoryDef) &&
+            file_exists($path . $this->services[$service]['definition'] . '.php')
+        )
+        {
+            require_once($path . $this->services[$service]['definition'] . '.php');
+        }
+
         require_once($path . 'Types.php');
+
+        //Set memory
+        $this->memoryDef[$path.$service] = 1;
     }
 
     /**
@@ -59,15 +73,7 @@ class ThriftFactory
      */
     public function getInstance($service, $classe, $param = null)
     {
-        //$this->loadFiles($service);
-        preg_match('#^(.+)\\\.+?$#', $classe, $m);
-        
-        $path = $this->getCacheDir($m[1]);
-    
-        if(file_exists($path . $this->services[$service]['definition'] . '.php'))
-            require_once($path . $this->services[$service]['definition'] . '.php');
-        
-        require_once($path . 'Types.php');
+        $this->loadFiles($service, $classe);
 
         if(is_null($param))
         {
@@ -87,9 +93,9 @@ class ThriftFactory
      */
     public function getProcessorInstance($service, $handler)
     {
-        $this->loadFiles($service);
-
         $classe = sprintf('%s\%sProcessor', $this->services[$service]['namespace'], $this->services[$service]['definition']);
+
+        $this->loadFiles($service, $classe);
 
         return new $classe($handler);
     }
@@ -102,9 +108,9 @@ class ThriftFactory
      */
     public function getClientInstance($service, $protocol)
     {
-        $this->loadFiles($service);
-
         $classe = sprintf('%s\%sClient', $this->services[$service]['namespace'], $this->services[$service]['definition']);
+
+        $this->loadFiles($service, $classe);
 
         return new $classe($protocol);
     }
