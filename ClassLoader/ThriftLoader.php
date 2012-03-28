@@ -6,11 +6,21 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 class ThriftLoader extends UniversalClassLoader
 {
-    public function findFile($class)
+    public function findFile($classNs)
     {
-        preg_match('#^(.+)\\\(.+?)$#', $class, $m);
+        $m = explode('\\', $classNs);
 
-        foreach ($this->getNamespaces() as $ns => $dirs) {
+        $namespace = $m[0] . '\\' . $m[1];
+        $class = end($m);
+
+        foreach ($this->getNamespaces() as $ns => $dirs)
+        {
+            //Don't interfere with other autoloaders
+            if (0 !== strpos($classNs, $ns))
+            {
+                return;
+            }
+
             foreach ($dirs as $dir) {
                 /**
                  * Présent dans le service
@@ -18,7 +28,7 @@ class ThriftLoader extends UniversalClassLoader
                  * Client
                  * Processor
                  */
-                if(0 === preg_match('#(.+)(interface|client|processor)$#i', $m[2], $n))
+                if(0 === preg_match('#(.+)(interface|client|processor)$#i', $class, $n))
                 {
                     $className = 'Types';
                 }
@@ -26,8 +36,6 @@ class ThriftLoader extends UniversalClassLoader
                 {
                     $className = $n[1];
                 }
-
-                $namespace = $m[1];
 
                 $file = $dir .
                         DIRECTORY_SEPARATOR .

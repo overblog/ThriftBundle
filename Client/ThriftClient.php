@@ -84,7 +84,7 @@ class ThriftClient
      */
     public function getFactory($classe, $param = null)
     {
-        return $this->factory->getInstance($this->config['service'], $classe, $param);
+        return $this->factory->getInstance($classe, $param);
     }
 
     /**

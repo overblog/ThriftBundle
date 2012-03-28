@@ -25,25 +25,28 @@ class ThriftFactoryTest extends ThriftBundleTestCase
                 'namespace' => 'ThriftModel\Test'
             )
         ));
+        $factory->initLoader(array(
+            'ThriftModel' => __DIR__ . '/..'
+        ));
 
         $this->assertInstanceOf(
             'ThriftModel\Test\Test',
-            $factory->getInstance('test', 'ThriftModel\Test\Test')
+            $factory->getInstance('ThriftModel\Test\Test')
         );
 
         $this->assertInstanceOf(
             'ThriftModel\Test\Test',
-            $factory->getInstance('test', 'ThriftModel\Test\Test', array())
+            $factory->getInstance('ThriftModel\Test\Test', array())
         );
 
         $this->assertInstanceOf(
             'ThriftModel\Test\State',
-            $factory->getInstance('test', 'ThriftModel\Test\State')
+            $factory->getInstance('ThriftModel\Test\State')
         );
 
         $this->assertInstanceOf(
             'ThriftModel\Test\InvalidValueException',
-            $factory->getInstance('test', 'ThriftModel\Test\InvalidValueException')
+            $factory->getInstance('ThriftModel\Test\InvalidValueException')
         );
 
         $this->assertInstanceOf(

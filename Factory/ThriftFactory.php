@@ -2,6 +2,9 @@
 
 namespace Overblog\ThriftBundle\Factory;
 
+use Overblog\ThriftBundle\ClassLoader\ThriftLoader;
+use Overblog\ThriftBundle\ClassLoader\ApcThriftLoader;
+
 /**
  * Thrift factory
  *
@@ -13,8 +16,6 @@ class ThriftFactory
     protected $cacheDir;
     protected $services;
     protected $debug;
-
-    private $memoryDef = array();
 
     /**
      * Inject dependencies
@@ -29,52 +30,37 @@ class ThriftFactory
     }
 
     /**
-     * Return cache dir for namespace
-     * @param type $namespace
-     * @return type
+     * Initialize loader
+     * @param array $namespaces
      */
-    protected function getCacheDir($namespace)
+    public function initLoader(Array $namespaces)
     {
-        return  $this->cacheDir .
-                DIRECTORY_SEPARATOR .
-                str_replace('\\', DIRECTORY_SEPARATOR, $namespace) .
-                DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * Load Thrift cache Files
-     */
-    protected function loadFiles($service, $classe)
-    {
-        preg_match('#^(.+)\\\.+?$#', $classe, $m);
-
-        $path = $this->getCacheDir($m[1]);
-
-        if(
-            !array_key_exists($path.$service, $this->memoryDef) &&
-            file_exists($path . $this->services[$service]['definition'] . '.php')
-        )
+        if(false === $this->debug)
         {
-            require_once($path . $this->services[$service]['definition'] . '.php');
+            $loader = new ApcThriftLoader('thrift');
+        }
+        else
+        {
+            $loader = new ThriftLoader();
         }
 
-        require_once($path . 'Types.php');
-
-        //Set memory
-        $this->memoryDef[$path.$service] = 1;
+        $loader->registerNamespaces($namespaces);
+        $loader->register();
     }
 
     /**
      * Return an instance of a Thrift Model Class
+     *
+     * @note => We keep this method for compatibily reason and to be user
+     *          that auloader is correctly start
+     *
      * @param string $service
      * @param string $classe
      * @param mixed $param
      * @return Object
      */
-    public function getInstance($service, $classe, $param = null)
+    public function getInstance($classe, $param = null)
     {
-        $this->loadFiles($service, $classe);
-
         if(is_null($param))
         {
             return new $classe();
@@ -95,8 +81,6 @@ class ThriftFactory
     {
         $classe = sprintf('%s\%sProcessor', $this->services[$service]['namespace'], $this->services[$service]['definition']);
 
-        $this->loadFiles($service, $classe);
-
         return new $classe($handler);
     }
 
@@ -109,8 +93,6 @@ class ThriftFactory
     public function getClientInstance($service, $protocol)
     {
         $classe = sprintf('%s\%sClient', $this->services[$service]['namespace'], $this->services[$service]['definition']);
-
-        $this->loadFiles($service, $classe);
 
         return new $classe($protocol);
     }

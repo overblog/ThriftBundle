@@ -31,11 +31,14 @@ class OverblogThriftExtension extends Extension
         $container->setParameter('thrift.config.services', $config['services']);
         $container->setParameter('thrift.config.servers', $config['servers']);
 
-        //Register clients
+        // Register clients
         foreach($config['clients'] as $name => $client)
         {
             $this->loadClient($name, $client, $container);
         }
+
+        // Register autoloader
+        $this->registerLoader($config['services'], $container);
     }
 
     /**
@@ -44,7 +47,7 @@ class OverblogThriftExtension extends Extension
      * @param array $client
      * @param ContainerBuilder $container
      */
-    public function loadClient($name, Array $client, ContainerBuilder $container)
+    protected function loadClient($name, Array $client, ContainerBuilder $container)
     {
         $clientDef = new Definition(
             $container->getParameter('thrift.client.class')
@@ -57,5 +60,31 @@ class OverblogThriftExtension extends Extension
             sprintf('thrift.client.%s', $name),
             $clientDef
         );
+    }
+
+    /**
+     * Register Thrift AutoLoader
+     * @param array $services
+     * @param ContainerBuilder $container
+     */
+    protected function registerLoader($services, ContainerBuilder $container)
+    {
+        $namespaces = array();
+
+        foreach($services as $service)
+        {
+            preg_match('#^([^\\\]+)\\\#', $service['namespace'], $m);
+
+            if(false === array_key_exists($m[1], $namespaces))
+            {
+                $namespaces[$m[1]] = $container->getParameter('kernel.cache_dir');
+            }
+        }
+
+        if(0 < count($namespaces))
+        {
+            $container->getDefinition('thrift.factory')
+                      ->addMethodCall('initLoader', array($namespaces));
+        }
     }
 }

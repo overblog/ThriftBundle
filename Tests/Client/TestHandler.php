@@ -23,7 +23,7 @@ class TestHandler
     {
         if($id == -1)
         {
-            $e = $this->factory->getInstance('test', 'ThriftModel\Test\InvalidValueException', array(
+            $e = $this->factory->getInstance('ThriftModel\Test\InvalidValueException', array(
                 'error_code' => 100,
                 'error_msg' => 'ERROR'
             ));
@@ -31,7 +31,7 @@ class TestHandler
             throw $e;
         }
 
-        $test = $this->factory->getInstance('test', 'ThriftModel\Test\Test', array(
+        $test = $this->factory->getInstance('ThriftModel\Test\Test', array(
             'id' => $id,
             'content' => 'TEST'
         ));
@@ -54,7 +54,7 @@ class TestHandler
     {
         if(empty($test->content))
         {
-            $e = $this->factory->getInstance('test', 'ThriftModel\Test\InvalidValueException', array(
+            $e = $this->factory->getInstance('ThriftModel\Test\InvalidValueException', array(
                 'error_code' => 100,
                 'error_msg' => 'ERROR'
             ));

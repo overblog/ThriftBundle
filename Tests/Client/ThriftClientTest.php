@@ -31,6 +31,9 @@ class ThriftClientTest extends ThriftBundleTestCase
                 'namespace' => 'ThriftModel\Test'
             )
         ));
+        $this->factory->initLoader(array(
+            'ThriftModel' => __DIR__ . '/..'
+        ));
     }
 
     public function testHttpClient()
@@ -178,7 +181,7 @@ class ThriftClientTest extends ThriftBundleTestCase
             }
 
             //Create test
-            $testObject = $this->factory->getInstance('test', 'ThriftModel\Test\Test', array(
+            $testObject = $this->factory->getInstance('ThriftModel\Test\Test', array(
                 'content' => 'OK'
             ));
 

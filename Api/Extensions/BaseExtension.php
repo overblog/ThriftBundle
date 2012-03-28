@@ -72,11 +72,6 @@ abstract class BaseExtension
      */
     public function getInstance($classe, $param = null)
     {
-        return $this->factory->getInstance($this->getServiceName(), $classe, $param);
+        return $this->factory->getInstance($classe, $param);
     }
-
-    /**
-     * Return the Thrift Service Name to use
-     */
-    abstract protected function getServiceName();
 }
