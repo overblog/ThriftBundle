@@ -2,10 +2,48 @@
 
 namespace Overblog\ThriftBundle\ClassLoader;
 
-use Symfony\Component\ClassLoader\UniversalClassLoader;
+/**
+ * Unfortunately, we can't extends UniversalClassLoader because of
+ * the debug version... :-(
+ */
 
-class ThriftLoader extends UniversalClassLoader
+class ThriftLoader
 {
+    private $namespaces = array();
+
+    /**
+     * Registers an array of namespaces
+     *
+     * @param array $namespaces An array of namespaces (namespaces as keys and locations as values)
+     *
+     * @api
+     */
+    public function registerNamespaces(array $namespaces)
+    {
+        foreach ($namespaces as $namespace => $locations) {
+            $this->namespaces[$namespace] = (array) $locations;
+        }
+    }
+
+    /**
+     * Registers this instance as an autoloader.
+     *
+     * @param Boolean $prepend Whether to prepend the autoloader or not
+     *
+     * @api
+     */
+    public function register($prepend = false)
+    {
+        spl_autoload_register(array($this, 'loadClass'), true, $prepend);
+    }
+
+    /**
+     * Finds the path to the file where the class is defined.
+     *
+     * @param string $class The name of the class
+     *
+     * @return string|null The path, if found
+     */
     public function findFile($classNs)
     {
         $m = explode('\\', $classNs);
@@ -13,7 +51,7 @@ class ThriftLoader extends UniversalClassLoader
         $namespace = $m[0] . '\\' . $m[1];
         $class = end($m);
 
-        foreach ($this->getNamespaces() as $ns => $dirs)
+        foreach ($this->namespaces as $ns => $dirs)
         {
             //Don't interfere with other autoloaders
             if (0 !== strpos($classNs, $ns))
