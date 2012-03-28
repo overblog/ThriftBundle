@@ -65,6 +65,18 @@ abstract class BaseExtension
     }
 
     /**
+     * Returns a parameter from the injected container
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getParameter($name)
+    {
+        return $this->_container->getParameter($name);
+    }
+
+    /**
      * Get instance of Thrift Model classes
      * @param string $classe
      * @param mixed $param
