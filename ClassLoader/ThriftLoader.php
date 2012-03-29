@@ -48,6 +48,12 @@ class ThriftLoader
     {
         $m = explode('\\', $classNs);
 
+        // Ignore wrong call
+        if(count($m) <= 1)
+        {
+            return;
+        }
+
         $namespace = $m[0] . '\\' . $m[1];
         $class = end($m);
 
