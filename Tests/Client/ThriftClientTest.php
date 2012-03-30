@@ -25,7 +25,7 @@ class ThriftClientTest extends ThriftBundleTestCase
         parent::setUp();
         parent::compile();
 
-        $this->factory = new ThriftFactory(__DIR__ . '/..', array(
+        $this->factory = new ThriftFactory(array(
             'test' => array(
                 'definition' => 'Test',
                 'namespace' => 'ThriftModel\Test'

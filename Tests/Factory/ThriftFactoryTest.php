@@ -19,7 +19,7 @@ class ThriftFactoryTest extends ThriftBundleTestCase
 
     public function testFactory()
     {
-        $factory = new ThriftFactory(__DIR__ . '/..', array(
+        $factory = new ThriftFactory(array(
             'test' => array(
                 'definition' => 'Test',
                 'namespace' => 'ThriftModel\Test'

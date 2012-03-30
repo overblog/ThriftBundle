@@ -13,4 +13,4 @@ services:
 
   thrift.factory:
     class: %thrift.factory%
-    arguments: [%kernel.cache_dir%, %thrift.config.services%, %kernel.debug%]
+    arguments: [%thrift.config.services%, %kernel.debug%]

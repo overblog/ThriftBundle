@@ -13,7 +13,6 @@ use Overblog\ThriftBundle\ClassLoader\ApcThriftLoader;
 
 class ThriftFactory
 {
-    protected $cacheDir;
     protected $services;
     protected $debug;
 
@@ -22,9 +21,8 @@ class ThriftFactory
      * @param string $cacheDir
      * @param boolean $debug
      */
-    public function __construct($cacheDir, Array $services, $debug = false)
+    public function __construct(Array $services, $debug = false)
     {
-        $this->cacheDir = $cacheDir;
         $this->services = $services;
         $this->debug = $debug;
     }
