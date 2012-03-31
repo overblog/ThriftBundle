@@ -74,7 +74,7 @@ class ThriftLoader
                  */
                 if(0 === preg_match('#(.+)(interface|client|processor)$#i', $class, $n))
                 {
-                    $className = $class . '_types';
+                    $className = 'Types';
                 }
                 else
                 {
