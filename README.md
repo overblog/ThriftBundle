@@ -20,12 +20,12 @@ Installation and setup
         [OverblogThrift]
             git=git@github.com:ebuzzing/OverblogThrift.git
             target=/thrift
-            version=v0.8.0-0.4
+            version=origin/0.8.x
 
     #app/autoload.php
         $loader->registerNamespaces(array(
             ...
-            'Thrift'           => __DIR__.'/../vendor/thrift',
+            'Thrift'           => __DIR__.'/../vendor/apache-thrift/lib/phpsf2/src',
         ));
 
 2) Install OverblogThriftBundle
@@ -33,7 +33,7 @@ Installation and setup
         [OverblogThriftBundle]
             git=git@github.com:ebuzzing/OverblogThriftBundle.git
             target=/bundles/Overblog/ThriftBundle
-            version=v0.8.1.2
+            version=v0.8.2
 
     #app/autoload.php
         $loader->registerNamespaces(array(
