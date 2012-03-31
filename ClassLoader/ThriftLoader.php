@@ -74,7 +74,7 @@ class ThriftLoader
                  */
                 if(0 === preg_match('#(.+)(interface|client|processor)$#i', $class, $n))
                 {
-                    $className = 'Types';
+                    $className = $class . '_types';
                 }
                 else
                 {
@@ -85,8 +85,7 @@ class ThriftLoader
                         DIRECTORY_SEPARATOR .
                         str_replace('\\', DIRECTORY_SEPARATOR, $namespace) .
                         DIRECTORY_SEPARATOR .
-                        str_replace('_', DIRECTORY_SEPARATOR, $className) .
-                        '.php';
+                        $className . '.php';
 
                 if(file_exists($file))
                 {
