@@ -72,7 +72,7 @@ class ThriftLoader
                  * Client
                  * Processor
                  */
-                if(0 === preg_match('#(.+)(interface|client|processor)$#i', $class, $n))
+                if(0 === preg_match('#(.+)(if|client|processor)$#i', $class, $n))
                 {
                     $className = 'Types';
                 }
