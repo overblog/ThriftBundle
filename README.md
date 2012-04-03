@@ -79,13 +79,19 @@ You can set in the option "protocol" too
 To use server
 ----------------------
 
-1) Create your handler (Extends Overblog\ThriftBundle\Api\Extensions\BaseExtension) and register it in your bundle:
+1) Create your handler (Extends Overblog\ThriftBundle\Api\Extensions\BaseExtension
+    and Implements ThriftModel\Service\ServiceIf) and register it in your bundle:
 
     #Bundle/Ressources/config/services.yml
         services:
           thrift.handler.service:
             class: BundleName\Handler\Service
             arguments: [@service_container]
+            tags:
+              -: { name: "thrift.extension" }
+
+              # Tag thrift.extension is needed to be sure autoloaded will be
+                loaded (for interface & classes)
 
 2) Add the config server to your config.yml project:
 

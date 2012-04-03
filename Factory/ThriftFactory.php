@@ -47,6 +47,18 @@ class ThriftFactory
     }
 
     /**
+     * Init class with factory. It assumes the loader if allready loaded
+     * @param string $className
+     * @param array $args
+     * @return mixed
+     */
+    public function initExtensionInstance($className, Array $args)
+    {
+        $ext = new \ReflectionClass($className);
+        return $ext->newInstanceArgs($args);
+    }
+
+    /**
      * Return an instance of a Thrift Model Class
      *
      * @note => We keep this method for compatibily reason and to be user
