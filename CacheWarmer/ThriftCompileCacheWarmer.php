@@ -20,6 +20,11 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
     private $services;
 
     /**
+     * Cache Suffix for thrift compiled files
+     */
+    const CACHE_SUFFIX = 'thrift';
+
+    /**
      * Register dependencies
      * @param ContainerInterface $container
      * @param Array $config
@@ -80,7 +85,7 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
             );
 
             //Set Path
-            $compiler->setModelPath(sprintf('%s/ThriftModel', $this->cacheDir));
+            $compiler->setModelPath(sprintf('%s/%s', $this->cacheDir, self::CACHE_SUFFIX));
 
             // Empty old model
             $compiler->emptyModelPath($config['definition']);

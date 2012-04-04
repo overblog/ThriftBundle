@@ -89,7 +89,7 @@ class ThriftFactory
      */
     public function getProcessorInstance($service, $handler)
     {
-        $classe = sprintf('%s\%sProcessor', $this->services[$service]['namespace'], $this->services[$service]['definition']);
+        $classe = sprintf('%s\%sProcessor', $this->services[$service]['namespace'], $this->services[$service]['className']);
 
         return new $classe($handler);
     }
@@ -102,7 +102,7 @@ class ThriftFactory
      */
     public function getClientInstance($service, $protocol)
     {
-        $classe = sprintf('%s\%sClient', $this->services[$service]['namespace'], $this->services[$service]['definition']);
+        $classe = sprintf('%s\%sClient', $this->services[$service]['namespace'], $this->services[$service]['className']);
 
         return new $classe($protocol);
     }

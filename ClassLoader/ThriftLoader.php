@@ -2,6 +2,8 @@
 
 namespace Overblog\ThriftBundle\ClassLoader;
 
+use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
+
 /**
  * Unfortunately, we can't extends UniversalClassLoader because of
  * the debug version... :-(
@@ -54,8 +56,8 @@ class ThriftLoader
             return;
         }
 
-        $namespace = $m[0] . '\\' . $m[1];
-        $class = end($m);
+        $class = array_pop($m);
+        $namespace = implode('\\', $m);
 
         foreach ($this->namespaces as $ns => $dirs)
         {
@@ -82,6 +84,8 @@ class ThriftLoader
                 }
 
                 $file = $dir .
+                        DIRECTORY_SEPARATOR .
+                        ThriftCompileCacheWarmer::CACHE_SUFFIX .
                         DIRECTORY_SEPARATOR .
                         str_replace('\\', DIRECTORY_SEPARATOR, $namespace) .
                         DIRECTORY_SEPARATOR .

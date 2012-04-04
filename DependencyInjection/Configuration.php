@@ -35,6 +35,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->children()
                             ->scalarNode('definition')->isRequired()->end()
+                            ->scalarNode('className')->defaultNull()->end()
                             ->scalarNode('namespace')->isRequired()->end()
                             ->scalarNode('bundleNameIn')->defaultNull()->end()
                             ->scalarNode('definitionPath')->defaultNull()->end()
@@ -51,6 +52,15 @@ class Configuration implements ConfigurationInterface
                                 return false;
                             })
                             ->thenInvalid('bundleNameIn or definitionPath must be set')
+                            ->ifTrue(function($v){
+                                return empty($v['className']);
+                            })
+                            ->then(function($v){
+                                // If className is empty, definition is used
+                                $v['className'] = $v['definition'];
+
+                                return $v;
+                            })
                         ->end()
                     ->end()
                 ->end()
