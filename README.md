@@ -20,7 +20,6 @@ Installation and setup
         [OverblogThrift]
             git=git@github.com:ebuzzing/OverblogThrift.git
             target=/thrift
-            version=origin/0.8.x
 
     #app/autoload.php
         $loader->registerNamespaces(array(
@@ -33,7 +32,6 @@ Installation and setup
         [OverblogThriftBundle]
             git=git@github.com:ebuzzing/OverblogThriftBundle.git
             target=/bundles/Overblog/ThriftBundle
-            version=v0.8.4
 
     #app/autoload.php
         $loader->registerNamespaces(array(
