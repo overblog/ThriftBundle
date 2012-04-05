@@ -21,8 +21,6 @@ class CompilerTest extends ThriftBundleTestCase
 
         $compiler->setModelPath($this->modelPath);
 
-        $this->assertFalse($compiler->emptyModelPath('ThriftModel\Test'), 'Return false because Definition directory does not exists');
-
         // Add namespace prefix
         $compiler->setNamespacePrefix($this->namespace);
 
@@ -38,9 +36,6 @@ class CompilerTest extends ThriftBundleTestCase
                 sprintf('Generating "php:sf2,nsglobal=%s"', $this->namespace)
             )
         );
-
-        // Empty old model
-        $this->assertTrue($compiler->emptyModelPath('Overblog\ThriftBundle\Tests'));
 
         // Now compile with server
         $this->assertTrue($compiler->compile($this->definitionPath, true), 'Return no error');

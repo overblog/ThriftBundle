@@ -22,7 +22,6 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
         //Build cache
         $this->compiler = new ThriftCompiler();
         $this->compiler->setModelPath($this->modelPath);
-        $this->compiler->emptyModelPath('ThriftModel\Test');
         $this->compiler->compile($this->definitionPath, true);
     }
 

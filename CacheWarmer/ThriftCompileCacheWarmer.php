@@ -87,9 +87,6 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
             //Set Path
             $compiler->setModelPath(sprintf('%s/%s', $this->cacheDir, self::CACHE_SUFFIX));
 
-            // Empty old model
-            $compiler->emptyModelPath($config['namespace']);
-
             $compiler->compile($definitionPath, $config['server']);
         }
     }

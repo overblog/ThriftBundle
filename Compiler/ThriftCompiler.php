@@ -104,28 +104,6 @@ class ThriftCompiler
     }
 
     /**
-     * Empty model path
-     * @param string $namespace
-     * @return boolean
-     */
-    public function emptyModelPath($namespace)
-    {
-        $m = explode('\\', $namespace);
-
-        $path = $this->modelPath . '/' . $m[0];
-
-        // Check if model path exists
-        if(!is_null($path) && file_exists($path))
-        {
-            exec(sprintf('rm -rf %s/*', $path), $output, $return);
-
-            return (0 === $return) ? true : false;
-        }
-
-        return false;
-    }
-
-    /**
      * Compile server files too (processor)
      */
     protected function addServerCompile()

@@ -68,15 +68,7 @@ class CompileCommand extends ContainerAwareCommand
         //Add namespace prefix if needed
         if($input->getOption('namespace'))
         {
-            // Empty old model
-            $compiler->emptyModelPath($input->getOption('namespace'));
-
             $compiler->setNamespacePrefix($input->getOption('namespace'));
-        }
-        else
-        {
-            // Empty old model
-            $compiler->emptyModelPath($definition);
         }
 
         $return = $compiler->compile($definitionPath, $input->getOption('server'));
