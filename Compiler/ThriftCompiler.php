@@ -105,12 +105,14 @@ class ThriftCompiler
 
     /**
      * Empty model path
-     * @param string $definition
+     * @param string $namespace
      * @return boolean
      */
-    public function emptyModelPath($definition)
+    public function emptyModelPath($namespace)
     {
-        $path = $this->modelPath . '/' . $definition;
+        $m = explode('\\', $namespace);
+
+        $path = $this->modelPath . '/' . $m[0];
 
         // Check if model path exists
         if(!is_null($path) && file_exists($path))

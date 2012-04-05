@@ -22,6 +22,7 @@ class ThriftFactoryTest extends ThriftBundleTestCase
         $factory = new ThriftFactory(array(
             'test' => array(
                 'definition' => 'Test',
+                'className' => 'Test',
                 'namespace' => 'ThriftModel\Test'
             )
         ));

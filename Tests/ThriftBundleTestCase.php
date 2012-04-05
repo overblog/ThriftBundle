@@ -13,7 +13,7 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->modelPath = __DIR__ . '/ThriftModel';
+        $this->modelPath = __DIR__ . '/thrift';
         $this->definitionPath = __DIR__ . '/ThriftDefinition/Test.thrift';
     }
 
@@ -22,7 +22,7 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
         //Build cache
         $this->compiler = new ThriftCompiler();
         $this->compiler->setModelPath($this->modelPath);
-        $this->compiler->emptyModelPath('Test');
+        $this->compiler->emptyModelPath('ThriftModel\Test');
         $this->compiler->compile($this->definitionPath, true);
     }
 

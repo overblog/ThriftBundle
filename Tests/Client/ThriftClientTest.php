@@ -28,6 +28,7 @@ class ThriftClientTest extends ThriftBundleTestCase
         $this->factory = new ThriftFactory(array(
             'test' => array(
                 'definition' => 'Test',
+                'className' => 'Test',
                 'namespace' => 'ThriftModel\Test'
             )
         ));
@@ -49,6 +50,7 @@ class ThriftClientTest extends ThriftBundleTestCase
             ),
             'service_config' => array(
                 'definition' => 'Test',
+                'className' => 'Test',
                 'namespace' => 'ThriftModel\Test',
                 'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated'
             )
@@ -83,6 +85,7 @@ class ThriftClientTest extends ThriftBundleTestCase
             ),
             'service_config' => array(
                 'definition' => 'Test',
+                'className' => 'Test',
                 'namespace' => 'ThriftModel\Test',
                 'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated'
             )
@@ -239,6 +242,7 @@ class ThriftClientTest extends ThriftBundleTestCase
             ),
             'service_config' => array(
                 'definition' => 'Test',
+                'className' => 'Test',
                 'namespace' => 'ThriftModel\Test',
                 'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated'
             )

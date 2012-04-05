@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
+use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
 
 /**
  * Compile command to generate thrift model
@@ -62,15 +63,20 @@ class CompileCommand extends ContainerAwareCommand
         $bundlePath      = $bundle->getPath();
 
         //Set Path
-        $compiler->setModelPath(sprintf('%s/ThriftModel', $bundlePath));
-
-        // Empty old model
-        $compiler->emptyModelPath($definition);
+        $compiler->setModelPath(sprintf('%s/%s', $bundlePath, ThriftCompileCacheWarmer::CACHE_SUFFIX));
 
         //Add namespace prefix if needed
         if($input->getOption('namespace'))
         {
+            // Empty old model
+            $compiler->emptyModelPath($input->getOption('namespace'));
+
             $compiler->setNamespacePrefix($input->getOption('namespace'));
+        }
+        else
+        {
+            // Empty old model
+            $compiler->emptyModelPath($definition);
         }
 
         $return = $compiler->compile($definitionPath, $input->getOption('server'));
