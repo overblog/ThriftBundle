@@ -64,7 +64,7 @@ class ThriftLoader
             //Don't interfere with other autoloaders
             if (0 !== strpos($classNs, $ns))
             {
-                return;
+                continue;
             }
 
             foreach ($dirs as $dir) {
