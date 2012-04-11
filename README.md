@@ -33,7 +33,7 @@ Installation and setup
         [OverblogThriftBundle]
             git=git@github.com:ebuzzing/OverblogThriftBundle.git
             target=/bundles/Overblog/ThriftBundle
-            version=v0.8.4.2
+            version=v0.8.4.3
 
     #app/autoload.php
         $loader->registerNamespaces(array(
