@@ -14,18 +14,17 @@ Usefull links ?
 Installation and setup
 ----------------------
 
-1) Install Overblog Thrift library
+1) Install Thrift library
 
     #deps
         [OverblogThrift]
-            git=git@github.com:ebuzzing/OverblogThrift.git
+            git=git://github.com/apache/thrift.git
             target=/thrift
-            version=origin/0.8.x
 
     #app/autoload.php
         $loader->registerNamespaces(array(
             ...
-            'Thrift'           => __DIR__.'/../vendor/apache-thrift/lib/phpsf2/src',
+            'Thrift'           => __DIR__.'/../vendor/apache-thrift/lib/php/lib',
         ));
 
 2) Install OverblogThriftBundle
@@ -33,7 +32,6 @@ Installation and setup
         [OverblogThriftBundle]
             git=git@github.com:ebuzzing/OverblogThriftBundle.git
             target=/bundles/Overblog/ThriftBundle
-            version=v0.8.4.3
 
     #app/autoload.php
         $loader->registerNamespaces(array(
