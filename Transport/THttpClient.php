@@ -3,6 +3,9 @@
 namespace Overblog\ThriftBundle\Transport;
 
 use Thrift\Transport\THttpClient as Client;
+use Thrift\Transport\TTransport;
+use Thrift\Exception\TTransportException;
+use Thrift\Factory\TStringFuncFactory;
 
 /**
  * Description of THttpClient
