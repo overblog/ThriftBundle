@@ -4,7 +4,7 @@ namespace Overblog\ThriftBundle\Client;
 
 use Overblog\ThriftBundle\Client\Client;
 
-use Overblog\ThriftBundle\Transport\THttpClient;
+use Thrift\Transport\THttpClient;
 
 /**
  * HTTP Client
