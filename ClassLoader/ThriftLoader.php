@@ -42,7 +42,7 @@ class ThriftLoader
     /**
      * Finds the path to the file where the class is defined.
      *
-     * @param string $class The name of the class
+     * @param string $classNs The name of the class
      *
      * @return string|null The path, if found
      */
@@ -53,7 +53,7 @@ class ThriftLoader
         // Ignore wrong call
         if(count($m) <= 1)
         {
-            return;
+            return; //TODO : Missing return argument
         }
 
         $class = array_pop($m);
@@ -98,6 +98,7 @@ class ThriftLoader
                 }
             }
         }
+        //TODO : Missing return statement
     }
 
     /**

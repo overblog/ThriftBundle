@@ -27,7 +27,7 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
     /**
      * Register dependencies
      * @param ContainerInterface $container
-     * @param Array $config
+     * @param Array $path
      * @param Array $services
      */
     public function __construct(ContainerInterface $container, $path, Array $services)
@@ -40,8 +40,10 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
 
     /**
      * Return definition path
-     * @param string $bundleName
      * @param string $definition
+     * @param string $bundleName
+     * @param string $definitionPath
+     * @throws \Exception
      * @return string
      */
     public function getDefinitionPath($definition, $bundleName = null, $definitionPath = null)

@@ -18,7 +18,7 @@ class ThriftFactory
 
     /**
      * Inject dependencies
-     * @param string $cacheDir
+     * @param array $services
      * @param boolean $debug
      */
     public function __construct(Array $services, $debug = false)
@@ -64,7 +64,6 @@ class ThriftFactory
      * @note => We keep this method for compatibily reason and to be user
      *          that auloader is correctly start
      *
-     * @param string $service
      * @param string $classe
      * @param mixed $param
      * @return Object
@@ -97,7 +96,7 @@ class ThriftFactory
     /**
      * Return a client instance
      * @param string $service
-     * @param Thrift\Protocol\TProtocol $transport
+     * @param Thrift\Protocol\TProtocol $protocol
      * @return Object
      */
     public function getClientInstance($service, $protocol)

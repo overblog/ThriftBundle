@@ -38,7 +38,7 @@ class ClientTestCommand extends ContainerAwareCommand
             return false;
         }
 
-        // Instanciate client
+        // Instantiate client
         $thriftClient = new ThriftClient(
             $this->getContainer()->get('thrift.factory'),
             array(
@@ -91,5 +91,6 @@ class ClientTestCommand extends ContainerAwareCommand
         {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
         }
+        //TODO : Missing return statement
     }
 }

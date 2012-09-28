@@ -53,6 +53,7 @@ class ThriftCompiler
     /**
      * Set exec path
      * @param string $path
+     * @return bool
      */
     public function setExecPath($path)
     {
@@ -68,6 +69,7 @@ class ThriftCompiler
 
     /**
      * Check if Thrift exec is installed
+     * @throws \Overblog\ThriftBundle\Exception\ConfigurationException
      * @return boolean
      */
     protected function checkExec()
@@ -134,6 +136,7 @@ class ThriftCompiler
      * Compile the Thrift definition
      * @param string $definition
      * @param boolean $serverCompile
+     * @throws \Overblog\ThriftBundle\Exception\ConfigurationException
      * @return boolean
      */
     public function compile($definition, $serverCompile = false)

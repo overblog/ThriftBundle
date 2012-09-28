@@ -35,6 +35,7 @@ class ServerCommand extends ContainerAwareCommand
      * Execute server
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @return bool
      */
     protected function execute(InputInterface $input, OutputInterface $output)
 	{
@@ -60,5 +61,6 @@ class ServerCommand extends ContainerAwareCommand
         $server->getHeader();
 
         $server->run($input->getOption('host'), $input->getOption('port'));
+        //TODO : Missing return statement
     }
 }

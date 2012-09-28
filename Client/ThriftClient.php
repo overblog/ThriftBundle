@@ -42,7 +42,8 @@ class ThriftClient
 
     /**
      * Register Dependencies
-     * @param array $clients
+     * @param \Overblog\ThriftBundle\Factory\ThriftFactory $factory
+     * @param array $config
      */
     public function __construct(ThriftFactory $factory, Array $config)
     {

@@ -18,6 +18,7 @@ class ApcThriftLoader extends ThriftLoader
      *
      * @param string $prefix A prefix to create a namespace in APC
      *
+     * @throws \RuntimeException
      * @api
      */
     public function __construct($prefix)
@@ -33,10 +34,12 @@ class ApcThriftLoader extends ThriftLoader
      * Finds a file by class name while caching lookups to APC.
      *
      * @param string $class A class name to resolve to file
+     * @return mixed|null|string
      */
     public function findFile($class)
     {
-        if (false === $file = apc_fetch($this->prefix.$class)) {
+        $file = apc_fetch($this->prefix.$class);
+        if (false === $file) {
             apc_store($this->prefix.$class, $file = parent::findFile($class));
         }
 
