@@ -14,7 +14,7 @@
         "overblog/thrift": "0.8.x"
     },
     "autoload": {
-        "psr-0": {"Overblog": ""}
+        "psr-0": {"Overblog\\ThriftBundle": ""}
     },
     "minimum-stability": "dev"
 }
