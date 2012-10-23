@@ -11,7 +11,7 @@
   ],
     "require": {
         "php": ">=5.3.0",
-        "overblog/thrift": "0.8.x"
+        "ebuzzing/thrift": "0.8.x"
     },
     "autoload": {
         "psr-0": {"Overblog\\ThriftBundle": ""}
