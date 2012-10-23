@@ -60,11 +60,14 @@ class ThriftClient
         if(is_null($this->client))
         {
             $service = $this->config['service_config'];
-
             //Initialisation du client
             $socket = $this->clientFactory($this->config['service'])->getSocket();
 
-            $this->transport = new TBufferedTransport($socket, 1024, 1024);
+            if (isset($service['transport'])) {
+                $this->transport = new $service['transport']($socket);
+            } else {
+                $this->transport = new TBufferedTransport($socket, 1024, 1024);
+            }
 
             $this->client = $this->factory->getClientInstance(
                 $this->config['service'],
