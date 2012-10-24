@@ -8,8 +8,9 @@ This is a custom version of the Thrift protocol for PHP
 Usefull links ?
 ----------------------
 
-@link https://github.com/yuxel/thrift-examples
-@link http://svn.apache.org/repos/asf/thrift/trunk/
+https://github.com/yuxel/thrift-examples
+
+http://svn.apache.org/repos/asf/thrift/trunk/
 
 Installation and setup
 ----------------------
