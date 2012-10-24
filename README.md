@@ -82,7 +82,7 @@ You can now create your Service.thrift file and place it in a ThriftDefinition d
 
 For example: MyNameSpace/MyBundle/ThriftDefinition/Service.thrift
 
-We must now configure the compiler to build the right files.
+You need to configure the compiler to build the right files.
 
 ```yml
 #app/config/config.yml
