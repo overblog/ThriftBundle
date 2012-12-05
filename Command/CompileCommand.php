@@ -25,8 +25,7 @@ class CompileCommand extends ContainerAwareCommand
         $this->setName('thrift:compile')
 		  ->setDescription('Compile Thrift Model for PHP');
 
-        $this->addArgument('bundleName', InputArgument::REQUIRED, 'Bundle where the Definition is located');
-        $this->addArgument('definition', InputArgument::REQUIRED, 'Definition class name');
+        $this->addArgument('service', InputArgument::REQUIRED, 'Service name');
 
         $this->addOption('server', null, InputOption::VALUE_NONE, 'Generate server classes');
         $this->addOption('namespace', null, InputOption::VALUE_REQUIRED, 'Namespace prefix');
@@ -50,17 +49,41 @@ class CompileCommand extends ContainerAwareCommand
             $compiler->setExecPath($path);
         }
 
-        $definition = $input->getArgument('definition');
+        $service = $input->getArgument('service');
+        $configs = $this->getContainer()->getParameter('thrift.config.services');
 
-        $bundleName      = $input->getArgument('bundleName');
-        $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
-        $bundlePath      = $bundle->getPath();
+        // Get config
+        if(isset($configs[$service]))
+        {
+            $config = $configs[$service];
+        }
+        else
+        {
+            $output->writeln(sprintf('<error>Unknow service %s</error>', $service));
 
-        $definitionPath  = $bundlePath . '/ThriftDefinition/' . $definition . '.thrift';
+            return 1;
+        }
 
-        $bundleName      = ($input->getOption('bundleNameOut')) ? $input->getOption('bundleNameOut') : $input->getArgument('bundleName');
-        $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
-        $bundlePath      = $bundle->getPath();
+        // Get definition path
+        $definitionPath = $this->getContainer()
+                               ->get('thrift.compile_warmer')
+                               ->getDefinitionPath(
+                                       $config['definition'],
+                                       $config['bundleNameIn'],
+                                       $config['definitionPath']
+                                   );
+
+
+        // Get out path
+        if(($bundleName = $input->getOption('bundleNameOut')))
+        {
+            $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
+            $bundlePath      = $bundle->getPath();
+        }
+        else
+        {
+            $bundlePath = getcwd();
+        }
 
         //Set Path
         $compiler->setModelPath(sprintf('%s/%s', $bundlePath, ThriftCompileCacheWarmer::CACHE_SUFFIX));

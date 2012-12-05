@@ -33,7 +33,7 @@ class ThriftCompiler
      * Base compiler options
      * @var array
      */
-    protected $options = array('sf2' => null);
+    protected $options = array('oop' => null);
 
     /**
      * Last compiler output

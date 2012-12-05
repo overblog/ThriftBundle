@@ -7,7 +7,6 @@ services:
   thrift.compile_warmer:
     class: %thrift.compile_warmer.class%
     arguments: [@service_container, %thrift.config.compiler.path%, %thrift.config.services%]
-    public: false
     tags:
       - { name: "kernel.cache_warmer", priority: "10" }
 
