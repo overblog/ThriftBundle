@@ -61,7 +61,7 @@ class ThriftClient
         {
             $service = $this->config['service_config'];
             //Initialisation du client
-            $socket = $this->clientFactory($this->config['service'])->getSocket();
+            $socket = $this->clientFactory()->getSocket();
 
             if (isset($service['transport'])) {
                 $this->transport = new $service['transport']($socket);
@@ -107,7 +107,7 @@ class ThriftClient
      * @param string $name
      * @return Client
      */
-    protected function clientFactory($name)
+    protected function clientFactory()
     {
         $class = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->config['type'])));
 
