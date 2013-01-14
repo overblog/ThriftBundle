@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
+use Overblog\ThriftBundle\Exception\CompilerException;
 
 /**
  * Generate Thrift model in cache warmer
@@ -89,7 +90,17 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
             //Set Path
             $compiler->setModelPath(sprintf('%s/%s', $this->cacheDir, self::CACHE_SUFFIX));
 
-            $compiler->compile($definitionPath, $config['server']);
+            $compile = $compiler->compile($definitionPath, $config['server']);
+
+            // Compilation Error
+            if(false === $compile)
+            {
+                throw new \RuntimeException(
+                        sprintf('Unable to compile Thrift definition %s.', $definitionPath),
+                        0,
+                        new CompilerException(implode("\n", $compiler->getLastOutput()))
+                    );
+            }
         }
     }
 
