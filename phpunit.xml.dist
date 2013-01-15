@@ -11,7 +11,7 @@
    bootstrap="./Tests/bootstrap.php">
     <php>
         <server name="SYMFONY" value="./Fixtures/symfony/src" />
-        <server name="THRIFT" value="./Fixtures/thrift/lib/phpsf2/src" />
+        <server name="THRIFT" value="./Fixtures/thrift/lib/php/lib" />
     </php>
     <testsuites>
         <testsuite name="OverblogThriftBundle Test Suite">
