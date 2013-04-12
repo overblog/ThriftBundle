@@ -26,6 +26,11 @@ class HttpClient extends Client
 
         $socket = new THttpClient($url['host'], $host['port'], $url['path']);
 
+        if (!empty($host['httpTimeoutSecs']))
+        {
+            $socket->setTimeoutSecs($host['httpTimeoutSecs']);
+        }
+
         return $socket;
     }
 }
