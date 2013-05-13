@@ -23,6 +23,7 @@ class ClientTestCommand extends ContainerAwareCommand
         $this->addOption('host', 't', InputOption::VALUE_REQUIRED, 'Host to listen on', 'localhost');
         $this->addOption('port', 'p', InputOption::VALUE_REQUIRED, 'Port to listen on', 9090);
         $this->addOption('recvTimeout', 'r', InputOption::VALUE_OPTIONAL, 'Data receive Timeout');
+        $this->addOption('mode', 'm', InputOption::VALUE_REQUIRED, 'Server mode (socket or http)', 'socket');
 	}
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -44,7 +45,7 @@ class ClientTestCommand extends ContainerAwareCommand
             array(
                 'service_config' => $services[$service],
                 'service' => $service,
-                'type' => 'socket',
+                'type' => $input->getOption('mode'),
                 'hosts' => array(
                     $service => array(
                         'host' => $input->getOption('host'),
