@@ -101,11 +101,10 @@ Model will be automatically generated on the cache warmup (```php app/console ca
 You can set in the option "protocol" too
 
 To use server
-----------------------
+-------------
 
-### 1) Create your handler (Extends Overblog\ThriftBundle\Api\Extensions\BaseExtension
-    and Implements ThriftModel\Service\ServiceIf) and register it in your bundle:
-
+Create your handler that extends `Overblog\ThriftBundle\Api\Extensions\BaseExtension` and implements `ThriftModel\Service\ServiceIf`. 
+Then register it in your bundle:
 ```yml
 #Bundle/Ressources/config/services.yml
     services:
@@ -118,7 +117,9 @@ To use server
           # Tag thrift.extension is needed to be sure autoloaded will be
             loaded (for interface & classes)
 ```
-### 2) Add the config server to your config.yml project:
+
+Add the server config to your project's config.yml:
+
 ```yml
 #app/config/config.yml
     overblog_thrift:
@@ -130,21 +131,23 @@ To use server
 
 Note: You can set in the option "fork" too
 
-### 4) If you wan't to use Thrift over HTTP Transport, register controller
+If you wan't to use Thrift over HTTP Transport, you must add the bundle's routing to your project.
 
-    #app/config/routing.yml
-        OverblogThriftBundle:
-          resource: "@OverblogThriftBundle/Resources/config/routing.yml"
-          prefix:   /
+```yml
+#app/config/routing.yml
+    OverblogThriftBundle:
+      resource: "@OverblogThriftBundle/Resources/config/routing.yml"
+      prefix:   /
+```
 
-### 5) Or you can start the socket version with the command:
+Or you can start the socket version with the command:
 
     php app/console thrift:server *service_name*
 
 To use client
-----------------------
+-------------
 
-### 1) HTTP Client: Add the config server to your config.yml project:
+HTTP Client: Add this to your projects's config.yml :
 
 ```yml
 #app/config/config.yml
@@ -158,7 +161,7 @@ To use client
             port: 80
 ```
 
-### 2) Socket Client: Add the config server to yout config.yml project:
+Socket Client: Add this to your projects's config.yml :
 
 ```yml
 #app/config/config.yml
@@ -172,7 +175,7 @@ To use client
             port: 9090
 ```
 
-### 3) Multi Socket Client: Add the config server to yout config.yml project:
+Multi Socket Client: Add this to your projects's config.yml :
 
 ```yml
 #app/config/config.yml
@@ -189,7 +192,7 @@ To use client
             port: 9091
 ```
 
-### 4) Then you can call the client:
+Then you can call the client:
 
 ```php
 // your_controller.php
