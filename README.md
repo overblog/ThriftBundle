@@ -129,8 +129,6 @@ Add the server config to your project's config.yml:
           handler: thrift_api.processor.service
 ```
 
-Note: You can set in the option "fork" too
-
 If you wan't to use Thrift over HTTP Transport, you must add the bundle's routing to your project.
 
 ```yml
