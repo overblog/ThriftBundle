@@ -12,7 +12,6 @@
 namespace Overblog\ThriftBundle\Api\Extensions;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Overblog\ThriftBundle\Factory\ThriftFactory;
 
 /**
  * Symfony extension for Thrift Extension

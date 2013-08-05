@@ -2,13 +2,7 @@
 
 namespace Overblog\ThriftBundle\Client;
 
-use Overblog\ThriftBundle\Exception\ConfigurationException;
-
-use Thrift\Transport\TMemoryBuffer;
-use Thrift\Transport\TNullTransport;
-use Thrift\Transport\TFramedTransport;
 use Thrift\Transport\TBufferedTransport;
-
 use Overblog\ThriftBundle\Factory\ThriftFactory;
 
 /**
