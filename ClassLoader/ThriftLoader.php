@@ -53,7 +53,7 @@ class ThriftLoader
         // Ignore wrong call
         if(count($m) <= 1)
         {
-            return; //TODO : Missing return argument
+            return;
         }
 
         $class = array_pop($m);
@@ -98,7 +98,8 @@ class ThriftLoader
                 }
             }
         }
-        //TODO : Missing return statement
+
+        return;
     }
 
     /**

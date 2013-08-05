@@ -91,6 +91,7 @@ class ClientTestCommand extends ContainerAwareCommand
         {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
         }
-        //TODO : Missing return statement
+
+        return 0;
     }
 }

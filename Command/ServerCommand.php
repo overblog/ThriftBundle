@@ -61,6 +61,7 @@ class ServerCommand extends ContainerAwareCommand
         $server->getHeader();
 
         $server->run($input->getOption('host'), $input->getOption('port'));
-        //TODO : Missing return statement
+
+        return 0;
     }
 }
