@@ -72,7 +72,7 @@ class ClientTestCommand extends ContainerAwareCommand
 
             $end = (microtime(true) - $time_start);
 
-            var_dump($result);
+            $output->writeln(print_r($result, true));
             $output->writeln(sprintf('<info>Time taken for request: %s ms</info>', $end));
 
         }
