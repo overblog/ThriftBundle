@@ -3,6 +3,7 @@
     "description": "OverBlog Thrift Bundle",
     "homepage": "https://github.com/ebuzzing/OverblogThriftBundle.git",
     "type": "library",
+    "license": "MIT",
     "authors": [
         {
           "name": "OverBlog",
