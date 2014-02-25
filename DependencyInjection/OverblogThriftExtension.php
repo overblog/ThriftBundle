@@ -27,6 +27,7 @@ class OverblogThriftExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('thrift.config.disableApc', $config['disableApc']);
         $container->setParameter('thrift.config.compiler.path', $config['compiler']['path']);
         $container->setParameter('thrift.config.services', $config['services']);
         $container->setParameter('thrift.config.servers', $config['servers']);

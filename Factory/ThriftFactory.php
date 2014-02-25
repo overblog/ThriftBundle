@@ -14,17 +14,17 @@ use Overblog\ThriftBundle\ClassLoader\ApcThriftLoader;
 class ThriftFactory
 {
     protected $services;
-    protected $debug;
+    protected $disableApc;
 
     /**
      * Inject dependencies
      * @param array $services
-     * @param boolean $debug
+     * @param boolean $disableApc
      */
-    public function __construct(Array $services, $debug = false)
+    public function __construct(Array $services, $disableApc = true)
     {
         $this->services = $services;
-        $this->debug = $debug;
+        $this->disableApc = $disableApc;
     }
 
     /**
@@ -33,7 +33,7 @@ class ThriftFactory
      */
     public function initLoader(Array $namespaces)
     {
-        if(false === $this->debug)
+        if(false === $this->disableApc)
         {
             $loader = new ApcThriftLoader('thrift');
         }
