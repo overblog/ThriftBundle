@@ -12,4 +12,4 @@ services:
 
   thrift.factory:
     class: %thrift.factory%
-    arguments: [%thrift.config.services%, %kernel.debug%]
+    arguments: [%thrift.config.services%, %thrift.config.disableApc%]
