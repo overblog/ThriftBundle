@@ -1,5 +1,6 @@
 parameters:
   thrift.client.class: Overblog\ThriftBundle\Client\ThriftClient
+  thrift.client.test.class: Overblog\ThriftBundle\Client\ThriftTestClient
   thrift.compile_warmer.class: Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer
   thrift.factory: Overblog\ThriftBundle\Factory\ThriftFactory
 

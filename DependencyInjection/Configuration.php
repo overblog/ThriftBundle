@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('disableApc')->defaultTrue()->end()
+                ->scalarNode('testMode')->defaultFalse()->end()
                 ->arrayNode('compiler')
                     ->addDefaultsIfNotSet()
                     ->children()
