@@ -35,7 +35,7 @@ class OverblogThriftExtension extends Extension
         // Register clients
         foreach($config['clients'] as $name => $client)
         {
-            $this->loadClient($name, $client, $container);
+            $this->loadClient($name, $client, $container, $config['testMode']);
         }
 
         // Register autoloader
@@ -47,11 +47,14 @@ class OverblogThriftExtension extends Extension
      * @param string $name
      * @param array $client
      * @param ContainerBuilder $container
+     * @param boolean $testMode
      */
-    protected function loadClient($name, Array $client, ContainerBuilder $container)
+    protected function loadClient($name, Array $client, ContainerBuilder $container, $testMode = false)
     {
         $clientDef = new Definition(
-            $container->getParameter('thrift.client.class')
+            $container->getParameter(
+                $testMode ? 'thrift.client.test.class' : 'thrift.client.class'
+            )
         );
 
         $clientDef->addArgument(new Reference('thrift.factory'));
