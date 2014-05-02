@@ -1,7 +1,7 @@
 {
     "name": "overblog/thrift-bundle",
     "description": "OverBlog Thrift Bundle",
-    "homepage": "https://github.com/ebuzzing/OverblogThriftBundle.git",
+    "homepage": "https://github.com/overblog/ThriftBundle.git",
     "type": "library",
     "license": "MIT",
     "authors": [
