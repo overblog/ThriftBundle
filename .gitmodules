@@ -3,4 +3,4 @@
 	url = git://github.com/symfony/symfony.git
 [submodule "Fixtures/thrift"]
 	path = Fixtures/thrift
-	url = git@github.com:ebuzzing/thrift.git
+	url = git@github.com:apache/thrift.git
