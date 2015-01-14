@@ -2,8 +2,7 @@
 
 namespace Overblog\ThriftBundle\CacheWarmer;
 
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\ClassLoader\ClassMapGenerator;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 use Overblog\ThriftBundle\Exception\CompilerException;
@@ -13,9 +12,9 @@ use Overblog\ThriftBundle\Exception\CompilerException;
  * @author Xavier HAUSHERR
  */
 
-class ThriftCompileCacheWarmer implements CacheWarmerInterface
+class ThriftCompileCacheWarmer
 {
-    private $container;
+    private $rootDir;
     private $cacheDir;
     private $path;
     private $services;
@@ -27,14 +26,15 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
 
     /**
      * Register dependencies
-     * @param ContainerInterface $container
+     * @param string $cacheDir
+     * @param string $rootDir
      * @param Array $path
      * @param Array $services
      */
-    public function __construct(ContainerInterface $container, $path, Array $services)
+    public function __construct($cacheDir, $rootDir, $path, Array $services)
     {
-        $this->container = $container;
-        $this->cacheDir = $this->container->get('kernel')->getCacheDir();
+        $this->cacheDir = $cacheDir;
+        $this->rootDir = $rootDir;
         $this->path = $path;
         $this->services = $services;
     }
@@ -42,53 +42,38 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
     /**
      * Return definition path
      * @param string $definition
-     * @param string $bundleName
      * @param string $definitionPath
      * @throws \Exception
      * @return string
      */
-    public function getDefinitionPath($definition, $bundleName = null, $definitionPath = null)
+    public function getDefinitionPath($definition, $definitionPath)
     {
-        if(empty($definitionPath) && empty($bundleName))
-        {
-            throw new \Exception('bundleNameIn or definitionPath must be set');
-        }
-
-        if(empty($bundleName))
-        {
-            $path = $this->container->get('kernel')->getRootDir() . '/../' . $definitionPath . '/';
-        }
-        else
-        {
-            $bundle = $this->container->get('kernel')->getBundle($bundleName);
-            $bundlePath      = $bundle->getPath();
-
-            $path = $bundlePath . '/ThriftDefinition/';
-        }
-
-        return $path . $definition . '.thrift';
+        return sprintf('%s/../%s/%s.thrift',
+                $this->rootDir,
+                $definitionPath,
+                $definition
+            );
     }
 
     /**
-     * Generate model
-     * @param string $cacheDir
+     * Compile Thrift Model
      */
-    public function warmUp($cacheDir)
+    public function compile()
     {
         $compiler = new ThriftCompiler();
         $compiler->setExecPath($this->path);
+        $cacheDir = sprintf('%s/%s', $this->cacheDir, self::CACHE_SUFFIX);
 
         // We compile for every Service
         foreach($this->services as $config)
         {
             $definitionPath  = $this->getDefinitionPath(
                 $config['definition'],
-                $config['bundleNameIn'],
                 $config['definitionPath']
             );
 
             //Set Path
-            $compiler->setModelPath(sprintf('%s/%s', $this->cacheDir, self::CACHE_SUFFIX));
+            $compiler->setModelPath($cacheDir);
 
             $compile = $compiler->compile($definitionPath, $config['server']);
 
@@ -102,14 +87,8 @@ class ThriftCompileCacheWarmer implements CacheWarmerInterface
                     );
             }
         }
-    }
 
-    /**
-     * This warm is not an option
-     * @return boolean
-     */
-    public function isOptional()
-    {
-        return false;
+        // Generate ClassMap
+        ClassMapGenerator::dump($cacheDir, sprintf('%s/classes.map', $cacheDir));
     }
 }

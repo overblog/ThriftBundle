@@ -2,15 +2,22 @@ parameters:
   thrift.client.class: Overblog\ThriftBundle\Client\ThriftClient
   thrift.client.test.class: Overblog\ThriftBundle\Client\ThriftTestClient
   thrift.compile_warmer.class: Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer
-  thrift.factory: Overblog\ThriftBundle\Factory\ThriftFactory
+  thrift.factory.class: Overblog\ThriftBundle\Factory\ThriftFactory
+  thrift.classloader.listener.class: Overblog\ThriftBundle\Listener\ClassLoaderListener
 
 services:
   thrift.compile_warmer:
     class: %thrift.compile_warmer.class%
-    arguments: [@service_container, %thrift.config.compiler.path%, %thrift.config.services%]
-    tags:
-      - { name: "kernel.cache_warmer", priority: "10" }
+    arguments: [%kernel.cache_dir%, %kernel.root_dir%, %thrift.config.compiler.path%, %thrift.config.services%]
 
   thrift.factory:
-    class: %thrift.factory%
-    arguments: [%thrift.config.services%, %thrift.config.disableApc%]
+    class: %thrift.factory.class%
+    arguments: [%thrift.config.services%]
+
+  thrift.classloader.listener:
+    arguments: [%kernel.cache_dir%]
+    class: %thrift.classloader.listener.class%
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
+      - { name: kernel.event_listener, event: console.command, method: onConsoleCommand, priority: 255 }
+

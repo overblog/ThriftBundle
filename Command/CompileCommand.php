@@ -69,7 +69,6 @@ class CompileCommand extends ContainerAwareCommand
                                ->get('thrift.compile_warmer')
                                ->getDefinitionPath(
                                        $config['definition'],
-                                       $config['bundleNameIn'],
                                        $config['definitionPath']
                                    );
 

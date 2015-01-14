@@ -90,7 +90,7 @@ You need to configure the compiler to build the right files.
       *service_name*:
         definition: Service
         namespace: ThriftModel\Service
-        bundleNameIn: MyBundle # Replace with your own bundle name
+        definitionPath: /PATH/ # Path of the definition
         server: true    # Define if server class will be generated
 ```
 
@@ -103,7 +103,7 @@ You can set in the option "protocol" too
 To use server
 -------------
 
-Create your handler that extends `Overblog\ThriftBundle\Api\Extensions\BaseExtension` and implements `ThriftModel\Service\ServiceIf`. 
+Create your handler that extends `Overblog\ThriftBundle\Api\Extensions\BaseExtension` and implements `ThriftModel\Service\ServiceIf`.
 Then register it in your bundle:
 ```yml
 #Bundle/Ressources/config/services.yml

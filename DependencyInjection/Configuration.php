@@ -22,7 +22,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('disableApc')->defaultTrue()->end()
                 ->scalarNode('testMode')->defaultFalse()->end()
                 ->arrayNode('compiler')
                     ->addDefaultsIfNotSet()
@@ -38,22 +37,12 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('definition')->isRequired()->end()
                             ->scalarNode('className')->defaultNull()->end()
                             ->scalarNode('namespace')->isRequired()->end()
-                            ->scalarNode('bundleNameIn')->defaultNull()->end()
-                            ->scalarNode('definitionPath')->defaultNull()->end()
+                            ->scalarNode('definitionPath')->isRequired()->end()
                             ->scalarNode('protocol')->defaultValue('Thrift\Protocol\TBinaryProtocolAccelerated')->end()
                             ->scalarNode('transport')->defaultValue('Thrift\Transport\TBufferedTransport')->end()
                             ->booleanNode('server')->defaultFalse()->end()
                         ->end()
                         ->validate()
-                            ->ifTrue( function($v) {
-                                if(empty($v['bundleNameIn']) && empty($v['definitionPath']))
-                                {
-                                    return true;
-                                }
-
-                                return false;
-                            })
-                            ->thenInvalid('bundleNameIn or definitionPath must be set')
                             ->ifTrue(function($v){
                                 return empty($v['className']);
                             })
