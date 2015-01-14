@@ -22,12 +22,9 @@ class ThriftFactoryTest extends ThriftBundleTestCase
         $factory = new ThriftFactory(array(
             'test' => array(
                 'definition' => 'Test',
-                'className' => 'Test',
+                'className' => 'TestService',
                 'namespace' => 'ThriftModel\Test'
             )
-        ));
-        $factory->initLoader(array(
-            'ThriftModel' => __DIR__ . '/..'
         ));
 
         $this->assertInstanceOf(
@@ -51,12 +48,12 @@ class ThriftFactoryTest extends ThriftBundleTestCase
         );
 
         $this->assertInstanceOf(
-            'ThriftModel\Test\TestProcessor',
+            'ThriftModel\Test\TestServiceProcessor',
             $factory->getProcessorInstance('test', null)
         );
 
         $this->assertInstanceOf(
-            'ThriftModel\Test\TestClient',
+            'ThriftModel\Test\TestServiceClient',
             $factory->getClientInstance('test', null)
         );
     }

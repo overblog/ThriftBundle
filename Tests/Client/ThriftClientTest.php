@@ -28,12 +28,9 @@ class ThriftClientTest extends ThriftBundleTestCase
         $this->factory = new ThriftFactory(array(
             'test' => array(
                 'definition' => 'Test',
-                'className' => 'Test',
+                'className' => 'TestService',
                 'namespace' => 'ThriftModel\Test'
             )
-        ));
-        $this->factory->initLoader(array(
-            'ThriftModel' => __DIR__ . '/..'
         ));
     }
 
@@ -50,13 +47,13 @@ class ThriftClientTest extends ThriftBundleTestCase
             ),
             'service_config' => array(
                 'definition' => 'Test',
-                'className' => 'Test',
+                'className' => 'TestService',
                 'namespace' => 'ThriftModel\Test',
                 'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated'
             )
         ));
 
-        $this->assertInstanceOf('ThriftModel\Test\TestClient', $thriftClient->getClient());
+        $this->assertInstanceOf('ThriftModel\Test\TestServiceClient', $thriftClient->getClient());
 
         $this->assertInstanceOf(
             'ThriftModel\Test\Test',
@@ -101,7 +98,7 @@ class ThriftClientTest extends ThriftBundleTestCase
 			'TSocket: Could not connect to localhost:9090 (Connexion refusée [111])'
 		);
 
-        $this->assertInstanceOf('ThriftModel\Test\TestClient', $thriftClient->getClient());
+        $this->assertInstanceOf('ThriftModel\Test\TestServiceClient', $thriftClient->getClient());
     }
 
     public function testSocketClient()
@@ -118,7 +115,7 @@ class ThriftClientTest extends ThriftBundleTestCase
         $processor = $this->factory->getProcessorInstance('test', $handler);
 
         $this->assertInstanceOf(
-            'ThriftModel\Test\TestProcessor',
+            'ThriftModel\Test\TestServiceProcessor',
             $processor
         );
 
@@ -143,7 +140,7 @@ class ThriftClientTest extends ThriftBundleTestCase
             sleep(2);
 
             $client = $thriftClient->getClient();
-            $this->assertInstanceOf('ThriftModel\Test\TestClient', $client);
+            $this->assertInstanceOf('ThriftModel\Test\TestServiceClient', $client);
 
             // Void Method
             $this->assertNull($client->ping());
@@ -242,7 +239,7 @@ class ThriftClientTest extends ThriftBundleTestCase
             ),
             'service_config' => array(
                 'definition' => 'Test',
-                'className' => 'Test',
+                'className' => 'TestService',
                 'namespace' => 'ThriftModel\Test',
                 'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated'
             )

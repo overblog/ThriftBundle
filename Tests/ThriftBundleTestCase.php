@@ -3,6 +3,8 @@
 namespace Overblog\ThriftBundle\Tests;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
+use Symfony\Component\ClassLoader\MapClassLoader;
+use Symfony\Component\ClassLoader\ClassMapGenerator;
 
 class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -23,6 +25,10 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
         $this->compiler = new ThriftCompiler();
         $this->compiler->setModelPath($this->modelPath);
         $this->compiler->compile($this->definitionPath, true);
+
+        // Init Loader
+        $l = new MapClassLoader(ClassMapGenerator::createMap($this->modelPath));
+        $l->register();
     }
 
     protected function tearDown()
