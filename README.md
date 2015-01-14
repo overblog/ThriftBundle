@@ -111,11 +111,6 @@ Then register it in your bundle:
       thrift.handler.service:
         class: BundleName\Handler\Service
         arguments: [@service_container]
-        tags:
-          -: { name: "thrift.extension" }
-
-          # Tag thrift.extension is needed to be sure autoloaded will be
-            loaded (for interface & classes)
 ```
 
 Add the server config to your project's config.yml:
