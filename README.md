@@ -13,7 +13,8 @@ https://github.com/yuxel/thrift-examples
 http://svn.apache.org/repos/asf/thrift/trunk/
 
 Getting the bundle
-------------------`
+------------------
+
 ### The Composer way
 
 Update your composer json with this new dependency into the "require" section.
