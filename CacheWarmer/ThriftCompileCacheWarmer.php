@@ -2,6 +2,7 @@
 
 namespace Overblog\ThriftBundle\CacheWarmer;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
@@ -86,6 +87,14 @@ class ThriftCompileCacheWarmer
                         new CompilerException(implode("\n", $compiler->getLastOutput()))
                     );
             }
+        }
+
+        // Check if thrift cache directory exists
+        $fs = new Filesystem();
+
+        if(!$fs->exists($cacheDir))
+        {
+            $fs->mkdir($cacheDir);
         }
 
         // Generate ClassMap
