@@ -13,39 +13,8 @@ https://github.com/yuxel/thrift-examples
 http://svn.apache.org/repos/asf/thrift/trunk/
 
 Getting the bundle
-------------------
-### The Symfony 2.0.X way
-
-Install the Thrift library
-```
-# deps
-[OverblogThrift]
-    git=git://github.com/apache/thrift.git
-    target=/thrift
-```
-``` php
-// app/autoload.php
-$loader->registerNamespaces(array(
-    ...
-    'Thrift'           => __DIR__.'/../vendor/apache-thrift/lib/php/lib',
-));
-```
-
-Install OverblogThriftBundle
-```
-# deps
-[OverblogThriftBundle]
-    git=git@github.com:ebuzzing/OverblogThriftBundle.git
-    target=/bundles/Overblog/ThriftBundle
-```
-```php
-// app/autoload.php
-$loader->registerNamespaces(array(
-    ...
-    'Overblog'         => __DIR__.'/../vendor/bundles',
-));
-```
-### The Symfony 2.1.X way
+------------------`
+### The Composer way
 
 Update your composer json with this new dependency into the "require" section.
 ```json
