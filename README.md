@@ -23,7 +23,7 @@ Update your composer json with this new dependency into the "require" section.
     "php": ">=5.3.3",
     "symfony/symfony": "2.1.*",
     ...
-    "overblog/thrift-bundle": "dev-master" // insert this line
+    "overblog/thrift-bundle": "*" // insert this line
 }
 ```
 
