@@ -86,6 +86,7 @@ You need to configure the compiler to build the right files.
 
 ```yml
 #app/config/config.yml
+  overblog_thrift:
     services:
       *service_name*:
         definition: Service
@@ -144,6 +145,7 @@ HTTP Client: Add this to your projects's config.yml :
 
 ```yml
 #app/config/config.yml
+  overblog_thrift:
     clients:
       *client_name*:
         service: *service_name*:
@@ -158,6 +160,7 @@ Socket Client: Add this to your projects's config.yml :
 
 ```yml
 #app/config/config.yml
+  overblog_thrift:
     clients:
       *client_name*:
         service: *service_name*:
@@ -172,6 +175,7 @@ Multi Socket Client: Add this to your projects's config.yml :
 
 ```yml
 #app/config/config.yml
+  overblog_thrift:
     clients:
       *client_name*:
         service: *service_name*:
