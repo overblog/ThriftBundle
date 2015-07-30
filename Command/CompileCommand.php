@@ -28,6 +28,7 @@ class CompileCommand extends ContainerAwareCommand
         $this->addArgument('service', InputArgument::REQUIRED, 'Service name');
 
         $this->addOption('server', null, InputOption::VALUE_NONE, 'Generate server classes');
+        $this->addOption('validate', null, InputOption::VALUE_NONE, 'Generate PHP validator methods');
         $this->addOption('namespace', null, InputOption::VALUE_REQUIRED, 'Namespace prefix');
         $this->addOption('path', null, InputOption::VALUE_REQUIRED, 'Thrift exec path');
 
