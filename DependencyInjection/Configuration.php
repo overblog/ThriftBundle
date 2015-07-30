@@ -41,6 +41,10 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('protocol')->defaultValue('Thrift\Protocol\TBinaryProtocolAccelerated')->end()
                             ->scalarNode('transport')->defaultValue('Thrift\Transport\TBufferedTransport')->end()
                             ->booleanNode('server')->defaultFalse()->end()
+                            ->arrayNode('includeDirs')
+                                ->prototype('scalar')
+                                ->end()
+                            ->end()
                         ->end()
                         ->validate()
                             ->ifTrue(function($v){

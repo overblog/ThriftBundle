@@ -76,6 +76,9 @@ class ThriftCompileCacheWarmer
             //Set Path
             $compiler->setModelPath($cacheDir);
 
+            //Set include dirs
+            $compiler->setIncludeDirs($config['includeDirs']);
+
             $compile = $compiler->compile($definitionPath, $config['server']);
 
             // Compilation Error

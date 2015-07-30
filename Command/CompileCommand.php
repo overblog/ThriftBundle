@@ -33,6 +33,8 @@ class CompileCommand extends ContainerAwareCommand
 
         $this->addOption('bundleNameOut', null, InputOption::VALUE_OPTIONAL,
                 'Bundle where the Model will be located (default is the same than the definitions');
+        $this->addOption('includeDir', 'I', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Add a directory to the list of directories searched for include directives');
 	}
 
     /**
@@ -86,6 +88,12 @@ class CompileCommand extends ContainerAwareCommand
 
         //Set Path
         $compiler->setModelPath(sprintf('%s/%s', $bundlePath, ThriftCompileCacheWarmer::CACHE_SUFFIX));
+
+        //Set include dirs
+        if (($includeDirs = $input->getOption('includeDir'))) {
+            $compiler->setIncludeDirs($includeDirs);
+        }
+
 
         //Add namespace prefix if needed
         if($input->getOption('namespace'))

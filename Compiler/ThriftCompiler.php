@@ -30,6 +30,12 @@ class ThriftCompiler
     protected $modelPath;
 
     /**
+     * Included dirs
+     * @var string[]
+     */
+    protected $includeDirs = array();
+
+    /**
      * Base compiler options
      * @var array
      */
@@ -97,6 +103,15 @@ class ThriftCompiler
     }
 
     /**
+     * Add a directory to the list of directories searched for include directives
+     * @param string[] $includeDirs
+     */
+    public function setIncludeDirs($includeDirs)
+    {
+        $this->includeDirs = (array)$includeDirs;
+    }
+
+    /**
      * Set namespace prefix
      * @param string $namespace
      */
@@ -152,15 +167,25 @@ class ThriftCompiler
             $this->addServerCompile();
         }
 
+        // prepare includeDirs
+        $includeDirs = '';
+        foreach ($this->includeDirs as $includeDir) {
+            $includeDirs .= ' -I '. $includeDir;
+        }
+
         //Reset output
         $this->lastOutput = null;
 
-        exec(sprintf('%s -r -v --gen php:%s --out %s %s 2>&1',
+        $cmd = sprintf(
+            '%s -r -v --gen php:%s --out %s %s %s 2>&1',
             $this->getExecPath(),
             $this->compileOptions(),
             $this->modelPath,
+            $includeDirs,
             $definition
-        ), $this->lastOutput, $return);
+        );
+
+        exec($cmd, $this->lastOutput, $return);
 
         return (0 === $return) ? true : false;
     }
