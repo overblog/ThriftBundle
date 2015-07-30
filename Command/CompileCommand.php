@@ -102,6 +102,10 @@ class CompileCommand extends ContainerAwareCommand
             $compiler->setNamespacePrefix($input->getOption('namespace'));
         }
 
+        if ($input->getOption('validate')) {
+            $compiler->addValidate();
+        }
+
         $return = $compiler->compile($definitionPath, $input->getOption('server'));
 
         //Error
