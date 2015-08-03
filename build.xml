@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="OverblogThriftBundle" basedir="." default="prepare">
+	<property name="ws" value="." />
 	<property name="builddir" value="${ws}/build" />
 
 	<target name="clean">
