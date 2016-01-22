@@ -64,6 +64,18 @@ abstract class BaseExtension
     }
 
     /**
+     * Set a service to the injected container
+     *
+     * @param string $id,       The service id
+     * @param mixed $service,   The service
+     */
+
+    public function set($id, $service)
+    {
+        $this->_container->set($id, $service);
+    }
+
+    /**
      * Returns a parameter from the injected container
      *
      * @param string $name
