@@ -62,8 +62,8 @@ class ThriftClientTest extends ThriftBundleTestCase
 
         // Server doesn't exists so it return an exception
         $this->setExpectedException('Thrift\Exception\TTransportException',
-			'THttpClient: Could not connect to localhost/thrift'
-		);
+            'THttpClient: Could not connect to localhost/thrift'
+        );
 
         $thriftClient->getClient()->ping();
     }
@@ -95,8 +95,8 @@ class ThriftClientTest extends ThriftBundleTestCase
 
         // Server doesn't exists
         $this->setExpectedException('Thrift\Exception\TException',
-			'TSocket: Could not connect to localhost:9090 (Connexion refusée [111])'
-		);
+            'TSocket: Could not connect to localhost:9090 (Connection refused [111])'
+        );
 
         $this->assertInstanceOf('ThriftModel\Test\TestServiceClient', $thriftClient->getClient());
     }
@@ -217,7 +217,7 @@ class ThriftClientTest extends ThriftBundleTestCase
     }
 
 
-    protected function onNotSuccessfulTest(\Exception $e)
+    protected function onNotSuccessfulTest($e)
     {
         parent::onNotSuccessfulTest($e);
     }
