@@ -36,7 +36,7 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
         exec(sprintf('rm -rf %s 2>&1 > /dev/null', $this->modelPath));
     }
 
-    protected function onNotSuccessfulTest(\Exception $e)
+    protected function onNotSuccessfulTest($e)
     {
         exec(sprintf('rm -rf %s 2>&1 > /dev/null', $this->modelPath));
 

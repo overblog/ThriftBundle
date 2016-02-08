@@ -1,5 +1,4 @@
 thrift_server:
-    pattern:  /{extensionName}
+    path:  /{extensionName}
     defaults: { _controller: OverblogThriftBundle:Thrift:server }
-    requirements:
-        _method: POST
+    methods: [POST]

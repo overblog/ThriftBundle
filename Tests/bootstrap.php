@@ -1,12 +1,12 @@
 <?php
 
-require_once $_SERVER['SYMFONY'].'/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+require_once $_SERVER['SYMFONY'].'/Symfony/Component/ClassLoader/ClassLoader.php';
 
-use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\ClassLoader\ClassLoader;
 
-$loader = new UniversalClassLoader();
-$loader->registerNamespace('Symfony', $_SERVER['SYMFONY']);
-$loader->registerNamespace('Thrift', $_SERVER['THRIFT']);
+$loader = new ClassLoader();
+$loader->addPrefix('Symfony', $_SERVER['SYMFONY']);
+$loader->addPrefix('Thrift', $_SERVER['THRIFT']);
 $loader->register();
 
 spl_autoload_register(function($class)
