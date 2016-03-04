@@ -121,6 +121,14 @@ class ThriftCompiler
     }
 
     /**
+     * Generate PHP validator methods
+     */
+    public function addValidate()
+    {
+        $this->options['validate'] = null;
+    }
+
+    /**
      * Compile server files too (processor)
      */
     protected function addServerCompile()

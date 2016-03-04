@@ -79,6 +79,11 @@ class ThriftCompileCacheWarmer
             //Set include dirs
             $compiler->setIncludeDirs($config['includeDirs']);
 
+            //Add validate
+            if ($config['validate']) {
+                $compiler->addValidate();
+            }
+
             $compile = $compiler->compile($definitionPath, $config['server']);
 
             // Compilation Error
