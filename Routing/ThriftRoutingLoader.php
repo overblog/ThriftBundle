@@ -30,7 +30,7 @@ class ThriftRoutingLoader extends Loader
         foreach ($this->services as $path => $service) {
             $route = new Route(
                 '/'.$path,
-                array('_controller' => 'ThriftBundle:Thrift:server'),
+                array('_controller' => 'ThriftBundle:Thrift:server', 'extensionName' => $path),
                 array(),
                 array(),
                 null,
