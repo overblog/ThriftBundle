@@ -1,1 +1,4 @@
 /Thrift/ext/thrift_protocol/.libs/
+/vendor
+composer.phar
+composer.lock
