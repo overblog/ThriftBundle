@@ -20,5 +20,8 @@
         "exclude-from-classmap": [
             "/Tests/"
         ]
+    },
+    "require-dev": {
+        "phing/phing": "2.*"
     }
 }

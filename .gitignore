@@ -1,4 +1,7 @@
 /Thrift/ext/thrift_protocol/.libs/
 /vendor
+/build
+/Tests/thrift
 composer.phar
 composer.lock
+.gitignore
