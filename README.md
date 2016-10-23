@@ -1,5 +1,7 @@
 # OverBlog Thrift Bundle #
 
+[![Build Status](https://travis-ci.org/overblog/ThriftBundle.svg?branch=master)](https://travis-ci.org/overblog/ThriftBundle)
+
 What is this repository ?
 ----------------------
 

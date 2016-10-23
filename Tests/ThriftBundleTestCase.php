@@ -24,7 +24,9 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
         //Build cache
         $this->compiler = new ThriftCompiler();
         $this->compiler->setModelPath($this->modelPath);
-        $this->compiler->compile($this->definitionPath, true);
+        if (!$this->compiler->compile($this->definitionPath, true)) {
+            throw new \RuntimeException(sprintf('Compile failed: "%s".', json_encode($this->compiler->getLastOutput())));
+        }
 
         // Init Loader
         $l = new MapClassLoader(ClassMapGenerator::createMap($this->modelPath));

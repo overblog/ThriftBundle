@@ -19,7 +19,7 @@
             <directory>./</directory>
             <exclude>
                 <directory>./Tests</directory>
-                <directory>./Fixtures</directory>
+                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

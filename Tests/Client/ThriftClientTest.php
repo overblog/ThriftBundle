@@ -216,12 +216,6 @@ class ThriftClientTest extends ThriftBundleTestCase
         }
     }
 
-
-    protected function onNotSuccessfulTest($e)
-    {
-        parent::onNotSuccessfulTest($e);
-    }
-
     public function testMultiSocketClient()
     {
         $thriftClient = new ThriftClient($this->factory, array(
