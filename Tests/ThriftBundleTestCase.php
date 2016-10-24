@@ -14,6 +14,7 @@ namespace Overblog\ThriftBundle\Tests;
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 use Symfony\Component\ClassLoader\MapClassLoader;
+use Symfony\Component\Process\Process;
 
 class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -34,7 +35,7 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
         $this->compiler = new ThriftCompiler();
         $this->compiler->setModelPath($this->modelPath);
         if (!$this->compiler->compile($this->definitionPath, true)) {
-            throw new \RuntimeException(sprintf('Compile failed: "%s".', json_encode($this->compiler->getLastOutput())));
+            throw new \RuntimeException(sprintf('Compile failed: "%s".', $this->compiler->getLastCompileProcess()->getErrorOutput()));
         }
 
         // Init Loader
@@ -44,13 +45,20 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        exec(sprintf('rm -rf %s 2>&1 > /dev/null', $this->modelPath));
+        $this->removeModelPath();
     }
 
     protected function onNotSuccessfulTest($e)
     {
-        exec(sprintf('rm -rf %s 2>&1 > /dev/null', $this->modelPath));
+        $this->removeModelPath();
 
         parent::onNotSuccessfulTest($e);
+    }
+
+    protected function removeModelPath()
+    {
+        $process = new Process(sprintf('rm -rf %s 2>&1 > /dev/null', $this->modelPath));
+        $process->setTimeout(null);
+        $process->run();
     }
 }

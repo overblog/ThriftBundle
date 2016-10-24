@@ -38,26 +38,24 @@ class CompilerTest extends ThriftBundleTestCase
         $this->assertTrue($compiler->compile($this->definitionPath), 'Return no error');
 
         // Check if the return is correct
-        $this->assertEquals($compiler->getLastOutput(),
-            [
-                sprintf('Scanning %s for includes', realpath($this->definitionPath)),
-                sprintf('Parsing %s for types', realpath($this->definitionPath)),
-                sprintf('Program: %s', realpath($this->definitionPath)),
-                sprintf('Generating "php:oop,nsglobal=%s"', $this->namespace),
-            ]
+        $this->assertEquals(
+            $compiler->getLastOutput(),
+            sprintf('Scanning %s for includes', realpath($this->definitionPath))."\n".
+            sprintf('Parsing %s for types', realpath($this->definitionPath))."\n".
+            sprintf('Program: %s', realpath($this->definitionPath))."\n".
+            sprintf('Generating "php:oop,nsglobal=%s"', $this->namespace)."\n"
         );
 
         // Now compile with server
         $this->assertTrue($compiler->compile($this->definitionPath, true), 'Return no error');
 
         // Check if the return is correct
-        $this->assertEquals($compiler->getLastOutput(),
-            [
-                sprintf('Scanning %s for includes', realpath($this->definitionPath)),
-                sprintf('Parsing %s for types', realpath($this->definitionPath)),
-                sprintf('Program: %s', realpath($this->definitionPath)),
-                sprintf('Generating "php:oop,nsglobal=%s,server"', $this->namespace),
-            ]
+        $this->assertEquals(
+            $compiler->getLastOutput(),
+            sprintf('Scanning %s for includes', realpath($this->definitionPath))."\n".
+            sprintf('Parsing %s for types', realpath($this->definitionPath))."\n".
+            sprintf('Program: %s', realpath($this->definitionPath))."\n".
+            sprintf('Generating "php:oop,nsglobal=%s,server"', $this->namespace)."\n"
         );
 
         // Unknow definition

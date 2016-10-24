@@ -12,6 +12,7 @@
 namespace Overblog\ThriftBundle\Compiler;
 
 use Overblog\ThriftBundle\Exception\ConfigurationException;
+use Symfony\Component\Process\Process;
 
 /**
  * Thrift compiler.
@@ -56,11 +57,9 @@ class ThriftCompiler
     protected $options = ['oop' => null];
 
     /**
-     * Last compiler output.
-     *
-     * @var string
+     * @var Process
      */
-    protected $lastOutput;
+    private $lastCompileProcess;
 
     /**
      * Return Thrift path.
@@ -69,7 +68,7 @@ class ThriftCompiler
      */
     protected function getExecPath()
     {
-        return $this->thriftPath.$this->thriftExec;
+        return $this->thriftPath . $this->thriftExec;
     }
 
     /**
@@ -127,7 +126,7 @@ class ThriftCompiler
      */
     public function setIncludeDirs($includeDirs)
     {
-        $this->includeDirs = (array) $includeDirs;
+        $this->includeDirs = (array)$includeDirs;
     }
 
     /**
@@ -168,7 +167,7 @@ class ThriftCompiler
         $return = [];
 
         foreach ($this->options as $option => $value) {
-            $return[] = $option.(!empty($value) ? '='.$value : '');
+            $return[] = $option . (!empty($value) ? '=' . $value : '');
         }
 
         return implode(',', $return);
@@ -178,7 +177,7 @@ class ThriftCompiler
      * Compile the Thrift definition.
      *
      * @param string $definition
-     * @param bool   $serverCompile
+     * @param bool $serverCompile
      *
      * @throws \Overblog\ThriftBundle\Exception\ConfigurationException
      *
@@ -198,11 +197,8 @@ class ThriftCompiler
         // prepare includeDirs
         $includeDirs = '';
         foreach ($this->includeDirs as $includeDir) {
-            $includeDirs .= ' -I '.$includeDir;
+            $includeDirs .= ' -I ' . $includeDir;
         }
-
-        //Reset output
-        $this->lastOutput = null;
 
         $cmd = sprintf(
             '%s -r -v --gen php:%s --out %s %s %s 2>&1',
@@ -213,9 +209,12 @@ class ThriftCompiler
             $definition
         );
 
-        exec($cmd, $this->lastOutput, $return);
+        $process =  new Process($cmd);
+        $process->setTimeout(null);
+        $this->lastCompileProcess = $process;
+        $process->run();
 
-        return (0 === $return) ? true : false;
+        return $process->isSuccessful();
     }
 
     /**
@@ -225,6 +224,11 @@ class ThriftCompiler
      */
     public function getLastOutput()
     {
-        return $this->lastOutput;
+        return $this->getLastCompileProcess() ? $this->getLastCompileProcess()->getOutput() : '';
+    }
+
+    public function getLastCompileProcess()
+    {
+        return $this->lastCompileProcess;
     }
 }

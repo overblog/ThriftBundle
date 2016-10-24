@@ -20,8 +20,9 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^5.3.6|~7.0",
+        "php": "^5.4|~7.0",
         "apache/thrift": ">=0.9.1",
+        "symfony/process": "^2.3|~3.0",
         "symfony/symfony": "~2.3|~3.0"
     },
     "require-dev": {}
