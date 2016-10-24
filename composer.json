@@ -20,5 +20,7 @@
         "exclude-from-classmap": [
             "/Tests/"
         ]
+    },
+    "require-dev": {
     }
 }
