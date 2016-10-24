@@ -1,18 +1,26 @@
 <?php
 
-namespace Overblog\ThriftBundle\CacheWarmer;
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\ClassLoader\ClassMapGenerator;
+namespace Overblog\ThriftBundle\CacheWarmer;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 use Overblog\ThriftBundle\Exception\CompilerException;
+use Symfony\Component\ClassLoader\ClassMapGenerator;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Generate Thrift model in cache warmer
+ * Generate Thrift model in cache warmer.
+ *
  * @author Xavier HAUSHERR
  */
-
 class ThriftCompileCacheWarmer
 {
     private $rootDir;
@@ -21,18 +29,19 @@ class ThriftCompileCacheWarmer
     private $services;
 
     /**
-     * Cache Suffix for thrift compiled files
+     * Cache Suffix for thrift compiled files.
      */
     const CACHE_SUFFIX = 'thrift';
 
     /**
-     * Register dependencies
+     * Register dependencies.
+     *
      * @param string $cacheDir
      * @param string $rootDir
-     * @param Array $path
-     * @param Array $services
+     * @param array  $path
+     * @param array  $services
      */
-    public function __construct($cacheDir, $rootDir, $path, Array $services)
+    public function __construct($cacheDir, $rootDir, $path, array $services)
     {
         $this->cacheDir = $cacheDir;
         $this->rootDir = $rootDir;
@@ -41,10 +50,13 @@ class ThriftCompileCacheWarmer
     }
 
     /**
-     * Return definition path
+     * Return definition path.
+     *
      * @param string $definition
      * @param string $definitionPath
+     *
      * @throws \Exception
+     *
      * @return string
      */
     public function getDefinitionPath($definition, $definitionPath)
@@ -57,7 +69,7 @@ class ThriftCompileCacheWarmer
     }
 
     /**
-     * Compile Thrift Model
+     * Compile Thrift Model.
      */
     public function compile()
     {
@@ -66,8 +78,7 @@ class ThriftCompileCacheWarmer
         $cacheDir = sprintf('%s/%s', $this->cacheDir, self::CACHE_SUFFIX);
 
         // We compile for every Service
-        foreach($this->services as $config)
-        {
+        foreach ($this->services as $config) {
             $definitionPath  = $this->getDefinitionPath(
                 $config['definition'],
                 $config['definitionPath']
@@ -87,8 +98,7 @@ class ThriftCompileCacheWarmer
             $compile = $compiler->compile($definitionPath, $config['server']);
 
             // Compilation Error
-            if(false === $compile)
-            {
+            if (false === $compile) {
                 throw new \RuntimeException(
                         sprintf('Unable to compile Thrift definition %s.', $definitionPath),
                         0,
@@ -100,8 +110,7 @@ class ThriftCompileCacheWarmer
         // Check if thrift cache directory exists
         $fs = new Filesystem();
 
-        if(!$fs->exists($cacheDir))
-        {
+        if (!$fs->exists($cacheDir)) {
             $fs->mkdir($cacheDir);
         }
 

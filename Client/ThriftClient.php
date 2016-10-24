@@ -1,58 +1,70 @@
 <?php
 
-namespace Overblog\ThriftBundle\Client;
-
-use Thrift\Transport\TBufferedTransport;
-use Overblog\ThriftBundle\Factory\ThriftFactory;
-
-/**
- * Build client
- * @author Xavier HAUSHERR
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
+namespace Overblog\ThriftBundle\Client;
+
+use Overblog\ThriftBundle\Factory\ThriftFactory;
+use Thrift\Transport\TBufferedTransport;
+
+/**
+ * Build client.
+ *
+ * @author Xavier HAUSHERR
+ */
 class ThriftClient
 {
     /**
-     * Thrift factory
+     * Thrift factory.
+     *
      * @var ThriftFactory
      */
     protected $factory;
 
     /**
-     * Client config
+     * Client config.
+     *
      * @var array
      */
-    protected $config = array();
+    protected $config = [];
 
     /**
-     * Client instance
+     * Client instance.
      */
     protected $client;
 
     /**
-     * Transport instance
+     * Transport instance.
      */
     protected $transport;
 
     /**
-     * Register Dependencies
+     * Register Dependencies.
+     *
      * @param \Overblog\ThriftBundle\Factory\ThriftFactory $factory
-     * @param array $config
+     * @param array                                        $config
      */
-    public function __construct(ThriftFactory $factory, Array $config)
+    public function __construct(ThriftFactory $factory, array $config)
     {
         $this->factory = $factory;
         $this->config = $config;
     }
 
     /**
-     * Return client
+     * Return client.
+     *
      * @return Thrift\Transport\TSocket
      */
     public function getClient()
     {
-        if(is_null($this->client))
-        {
+        if (is_null($this->client)) {
             $service = $this->config['service_config'];
             //Initialisation du client
             $socket = $this->clientFactory()->getSocket();
@@ -75,9 +87,11 @@ class ThriftClient
     }
 
     /**
-     * Instanciate Thrift Model classes
+     * Instanciate Thrift Model classes.
+     *
      * @param string $classe
-     * @param mixed $param
+     * @param mixed  $param
+     *
      * @return mixed
      */
     public function getFactory($classe, $param = null)
@@ -86,19 +100,20 @@ class ThriftClient
     }
 
     /**
-     * Close every connections
+     * Close every connections.
      */
     public function __destruct()
     {
-        if(!is_null($this->transport))
-        {
+        if (!is_null($this->transport)) {
             $this->transport->close();
         }
     }
 
     /**
-     * Instanciate client class
+     * Instanciate client class.
+     *
      * @param string $name
+     *
      * @return Client
      */
     protected function clientFactory()

@@ -1,32 +1,39 @@
 <?php
+
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Overblog\ThriftBundle\Server\HttpServer;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Http Server controller
+ * Http Server controller.
+ *
  * @author Xavier HAUSHERR
  */
-
 class ThriftController extends Controller
 {
     /**
-     * HTTP Entry point
+     * HTTP Entry point.
      */
     public function serverAction(Request $request)
     {
-        if(!($extensionName = $request->get('extensionName')))
-        {
+        if (!($extensionName = $request->get('extensionName'))) {
             throw $this->createNotFoundException('Unable to get config name');
         }
 
         $servers = $this->container->getParameter('thrift.config.servers');
 
-        if(!isset($servers[$extensionName]))
-        {
+        if (!isset($servers[$extensionName])) {
             throw $this->createNotFoundException(sprintf('Unknown config "%s"', $extensionName));
         }
 

@@ -1,29 +1,38 @@
 <?php
+
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Command;
 
+use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
+use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Overblog\ThriftBundle\Compiler\ThriftCompiler;
-use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
-
 /**
- * Compile command to generate thrift model
+ * Compile command to generate thrift model.
+ *
  * @author Xavier HAUSHERR
  */
-
 class CompileCommand extends ContainerAwareCommand
 {
     /**
-     * Configure the command
+     * Configure the command.
      */
     protected function configure()
-	{
+    {
         $this->setName('thrift:compile')
-		  ->setDescription('Compile Thrift Model for PHP');
+          ->setDescription('Compile Thrift Model for PHP');
 
         $this->addArgument('service', InputArgument::REQUIRED, 'Service name');
 
@@ -36,19 +45,19 @@ class CompileCommand extends ContainerAwareCommand
                 'Bundle where the Model will be located (default is the same than the definitions');
         $this->addOption('includeDir', 'I', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Add a directory to the list of directories searched for include directives');
-	}
+    }
 
     /**
-     * Execute compilation
-     * @param InputInterface $input
+     * Execute compilation.
+     *
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
-	{
+    {
         $compiler = new ThriftCompiler();
 
-        if(($path = $input->getOption('path')))
-        {
+        if (($path = $input->getOption('path'))) {
             $compiler->setExecPath($path);
         }
 
@@ -56,12 +65,9 @@ class CompileCommand extends ContainerAwareCommand
         $configs = $this->getContainer()->getParameter('thrift.config.services');
 
         // Get config
-        if(isset($configs[$service]))
-        {
+        if (isset($configs[$service])) {
             $config = $configs[$service];
-        }
-        else
-        {
+        } else {
             $output->writeln(sprintf('<error>Unknow service %s</error>', $service));
 
             return 1;
@@ -75,15 +81,11 @@ class CompileCommand extends ContainerAwareCommand
                                        $config['definitionPath']
                                    );
 
-
         // Get out path
-        if(($bundleName = $input->getOption('bundleNameOut')))
-        {
+        if (($bundleName = $input->getOption('bundleNameOut'))) {
             $bundle          = $this->getContainer()->get('kernel')->getBundle($bundleName);
             $bundlePath      = $bundle->getPath();
-        }
-        else
-        {
+        } else {
             $bundlePath = getcwd();
         }
 
@@ -95,10 +97,8 @@ class CompileCommand extends ContainerAwareCommand
             $compiler->setIncludeDirs($includeDirs);
         }
 
-
         //Add namespace prefix if needed
-        if($input->getOption('namespace'))
-        {
+        if ($input->getOption('namespace')) {
             $compiler->setNamespacePrefix($input->getOption('namespace'));
         }
 
@@ -109,12 +109,9 @@ class CompileCommand extends ContainerAwareCommand
         $return = $compiler->compile($definitionPath, $input->getOption('server'));
 
         //Error
-        if(1 === $return)
-        {
+        if (1 === $return) {
             $output->writeln(sprintf('<error>%s</error>', implode("\n", $compiler->getLastOutput())));
-        }
-        else
-        {
+        } else {
             $output->writeln(sprintf('<info>%s</info>', implode("\n", $compiler->getLastOutput())));
         }
     }

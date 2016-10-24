@@ -1,51 +1,59 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Factory;
 
 /**
- * Thrift factory
+ * Thrift factory.
  *
  * @author Xavier HAUSHERR
  */
-
 class ThriftFactory
 {
     protected $services;
 
     /**
-     * Inject dependencies
+     * Inject dependencies.
+     *
      * @param array $services
      */
-    public function __construct(Array $services)
+    public function __construct(array $services)
     {
         $this->services = $services;
     }
 
     /**
-     * Return an instance of a Thrift Model Class
+     * Return an instance of a Thrift Model Class.
      *
      * @param string $classe
-     * @param mixed $param
-     * @return Object
+     * @param mixed  $param
+     *
+     * @return object
      */
     public function getInstance($classe, $param = null)
     {
-        if(is_null($param))
-        {
+        if (is_null($param)) {
             return new $classe();
-        }
-        else
-        {
+        } else {
             return new $classe($param);
         }
     }
 
     /**
-     * Return a processor instance
+     * Return a processor instance.
      *
      * @param string $service
-     * @param mixed $handler
-     * @return Object
+     * @param mixed  $handler
+     *
+     * @return object
      */
     public function getProcessorInstance($service, $handler)
     {
@@ -55,11 +63,12 @@ class ThriftFactory
     }
 
     /**
-     * Return a client instance
-     * 
-     * @param string $service
+     * Return a client instance.
+     *
+     * @param string                    $service
      * @param Thrift\Protocol\TProtocol $protocol
-     * @return Object
+     *
+     * @return object
      */
     public function getClientInstance($service, $protocol)
     {

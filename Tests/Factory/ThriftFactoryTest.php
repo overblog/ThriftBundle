@@ -1,11 +1,21 @@
 <?php
+
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Tests\Factory;
 
-use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
 use Overblog\ThriftBundle\Factory\ThriftFactory;
+use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
 
 /**
- * UNIT TEST
+ * UNIT TEST.
  *
  * @author Xavier HAUSHERR
  */
@@ -19,13 +29,13 @@ class ThriftFactoryTest extends ThriftBundleTestCase
 
     public function testFactory()
     {
-        $factory = new ThriftFactory(array(
-            'test' => array(
+        $factory = new ThriftFactory([
+            'test' => [
                 'definition' => 'Test',
                 'className' => 'TestService',
-                'namespace' => 'ThriftModel\Test'
-            )
-        ));
+                'namespace' => 'ThriftModel\Test',
+            ],
+        ]);
 
         $this->assertInstanceOf(
             'ThriftModel\Test\Test',
@@ -34,7 +44,7 @@ class ThriftFactoryTest extends ThriftBundleTestCase
 
         $this->assertInstanceOf(
             'ThriftModel\Test\Test',
-            $factory->getInstance('ThriftModel\Test\Test', array())
+            $factory->getInstance('ThriftModel\Test\Test', [])
         );
 
         $this->assertInstanceOf(

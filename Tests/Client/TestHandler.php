@@ -1,9 +1,18 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Tests\Client;
 
-use ThriftModel\Test\Test;
 use Overblog\ThriftBundle\Factory\ThriftFactory;
+use ThriftModel\Test\Test;
 
 class TestHandler
 {
@@ -16,25 +25,23 @@ class TestHandler
 
     public function ping()
     {
-
     }
 
     public function get($id)
     {
-        if($id == -1)
-        {
-            $e = $this->factory->getInstance('ThriftModel\Test\InvalidValueException', array(
+        if ($id == -1) {
+            $e = $this->factory->getInstance('ThriftModel\Test\InvalidValueException', [
                 'error_code' => 100,
-                'error_msg' => 'ERROR'
-            ));
+                'error_msg' => 'ERROR',
+            ]);
 
             throw $e;
         }
 
-        $test = $this->factory->getInstance('ThriftModel\Test\Test', array(
+        $test = $this->factory->getInstance('ThriftModel\Test\Test', [
             'id' => $id,
-            'content' => 'TEST'
-        ));
+            'content' => 'TEST',
+        ]);
 
         return $test;
     }
@@ -47,17 +54,16 @@ class TestHandler
 
         $test1->content = 'TEST2';
 
-        return array($test, $test1);
+        return [$test, $test1];
     }
 
     public function create($test)
     {
-        if(empty($test->content))
-        {
-            $e = $this->factory->getInstance('ThriftModel\Test\InvalidValueException', array(
+        if (empty($test->content)) {
+            $e = $this->factory->getInstance('ThriftModel\Test\InvalidValueException', [
                 'error_code' => 100,
-                'error_msg' => 'ERROR'
-            ));
+                'error_msg' => 'ERROR',
+            ]);
 
             throw $e;
         }

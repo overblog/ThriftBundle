@@ -1,19 +1,28 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * This is the class that validates and merges configuration from your app/config files
+ * This is the class that validates and merges configuration from your app/config files.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -48,10 +57,10 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->validate()
-                            ->ifTrue(function($v){
+                            ->ifTrue(function ($v) {
                                 return empty($v['className']);
                             })
-                            ->then(function($v){
+                            ->then(function ($v) {
                                 // If className is empty, definition is used
                                 $v['className'] = $v['definition'];
 
@@ -95,10 +104,11 @@ class Configuration implements ConfigurationInterface
             ->end()
             //Server validation
             ->validate()
-                ->ifTrue( function($v) {
-                    foreach($v['servers'] as $name => $server)
-                    {
-                        if(!isset($v['services'][$server['service']])) return true;
+                ->ifTrue(function ($v) {
+                    foreach ($v['servers'] as $name => $server) {
+                        if (!isset($v['services'][$server['service']])) {
+                            return true;
+                        }
                     }
 
                     return false;
@@ -106,10 +116,11 @@ class Configuration implements ConfigurationInterface
                 ->thenInvalid('Unknow service in servers configuration.')
             ->end()
             ->validate()
-                ->ifTrue( function($v) {
-                    foreach($v['clients'] as $name => $client)
-                    {
-                        if(!isset($v['services'][$client['service']])) return true;
+                ->ifTrue(function ($v) {
+                    foreach ($v['clients'] as $name => $client) {
+                        if (!isset($v['services'][$client['service']])) {
+                            return true;
+                        }
                     }
 
                     return false;
@@ -118,16 +129,14 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->validate()
                 ->always()
-                ->then( function($v) {
+                ->then(function ($v) {
                     //Servers
-                    foreach($v['servers'] as $name => $server)
-                    {
+                    foreach ($v['servers'] as $name => $server) {
                         $v['servers'][$name]['service_config'] = $v['services'][$server['service']];
                     }
 
                     //Clients
-                    foreach($v['clients'] as $name => $client)
-                    {
+                    foreach ($v['clients'] as $name => $client) {
                         $v['clients'][$name]['service_config'] = $v['services'][$client['service']];
                     }
 

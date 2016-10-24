@@ -1,19 +1,26 @@
 <?php
+
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 /**
- * UNIT TEST
+ * UNIT TEST.
  *
  * @author Xavier HAUSHERR
  */
 namespace Overblog\ThriftBundle\Tests\Compiler;
 
-use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-
-use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
-use Overblog\ThriftBundle\Tests\Command\AppKernelMock;
-use Overblog\ThriftBundle\Compiler\ThriftCompiler;
-
 use Overblog\ThriftBundle\Command\CompileCommand;
+use Overblog\ThriftBundle\Tests\Command\AppKernelMock;
+use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class CompileCommandTest extends ThriftBundleTestCase
 {
@@ -21,7 +28,7 @@ class CompileCommandTest extends ThriftBundleTestCase
 
     protected function setUp()
     {
-//        parent::setUp();
+        //        parent::setUp();
 //
 //        $kernel = new AppKernelMock('test', false);
 //        $this->application = new Application($kernel);
@@ -30,7 +37,7 @@ class CompileCommandTest extends ThriftBundleTestCase
 
     public function testExecute()
     {
-//        $command = $this->application->find('thrift:compile');
+        //        $command = $this->application->find('thrift:compile');
 //        $commandTester = new CommandTester($command);
 //        $commandTester->execute(array(
 //            'command' => $command->getName(),

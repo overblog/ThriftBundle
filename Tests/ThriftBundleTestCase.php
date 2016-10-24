@@ -1,10 +1,19 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Tests;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
-use Symfony\Component\ClassLoader\MapClassLoader;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
+use Symfony\Component\ClassLoader\MapClassLoader;
 
 class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -15,8 +24,8 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->modelPath = __DIR__ . '/thrift';
-        $this->definitionPath = __DIR__ . '/ThriftDefinition/Test.thrift';
+        $this->modelPath = __DIR__.'/thrift';
+        $this->definitionPath = __DIR__.'/ThriftDefinition/Test.thrift';
     }
 
     protected function compile()
