@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Routing;
 
 use Symfony\Component\Config\Loader\Loader;
@@ -8,7 +17,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class ThriftRoutingLoader extends Loader
 {
-
     protected $services;
 
     public function __construct($services)
@@ -19,8 +27,8 @@ class ThriftRoutingLoader extends Loader
     /**
      * Loads a resource.
      *
-     * @param mixed $resource The resource
-     * @param string|null $type The resource type or null if unknown
+     * @param mixed       $resource The resource
+     * @param string|null $type     The resource type or null if unknown
      *
      * @throws \Exception If something went wrong
      */
@@ -30,23 +38,24 @@ class ThriftRoutingLoader extends Loader
         foreach ($this->services as $path => $service) {
             $route = new Route(
                 '/'.$path,
-                array('_controller' => 'ThriftBundle:Thrift:server', 'extensionName' => $path),
-                array(),
-                array(),
+                ['_controller' => 'ThriftBundle:Thrift:server', 'extensionName' => $path],
+                [],
+                [],
                 null,
-                array(),
-                array('post')
+                [],
+                ['post']
             );
-            $coll->add('thrift.' . $service['service'], $route);
+            $coll->add('thrift.'.$service['service'], $route);
         }
+
         return $coll;
     }
 
     /**
      * Returns whether this class supports the given resource.
      *
-     * @param mixed $resource A resource
-     * @param string|null $type The resource type or null if unknown
+     * @param mixed       $resource A resource
+     * @param string|null $type     The resource type or null if unknown
      *
      * @return bool True if this class supports the given resource, false otherwise
      */

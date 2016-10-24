@@ -1,44 +1,55 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Client;
 
 /**
- * Abstract class for create a client
+ * Abstract class for create a client.
+ *
  * @author Xavier HAUSHERR
  */
-
 abstract class Client
 {
     /**
-     * Config handler
+     * Config handler.
+     *
      * @var array
      */
     protected $config;
 
     /**
-     * Socket instance
+     * Socket instance.
+     *
      * @var Thrift\Transport\TSocket
      */
     protected $socket;
 
     /**
-     * Register dependencies
+     * Register dependencies.
+     *
      * @param array $config
      */
-    public function __construct(Array $config)
+    public function __construct(array $config)
     {
         $this->config = $config;
     }
 
     /**
-     * Return socket
+     * Return socket.
      *
      * @return Thrift\Transport\TSocket
      */
     public function getSocket()
     {
-        if(is_null($this->socket))
-        {
+        if (is_null($this->socket)) {
             $this->socket = $this->createSocket();
         }
 
@@ -46,7 +57,7 @@ abstract class Client
     }
 
     /**
-     * Insctanciate socket
+     * Insctanciate socket.
      *
      * @return Thrift\Transport\TSocket
      */

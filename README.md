@@ -175,3 +175,16 @@ $service->name = 'Name 1';
 
 $id = $client->execMethod($service);
 ```
+
+Contribute
+----------
+
+Tests:
+
+Install [phpunit](https://phpunit.de/manual/current/en/installation.html).
+
+In the bundle directory:
+
+```bash
+phpunit
+```

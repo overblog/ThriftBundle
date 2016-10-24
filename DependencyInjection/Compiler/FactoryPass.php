@@ -1,13 +1,23 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\DependencyInjection\Compiler;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+
 use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
 use Overblog\ThriftBundle\Listener\ClassLoaderListener;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Description of FactoryPass
+ * Description of FactoryPass.
  *
  * @author xavier
  */
@@ -18,11 +28,9 @@ class FactoryPass implements CompilerPassInterface
      *
      * @param ContainerBuilder $container
      *
-     * @return void
-     *
      * @api
      */
-    function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container)
     {
         $cacheDir = $container->getParameter('kernel.cache_dir');
 
@@ -39,4 +47,3 @@ class FactoryPass implements CompilerPassInterface
         ClassLoaderListener::registerClassLoader($cacheDir);
     }
 }
-

@@ -1,23 +1,32 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
 class OverblogThriftExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -32,20 +41,20 @@ class OverblogThriftExtension extends Extension
         $container->setParameter('thrift.config.servers', $config['servers']);
 
         // Register clients
-        foreach($config['clients'] as $name => $client)
-        {
+        foreach ($config['clients'] as $name => $client) {
             $this->loadClient($name, $client, $container, $config['testMode']);
         }
     }
 
     /**
-     * Create client service
-     * @param string $name
-     * @param array $client
+     * Create client service.
+     *
+     * @param string           $name
+     * @param array            $client
      * @param ContainerBuilder $container
-     * @param boolean $testMode
+     * @param bool             $testMode
      */
-    protected function loadClient($name, Array $client, ContainerBuilder $container, $testMode = false)
+    protected function loadClient($name, array $client, ContainerBuilder $container, $testMode = false)
     {
         $clientDef = new Definition(
             $container->getParameter(

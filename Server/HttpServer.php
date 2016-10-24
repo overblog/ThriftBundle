@@ -1,21 +1,28 @@
 <?php
 
-namespace Overblog\ThriftBundle\Server;
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-use Overblog\ThriftBundle\Server\Server;
+namespace Overblog\ThriftBundle\Server;
 
 use Thrift\Transport\TBufferedTransport;
 use Thrift\Transport\TPhpStream;
 
 /**
- * HTTP Server class
+ * HTTP Server class.
+ *
  * @author Xavier HAUSHERR
  */
-
 class HttpServer extends Server
 {
     /**
-     * Run server
+     * Run server.
      */
     public function run()
     {

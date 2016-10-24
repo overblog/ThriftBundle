@@ -1,70 +1,87 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Compiler;
 
 use Overblog\ThriftBundle\Exception\ConfigurationException;
 
 /**
- * Thrift compiler
+ * Thrift compiler.
+ *
  * @author Xavier HAUSHERR
  */
-
 class ThriftCompiler
 {
     /**
-     * Thrift Executable name
+     * Thrift Executable name.
+     *
      * @var string
      */
     protected $thriftExec = 'thrift';
 
     /**
-     * Thrift Executable path
+     * Thrift Executable path.
+     *
      * @var string
      */
     protected $thriftPath = '/usr/local/bin/';
 
     /**
-     * Model Path
+     * Model Path.
+     *
      * @var string
      */
     protected $modelPath;
 
     /**
-     * Included dirs
+     * Included dirs.
+     *
      * @var string[]
      */
-    protected $includeDirs = array();
+    protected $includeDirs = [];
 
     /**
-     * Base compiler options
+     * Base compiler options.
+     *
      * @var array
      */
-    protected $options = array('oop' => null);
+    protected $options = ['oop' => null];
 
     /**
-     * Last compiler output
+     * Last compiler output.
+     *
      * @var string
      */
     protected $lastOutput;
 
     /**
-     * Return Thrift path
+     * Return Thrift path.
+     *
      * @return string
      */
     protected function getExecPath()
     {
-        return $this->thriftPath . $this->thriftExec;
+        return $this->thriftPath.$this->thriftExec;
     }
 
     /**
-     * Set exec path
+     * Set exec path.
+     *
      * @param string $path
+     *
      * @return bool
      */
     public function setExecPath($path)
     {
-        if('/' !== substr($path, -1))
-        {
+        if ('/' !== substr($path, -1)) {
             $path .= '/';
         }
 
@@ -74,14 +91,15 @@ class ThriftCompiler
     }
 
     /**
-     * Check if Thrift exec is installed
+     * Check if Thrift exec is installed.
+     *
      * @throws \Overblog\ThriftBundle\Exception\ConfigurationException
-     * @return boolean
+     *
+     * @return bool
      */
     protected function checkExec()
     {
-        if(!file_exists($this->getExecPath()))
-        {
+        if (!file_exists($this->getExecPath())) {
             throw new ConfigurationException('Unable to find Thrift executable');
         }
 
@@ -89,13 +107,13 @@ class ThriftCompiler
     }
 
     /**
-     * Set model path and create it if needed
+     * Set model path and create it if needed.
+     *
      * @param string $path
      */
     public function setModelPath($path)
     {
-        if(!is_null($path) && !file_exists($path))
-        {
+        if (!is_null($path) && !file_exists($path)) {
             mkdir($path);
         }
 
@@ -103,16 +121,18 @@ class ThriftCompiler
     }
 
     /**
-     * Add a directory to the list of directories searched for include directives
+     * Add a directory to the list of directories searched for include directives.
+     *
      * @param string[] $includeDirs
      */
     public function setIncludeDirs($includeDirs)
     {
-        $this->includeDirs = (array)$includeDirs;
+        $this->includeDirs = (array) $includeDirs;
     }
 
     /**
-     * Set namespace prefix
+     * Set namespace prefix.
+     *
      * @param string $namespace
      */
     public function setNamespacePrefix($namespace)
@@ -121,7 +141,7 @@ class ThriftCompiler
     }
 
     /**
-     * Generate PHP validator methods
+     * Generate PHP validator methods.
      */
     public function addValidate()
     {
@@ -129,56 +149,56 @@ class ThriftCompiler
     }
 
     /**
-     * Compile server files too (processor)
+     * Compile server files too (processor).
      */
     protected function addServerCompile()
     {
-        if(!isset($this->options['server']))
-        {
+        if (!isset($this->options['server'])) {
             $this->options['server'] = null;
         }
     }
 
     /**
-     * Compile the thrift options
+     * Compile the thrift options.
+     *
      * @return string
      */
     protected function compileOptions()
     {
-        $return = array();
+        $return = [];
 
-        foreach($this->options as $option => $value)
-        {
-            $return[] = $option . (!empty($value) ? '=' . $value : '');
+        foreach ($this->options as $option => $value) {
+            $return[] = $option.(!empty($value) ? '='.$value : '');
         }
 
         return implode(',', $return);
     }
 
     /**
-     * Compile the Thrift definition
+     * Compile the Thrift definition.
+     *
      * @param string $definition
-     * @param boolean $serverCompile
+     * @param bool   $serverCompile
+     *
      * @throws \Overblog\ThriftBundle\Exception\ConfigurationException
-     * @return boolean
+     *
+     * @return bool
      */
     public function compile($definition, $serverCompile = false)
     {
         // Check if definition file exists
-        if(!file_exists($definition))
-        {
+        if (!file_exists($definition)) {
             throw new ConfigurationException(sprintf('Unable to find Thrift definition at path "%s"', $definition));
         }
 
-        if(true === $serverCompile)
-        {
+        if (true === $serverCompile) {
             $this->addServerCompile();
         }
 
         // prepare includeDirs
         $includeDirs = '';
         foreach ($this->includeDirs as $includeDir) {
-            $includeDirs .= ' -I '. $includeDir;
+            $includeDirs .= ' -I '.$includeDir;
         }
 
         //Reset output
@@ -199,7 +219,8 @@ class ThriftCompiler
     }
 
     /**
-     * Return the last compiler output
+     * Return the last compiler output.
+     *
      * @return string
      */
     public function getLastOutput()
