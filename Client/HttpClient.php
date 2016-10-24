@@ -21,9 +21,7 @@ use Thrift\Transport\THttpClient;
 class HttpClient extends Client
 {
     /**
-     * Instanciate Socket Client.
-     *
-     * @return Thrift\Transport\THttpClient
+     * {@inheritdoc}
      */
     protected function createSocket()
     {

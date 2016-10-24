@@ -14,6 +14,7 @@ namespace Overblog\ThriftBundle\Tests;
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 use Symfony\Component\ClassLoader\MapClassLoader;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
@@ -35,7 +36,7 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
         $this->compiler = new ThriftCompiler();
         $this->compiler->setModelPath($this->modelPath);
         if (!$this->compiler->compile($this->definitionPath, true)) {
-            throw new \RuntimeException(sprintf('Compile failed: "%s".', $this->compiler->getLastCompileProcess()->getErrorOutput()));
+            throw new ProcessFailedException($this->compiler->getLastCompileProcess());
         }
 
         // Init Loader

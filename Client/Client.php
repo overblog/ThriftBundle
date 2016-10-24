@@ -28,7 +28,7 @@ abstract class Client
     /**
      * Socket instance.
      *
-     * @var Thrift\Transport\TSocket
+     * @var \Thrift\Transport\TSocket
      */
     protected $socket;
 
@@ -45,7 +45,7 @@ abstract class Client
     /**
      * Return socket.
      *
-     * @return Thrift\Transport\TSocket
+     * @return \Thrift\Transport\TSocket
      */
     public function getSocket()
     {
@@ -57,9 +57,9 @@ abstract class Client
     }
 
     /**
-     * Insctanciate socket.
+     * Instantiate socket.
      *
-     * @return Thrift\Transport\TSocket
+     * @return \Thrift\Transport\TSocket
      */
     abstract protected function createSocket();
 }

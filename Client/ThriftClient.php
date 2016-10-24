@@ -60,43 +60,28 @@ class ThriftClient
     /**
      * Return client.
      *
-     * @return Thrift\Transport\TSocket
+     * @return \Thrift\Transport\TSocket
      */
     public function getClient()
     {
         if (is_null($this->client)) {
-            $service = $this->config['service_config'];
-            //Initialisation du client
-            $socket = $this->clientFactory()->getSocket();
-
-            if (isset($service['transport'])) {
-                $this->transport = new $service['transport']($socket);
-            } else {
-                $this->transport = new TBufferedTransport($socket, 1024, 1024);
-            }
-
-            $this->client = $this->factory->getClientInstance(
-                $this->config['service'],
-                new $service['protocol']($this->transport)
-            );
-
-            $this->transport->open();
+            $this->client = $this->createClient();
         }
 
         return $this->client;
     }
 
     /**
-     * Instanciate Thrift Model classes.
+     * Instantiate Thrift Model classes.
      *
-     * @param string $classe
+     * @param string $class
      * @param mixed  $param
      *
      * @return mixed
      */
-    public function getFactory($classe, $param = null)
+    public function getFactory($class, $param = null)
     {
-        return $this->factory->getInstance($classe, $param);
+        return $this->factory->getInstance($class, $param);
     }
 
     /**
@@ -110,10 +95,7 @@ class ThriftClient
     }
 
     /**
-     * Instanciate client class.
-     *
-     * @param string $name
-     *
+     * Instantiate client class.
      * @return Client
      */
     protected function clientFactory()
@@ -121,5 +103,27 @@ class ThriftClient
         $class = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->config['type'])));
 
         return new $class($this->config);
+    }
+
+    protected function createClient()
+    {
+        $service = $this->config['service_config'];
+        //Initialisation du client
+        $socket = $this->clientFactory()->getSocket();
+
+        if (isset($service['transport'])) {
+            $this->transport = new $service['transport']($socket);
+        } else {
+            $this->transport = new TBufferedTransport($socket, 1024, 1024);
+        }
+
+        $client = $this->factory->getClientInstance(
+            $this->config['service'],
+            new $service['protocol']($this->transport)
+        );
+
+        $this->transport->open();
+
+        return $client;
     }
 }

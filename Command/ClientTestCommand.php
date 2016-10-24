@@ -80,16 +80,15 @@ class ClientTestCommand extends ContainerAwareCommand
 
             $output->writeln(print_r($result, true));
             $output->writeln(sprintf('<info>Time taken for request: %s ms</info>', $end));
-        } catch (\ThriftModel\User\InvalidValueException $e) {
-            $output->writeln(sprintf('<error>Error Code: %s</error>', $e->getCode()));
-            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
         } catch (\Thrift\Exception\TException $e) {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
             $output->writeln(sprintf('<info>Have you started the server with: php app/console thrift:server %s ?</info>', $service));
 
-            return false;
+            return 1;
         } catch (\Exception $e) {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+
+            return 1;
         }
 
         return 0;
