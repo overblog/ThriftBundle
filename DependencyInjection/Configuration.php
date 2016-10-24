@@ -49,6 +49,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('definitionPath')->isRequired()->end()
                             ->scalarNode('protocol')->defaultValue('Thrift\Protocol\TBinaryProtocolAccelerated')->end()
                             ->scalarNode('transport')->defaultValue('Thrift\Transport\TBufferedTransport')->end()
+                            ->scalarNode('buffered_transport')->defaultTrue()->end()
                             ->booleanNode('server')->defaultFalse()->end()
                             ->booleanNode('validate')->defaultFalse()->end()
                             ->arrayNode('includeDirs')
@@ -113,7 +114,7 @@ class Configuration implements ConfigurationInterface
 
                     return false;
                 })
-                ->thenInvalid('Unknow service in servers configuration.')
+                ->thenInvalid('Unknown service in servers configuration.')
             ->end()
             ->validate()
                 ->ifTrue(function ($v) {
@@ -125,7 +126,7 @@ class Configuration implements ConfigurationInterface
 
                     return false;
                 })
-                ->thenInvalid('Unknow service in clients configuration.')
+                ->thenInvalid('Unknown service in clients configuration.')
             ->end()
             ->validate()
                 ->always()

@@ -43,14 +43,6 @@ abstract class Server
     }
 
     /**
-     * Return thrift header.
-     */
-    public function getHeader()
-    {
-        header('Content-Type: application/x-thrift');
-    }
-
-    /**
      * Run the server.
      */
     abstract public function run();

@@ -14,6 +14,7 @@ namespace Overblog\ThriftBundle\Controller;
 use Overblog\ThriftBundle\Server\HttpServer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Http Server controller.
@@ -47,11 +48,13 @@ class ThriftController extends Controller
             $server['service_config']
         );
 
-        $server->getHeader();
+        $response = new StreamedResponse();
+        $response->headers->set('Content-Type', 'application/x-thrift');
 
-        $server->run();
+        $response->setCallback(function () use ($server, $request) {
+            $server->run($request->getContent(true));
+        });
 
-        // Much faster than return a Symfony Response
-        exit(0);
+        return $response;
     }
 }

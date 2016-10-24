@@ -33,17 +33,17 @@ class ThriftFactory
     /**
      * Return an instance of a Thrift Model Class.
      *
-     * @param string $classe
+     * @param string $class
      * @param mixed  $param
      *
      * @return object
      */
-    public function getInstance($classe, $param = null)
+    public function getInstance($class, $param = null)
     {
         if (is_null($param)) {
-            return new $classe();
+            return new $class();
         } else {
-            return new $classe($param);
+            return new $class($param);
         }
     }
 
@@ -57,23 +57,48 @@ class ThriftFactory
      */
     public function getProcessorInstance($service, $handler)
     {
-        $classe = sprintf('%s\%sProcessor', $this->services[$service]['namespace'], $this->services[$service]['className']);
+        $class = $this->getProcessorClassName($service);
 
-        return new $classe($handler);
+        return new $class($handler);
     }
 
     /**
      * Return a client instance.
      *
-     * @param string                    $service
-     * @param Thrift\Protocol\TProtocol $protocol
+     * @param string                     $service
+     * @param \Thrift\Protocol\TProtocol $protocol
      *
      * @return object
      */
     public function getClientInstance($service, $protocol)
     {
-        $classe = sprintf('%s\%sClient', $this->services[$service]['namespace'], $this->services[$service]['className']);
+        $class = $this->getClientClassName($service);
 
-        return new $classe($protocol);
+        return new $class($protocol);
+    }
+
+    public function getClientClassName($name)
+    {
+        $service = $this->getService($name);
+        $className = sprintf('%s\%sClient', $service['namespace'], $service['className']);
+
+        return $className;
+    }
+
+    public function getProcessorClassName($name)
+    {
+        $service = $this->getService($name);
+        $className = sprintf('%s\%sProcessor', $service['namespace'], $service['className']);
+
+        return $className;
+    }
+
+    private function getService($name)
+    {
+        if (!isset($this->services[$name])) {
+            throw new \InvalidArgumentException(sprintf('Service "%s" not found.', $name));
+        }
+
+        return $this->services[$name];
     }
 }

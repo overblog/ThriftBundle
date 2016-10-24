@@ -41,8 +41,8 @@ class OverblogThriftExtension extends Extension
         $container->setParameter('thrift.config.servers', $config['servers']);
 
         // Register clients
-        foreach ($config['clients'] as $name => $client) {
-            $this->loadClient($name, $client, $container, $config['testMode']);
+        foreach ($config['clients'] as $name => $clientConfig) {
+            $this->loadClient($name, $clientConfig, $container, $config['testMode']);
         }
     }
 
@@ -50,11 +50,11 @@ class OverblogThriftExtension extends Extension
      * Create client service.
      *
      * @param string           $name
-     * @param array            $client
+     * @param array            $clientConfig
      * @param ContainerBuilder $container
      * @param bool             $testMode
      */
-    protected function loadClient($name, array $client, ContainerBuilder $container, $testMode = false)
+    protected function loadClient($name, array $clientConfig, ContainerBuilder $container, $testMode = false)
     {
         $clientDef = new Definition(
             $container->getParameter(
@@ -62,8 +62,7 @@ class OverblogThriftExtension extends Extension
             )
         );
 
-        $clientDef->addArgument(new Reference('thrift.factory'));
-        $clientDef->addArgument($client);
+        $clientDef->setArguments([new Reference('thrift.factory'), $clientConfig]);
 
         $container->setDefinition(
             sprintf('thrift.client.%s', $name),

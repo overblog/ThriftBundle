@@ -30,6 +30,8 @@ class ThriftRoutingLoader extends Loader
      * @param mixed       $resource The resource
      * @param string|null $type     The resource type or null if unknown
      *
+     * @return RouteCollection
+     *
      * @throws \Exception If something went wrong
      */
     public function load($resource, $type = null)
@@ -38,7 +40,7 @@ class ThriftRoutingLoader extends Loader
         foreach ($this->services as $path => $service) {
             $route = new Route(
                 '/'.$path,
-                ['_controller' => 'ThriftBundle:Thrift:server', 'extensionName' => $path],
+                ['_controller' => 'OverblogThriftBundle:Thrift:server', 'extensionName' => $path],
                 [],
                 [],
                 null,

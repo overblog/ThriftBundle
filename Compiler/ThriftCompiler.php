@@ -68,7 +68,7 @@ class ThriftCompiler
      */
     protected function getExecPath()
     {
-        return $this->thriftPath . $this->thriftExec;
+        return $this->thriftPath.$this->thriftExec;
     }
 
     /**
@@ -113,7 +113,7 @@ class ThriftCompiler
     public function setModelPath($path)
     {
         if (!is_null($path) && !file_exists($path)) {
-            mkdir($path);
+            mkdir($path, 0777, true);
         }
 
         $this->modelPath = $path;
@@ -126,7 +126,7 @@ class ThriftCompiler
      */
     public function setIncludeDirs($includeDirs)
     {
-        $this->includeDirs = (array)$includeDirs;
+        $this->includeDirs = (array) $includeDirs;
     }
 
     /**
@@ -167,7 +167,7 @@ class ThriftCompiler
         $return = [];
 
         foreach ($this->options as $option => $value) {
-            $return[] = $option . (!empty($value) ? '=' . $value : '');
+            $return[] = $option.(!empty($value) ? '='.$value : '');
         }
 
         return implode(',', $return);
@@ -177,7 +177,7 @@ class ThriftCompiler
      * Compile the Thrift definition.
      *
      * @param string $definition
-     * @param bool $serverCompile
+     * @param bool   $serverCompile
      *
      * @throws \Overblog\ThriftBundle\Exception\ConfigurationException
      *
@@ -197,7 +197,7 @@ class ThriftCompiler
         // prepare includeDirs
         $includeDirs = '';
         foreach ($this->includeDirs as $includeDir) {
-            $includeDirs .= ' -I ' . $includeDir;
+            $includeDirs .= ' -I '.$includeDir;
         }
 
         $cmd = sprintf(

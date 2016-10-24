@@ -1,6 +1,6 @@
 /vendor
 /build
-/Tests/thrift
+/Tests/tmp
 composer.phar
 composer.lock
-.gitignore
+.php_cs.cache

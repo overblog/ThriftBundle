@@ -4,25 +4,26 @@ parameters:
   thrift.compile_warmer.class: Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer
   thrift.factory.class: Overblog\ThriftBundle\Factory\ThriftFactory
   thrift.classloader.listener.class: Overblog\ThriftBundle\Listener\ClassLoaderListener
+  thrift.routing.loader.class: Overblog\ThriftBundle\Routing\ThriftRoutingLoader
 
 services:
   thrift.compile_warmer:
-    class: %thrift.compile_warmer.class%
-    arguments: [%kernel.cache_dir%, %kernel.root_dir%, %thrift.config.compiler.path%, %thrift.config.services%]
+    class: "%thrift.compile_warmer.class%"
+    arguments: ["%kernel.cache_dir%", "%kernel.root_dir%", "%thrift.config.compiler.path%", "%thrift.config.services%"]
 
   thrift.factory:
-    class: %thrift.factory.class%
-    arguments: [%thrift.config.services%]
+    class: "%thrift.factory.class%"
+    arguments: ["%thrift.config.services%"]
 
   thrift.classloader.listener:
-    arguments: [%kernel.cache_dir%]
-    class: %thrift.classloader.listener.class%
+    arguments: ["%kernel.cache_dir%"]
+    class: "%thrift.classloader.listener.class%"
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
       - { name: kernel.event_listener, event: console.command, method: onConsoleCommand, priority: 255 }
 
   thrift.routing.loader:
-    class: Overblog\ThriftBundle\Routing\ThriftRoutingLoader
-    arguments: [%thrift.config.servers%]
+    class: "%thrift.routing.loader.class%"
+    arguments: ["%thrift.config.servers%"]
     tags:
       - { name: routing.loader, priority: 255 }
