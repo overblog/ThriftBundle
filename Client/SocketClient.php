@@ -22,9 +22,7 @@ use Thrift\Transport\TSocketPool;
 class SocketClient extends Client
 {
     /**
-     * Instanciate Socket Client.
-     *
-     * @return Thrift\Transport\TSocket
+     * {@inheritdoc}
      */
     protected function createSocket()
     {

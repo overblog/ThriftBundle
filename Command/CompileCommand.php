@@ -50,8 +50,9 @@ class CompileCommand extends ContainerAwareCommand
     /**
      * Execute compilation.
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
+     * @return int|null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -109,10 +110,10 @@ class CompileCommand extends ContainerAwareCommand
         $return = $compiler->compile($definitionPath, $input->getOption('server'));
 
         //Error
-        if (1 === $return) {
-            $output->writeln(sprintf('<error>%s</error>', implode("\n", $compiler->getLastOutput())));
+        if (!$return) {
+            $output->writeln(sprintf('<error>%s</error>', $compiler->getLastOutput()));
         } else {
-            $output->writeln(sprintf('<info>%s</info>', implode("\n", $compiler->getLastOutput())));
+            $output->writeln(sprintf('<info>%s</info>', $compiler->getLastOutput()));
         }
     }
 }

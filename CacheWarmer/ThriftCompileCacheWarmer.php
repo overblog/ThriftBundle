@@ -102,7 +102,7 @@ class ThriftCompileCacheWarmer
                 throw new \RuntimeException(
                         sprintf('Unable to compile Thrift definition %s.', $definitionPath),
                         0,
-                        new CompilerException(implode("\n", $compiler->getLastOutput()))
+                        new CompilerException($compiler->getLastOutput())
                     );
             }
         }
