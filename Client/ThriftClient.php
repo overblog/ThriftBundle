@@ -96,11 +96,16 @@ class ThriftClient
 
     /**
      * Instantiate client class.
+     *
      * @return Client
      */
     protected function clientFactory()
     {
-        $class = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->config['type'])));
+        if ('http-test' === $this->config['type']) {
+            $class = '\\Overblog\\ThriftBundle\\Tests\\Thrift\\Client\\HttpClient';
+        } else {
+            $class = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->config['type'])));
+        }
 
         return new $class($this->config);
     }
@@ -109,12 +114,10 @@ class ThriftClient
     {
         $service = $this->config['service_config'];
         //Initialisation du client
-        $socket = $this->clientFactory()->getSocket();
+        $this->transport = $this->clientFactory()->getSocket();
 
-        if (isset($service['transport'])) {
-            $this->transport = new $service['transport']($socket);
-        } else {
-            $this->transport = new TBufferedTransport($socket, 1024, 1024);
+        if (isset($service['buffered_transport']) && true === $service['buffered_transport']) {
+            $this->transport = new TBufferedTransport($this->transport);
         }
 
         $client = $this->factory->getClientInstance(

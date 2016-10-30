@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -e
+set -u
+
+THRIFT_SOURCES_DIR="${HOME}/thrift"
+THRIFT_DIST_PATH="$THRIFT_SOURCES_DIR/thrift-${THRIFT_VERSION}"
+
+sudo apt-get update
+sudo apt-get install automake bison flex g++ git libboost1.55-all-dev \
+  libevent-dev libssl-dev libtool make pkg-config openjdk-7-jdk \
+  php5-dev php5-cli phpunit
+
+mkdir -p $THRIFT_SOURCES_DIR
+cd $THRIFT_SOURCES_DIR
+
+if [ ! -d $THRIFT_DIST_PATH ];
+then
+  curl http://archive.apache.org/dist/thrift/${THRIFT_VERSION}/thrift-${THRIFT_VERSION}.tar.gz | tar zx
+  cd thrift-${THRIFT_VERSION}/
+  ./configure --without-qt4 --without-c_glib \
+    --without-csharp --without-java --without-erlang \
+    --without-python --without-perl --with-php --with-php_extension \
+    --without-ruby --without-haskell --without-go --without-d --without-cpp
+  make
+fi
+
+cd thrift-${THRIFT_VERSION}/
+sudo make install
+
+cd ${TRAVIS_BUILD_DIR}

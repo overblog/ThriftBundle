@@ -26,7 +26,7 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->modelPath = __DIR__.'/thrift';
+        $this->modelPath = static::getTmpDir().'/thrift';
         $this->definitionPath = __DIR__.'/ThriftDefinition/Test.thrift';
     }
 
@@ -49,17 +49,15 @@ class ThriftBundleTestCase extends \PHPUnit_Framework_TestCase
         $this->removeModelPath();
     }
 
-    protected function onNotSuccessfulTest($e)
-    {
-        $this->removeModelPath();
-
-        parent::onNotSuccessfulTest($e);
-    }
-
     protected function removeModelPath()
     {
         $process = new Process(sprintf('rm -rf %s 2>&1 > /dev/null', $this->modelPath));
         $process->setTimeout(null);
         $process->run();
+    }
+
+    public static function getTmpDir()
+    {
+        return __DIR__.'/tmp';
     }
 }

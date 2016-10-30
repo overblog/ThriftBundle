@@ -11,8 +11,8 @@
 
 namespace Overblog\ThriftBundle\Server;
 
+use Overblog\ThriftBundle\Thrift\Transport\TPhpStream;
 use Thrift\Transport\TBufferedTransport;
-use Thrift\Transport\TPhpStream;
 
 /**
  * HTTP Server class.
@@ -22,11 +22,12 @@ use Thrift\Transport\TPhpStream;
 class HttpServer extends Server
 {
     /**
-     * Run server.
+     * @param null|resource $input
+     * @param null|int      $mode
      */
-    public function run()
+    public function run($input = null, $mode = null)
     {
-        $transport = new TBufferedTransport(new TPhpStream(TPhpStream::MODE_R | TPhpStream::MODE_W));
+        $transport = new TBufferedTransport(new TPhpStream(null === $mode ? TPhpStream::MODE_R | TPhpStream::MODE_W : $mode, $input));
         $protocol = new $this->config['protocol']($transport, true, true);
 
         $transport->open();

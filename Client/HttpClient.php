@@ -26,15 +26,21 @@ class HttpClient extends Client
     protected function createSocket()
     {
         $host = current($this->config['hosts']);
-
         $url = parse_url($this->config['type'].'://'.$host['host']);
+        $class = $this->getSocketClassName();
 
-        $socket = new THttpClient($url['host'], $host['port'], $url['path']);
+        /** @var THttpClient $socket */
+        $socket = new $class($url['host'], $host['port'], $url['path']);
 
         if (!empty($host['httpTimeoutSecs'])) {
             $socket->setTimeoutSecs($host['httpTimeoutSecs']);
         }
 
         return $socket;
+    }
+
+    protected function getSocketClassName()
+    {
+        return '\\Thrift\\Transport\\THttpClient';
     }
 }

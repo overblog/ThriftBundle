@@ -25,11 +25,13 @@ class TestHandler
 
     public function ping()
     {
+        return true;
     }
 
     public function get($id)
     {
         if ($id == -1) {
+            /** @var \ThriftModel\Test\InvalidValueException $e */
             $e = $this->factory->getInstance('ThriftModel\Test\InvalidValueException', [
                 'error_code' => 100,
                 'error_msg' => 'ERROR',
@@ -60,6 +62,7 @@ class TestHandler
     public function create($test)
     {
         if (empty($test->content)) {
+            /** @var \ThriftModel\Test\InvalidValueException $e */
             $e = $this->factory->getInstance('ThriftModel\Test\InvalidValueException', [
                 'error_code' => 100,
                 'error_msg' => 'ERROR',
