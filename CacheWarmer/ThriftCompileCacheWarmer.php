@@ -13,6 +13,7 @@ namespace Overblog\ThriftBundle\CacheWarmer;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 use Overblog\ThriftBundle\Exception\CompilerException;
+use Overblog\ThriftBundle\Listener\ClassLoaderListener;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -27,11 +28,6 @@ class ThriftCompileCacheWarmer
     private $cacheDir;
     private $path;
     private $services;
-
-    /**
-     * Cache Suffix for thrift compiled files.
-     */
-    const CACHE_SUFFIX = 'thrift';
 
     /**
      * Register dependencies.
@@ -70,12 +66,14 @@ class ThriftCompileCacheWarmer
 
     /**
      * Compile Thrift Model.
+     * @param bool $loadClasses
+     * @throws \Overblog\ThriftBundle\Exception\ConfigurationException
      */
-    public function compile()
+    public function compile($loadClasses = false)
     {
         $compiler = new ThriftCompiler();
         $compiler->setExecPath($this->path);
-        $cacheDir = sprintf('%s/%s', $this->cacheDir, self::CACHE_SUFFIX);
+        $cacheDir = $this->cacheDir;
 
         // We compile for every Service
         foreach ($this->services as $config) {
@@ -100,10 +98,10 @@ class ThriftCompileCacheWarmer
             // Compilation Error
             if (false === $compile) {
                 throw new \RuntimeException(
-                        sprintf('Unable to compile Thrift definition %s.', $definitionPath),
-                        0,
-                        new CompilerException($compiler->getLastOutput())
-                    );
+                    sprintf('Unable to compile Thrift definition %s.', $definitionPath),
+                    0,
+                    new CompilerException($compiler->getLastOutput())
+                );
             }
         }
 
@@ -116,5 +114,10 @@ class ThriftCompileCacheWarmer
 
         // Generate ClassMap
         ClassMapGenerator::dump($cacheDir, sprintf('%s/classes.map', $cacheDir));
+
+        if ($loadClasses) {
+            // Init Class Loader
+            ClassLoaderListener::registerClassLoader($cacheDir);
+        }
     }
 }

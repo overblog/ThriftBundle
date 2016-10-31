@@ -73,7 +73,7 @@ class ClassLoaderListener
      */
     public static function registerClassLoader($cacheDir)
     {
-        $path = sprintf('%s/%s/classes.map', $cacheDir, ThriftCompileCacheWarmer::CACHE_SUFFIX);
+        $path = sprintf('%s/classes.map', $cacheDir);
         $classMap = require $path;
         $l = new MapClassLoader($classMap);
         $l->register();

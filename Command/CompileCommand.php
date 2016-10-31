@@ -92,7 +92,7 @@ class CompileCommand extends ContainerAwareCommand
         }
 
         //Set Path
-        $compiler->setModelPath(sprintf('%s/%s', $bundlePath, ThriftCompileCacheWarmer::CACHE_SUFFIX));
+        $compiler->setModelPath(sprintf('%s/%s', $bundlePath, 'thrift'));
 
         //Set include dirs
         if (($includeDirs = $input->getOption('includeDir'))) {

@@ -10,6 +10,7 @@
  */
 
 namespace Overblog\ThriftBundle\Factory;
+use Overblog\ThriftBundle\Cache\ClientCacheProxyManager;
 
 /**
  * Thrift factory.
@@ -18,16 +19,23 @@ namespace Overblog\ThriftBundle\Factory;
  */
 class ThriftFactory
 {
-    protected $services;
+    private $services;
+
+    /**
+     * @var ClientCacheProxyManager
+     */
+    private $clientCacheProxyManager;
 
     /**
      * Inject dependencies.
      *
      * @param array $services
+     * @param ClientCacheProxyManager $clientCacheProxyManager
      */
-    public function __construct(array $services)
+    public function __construct(array $services, ClientCacheProxyManager $clientCacheProxyManager)
     {
         $this->services = $services;
+        $this->clientCacheProxyManager = $clientCacheProxyManager;
     }
 
     /**
@@ -73,8 +81,14 @@ class ThriftFactory
     public function getClientInstance($service, $protocol)
     {
         $class = $this->getClientClassName($service);
+        $client = new $class($protocol);
+        $ttl = isset($this->services[$service]['cache']) ? $this->services[$service]['cache'] : 0;
+        if ($ttl > 0 && !class_exists('ProxyManager\\Factory\\AccessInterceptorValueHolderFactory')) {
+            throw new \RuntimeException('To use thrift client cache, the package "ocramius/proxy-manager" is required');
+        }
+        $clientCacheProxy = $this->clientCacheProxyManager->getClientCacheProxy($client, $ttl);
 
-        return new $class($protocol);
+        return $clientCacheProxy;
     }
 
     public function getClientClassName($name)

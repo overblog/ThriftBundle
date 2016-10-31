@@ -86,6 +86,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('service')->isRequired()->end()
                             ->scalarNode('type')->defaultValue('http')->end()
+                            ->integerNode('cache')->defaultValue(0)->end()
                             ->arrayNode('hosts')
                                 ->requiresAtLeastOneElement()
                                 ->useAttributeAsKey('name')
