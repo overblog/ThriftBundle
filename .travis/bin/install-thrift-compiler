@@ -17,7 +17,7 @@ cd $THRIFT_SOURCES_DIR
 if [ ! -d $THRIFT_DIST_PATH ];
 then
   curl http://archive.apache.org/dist/thrift/${THRIFT_VERSION}/thrift-${THRIFT_VERSION}.tar.gz | tar zx
-  cd thrift-${THRIFT_VERSION}/
+  cd $THRIFT_DIST_PATH
   ./configure --without-qt4 --without-c_glib \
     --without-csharp --without-java --without-erlang \
     --without-python --without-perl --with-php --with-php_extension \
@@ -25,7 +25,7 @@ then
   make
 fi
 
-cd thrift-${THRIFT_VERSION}/
+cd $THRIFT_DIST_PATH
 sudo make install
 
 cd ${TRAVIS_BUILD_DIR}
