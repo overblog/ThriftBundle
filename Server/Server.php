@@ -24,26 +24,12 @@ abstract class Server
     protected $processor;
 
     /**
-     * Configuration.
-     *
-     * @var array
-     */
-    protected $config;
-
-    /**
      * Load dependencies.
      *
      * @param mixed $processor
-     * @param array $config
      */
-    public function __construct($processor, array $config)
+    public function __construct($processor)
     {
         $this->processor = $processor;
-        $this->config = $config;
     }
-
-    /**
-     * Run the server.
-     */
-    abstract public function run();
 }

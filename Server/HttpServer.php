@@ -22,13 +22,14 @@ use Thrift\Transport\TBufferedTransport;
 class HttpServer extends Server
 {
     /**
-     * @param null|resource $input
-     * @param null|int      $mode
+     * @param $protocolClass
+     * @param resource $input
+     * @param null|int $mode
      */
-    public function run($input = null, $mode = null)
+    public function run($protocolClass, $input, $mode = null)
     {
         $transport = new TBufferedTransport(new TPhpStream(null === $mode ? TPhpStream::MODE_R | TPhpStream::MODE_W : $mode, $input));
-        $protocol = new $this->config['protocol']($transport, true, true);
+        $protocol = new $protocolClass($transport, true, true);
 
         $transport->open();
         $this->processor->process($protocol, $protocol);

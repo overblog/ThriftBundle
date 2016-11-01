@@ -11,6 +11,7 @@
 
 namespace Overblog\ThriftBundle\Client;
 
+use Overblog\ThriftBundle\Metadata\HostMetadata;
 use Thrift\Transport\TSocket;
 use Thrift\Transport\TSocketPool;
 
@@ -26,33 +27,41 @@ class SocketClient extends Client
      */
     protected function createSocket()
     {
-        $nbHosts = count($this->config['hosts']);
+        $nbHosts = count($this->metadata->getHosts());
 
         if ($nbHosts == 1) {
-            $host = current($this->config['hosts']);
+            /**
+             * @var HostMetadata
+             */
+            $hostMetadata = current($this->metadata->getHosts());
 
-            $socket = new TSocket($host['host'], $host['port']);
-            if (!empty($host['recvTimeout'])) {
-                $socket->setRecvTimeout($host['recvTimeout']);
+            $socket = new TSocket($hostMetadata->getHost(), $hostMetadata->getPort());
+            if ($hostMetadata->getRecvTimeout()) {
+                $socket->setRecvTimeout($hostMetadata->getRecvTimeout());
             }
-            if (!empty($host['sendTimeout'])) {
-                $socket->setSendTimeout($host['sendTimeout']);
+            if ($hostMetadata->getSendTimeout()) {
+                $socket->setSendTimeout($hostMetadata->getSendTimeout());
             }
         } else {
             $hosts = [];
             $ports = [];
+            $recvTimeout = null;
+            $sendTimeout = null;
 
-            foreach ($this->config['hosts'] as $host) {
-                $hosts[] = $host['host'];
-                $ports[] = $host['port'];
+            foreach ($this->metadata->getHosts() as $hostMetadata) {
+                $hosts[] = $hostMetadata->getHost();
+                $ports[] = $hostMetadata->getPort();
+
+                $recvTimeout = null === $recvTimeout || $hostMetadata->getRecvTimeout() < $recvTimeout ? $hostMetadata->getRecvTimeout() : $recvTimeout;
+                $sendTimeout = null === $sendTimeout || $hostMetadata->getSendTimeout() < $sendTimeout ? $hostMetadata->getSendTimeout() : $sendTimeout;
             }
 
             $socket = new TSocketPool($hosts, $ports);
-            if (!empty($host['recvTimeout'])) {
-                $socket->setRecvTimeout($host['recvTimeout']);
+            if ($recvTimeout) {
+                $socket->setRecvTimeout($recvTimeout);
             }
-            if (!empty($host['sendTimeout'])) {
-                $socket->setSendTimeout($host['sendTimeout']);
+            if ($sendTimeout) {
+                $socket->setSendTimeout($sendTimeout);
             }
         }
 

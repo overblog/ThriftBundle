@@ -12,6 +12,7 @@
 namespace Overblog\ThriftBundle\Tests\Factory;
 
 use Overblog\ThriftBundle\Factory\ThriftFactory;
+use Overblog\ThriftBundle\Metadata\Metadata;
 use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
 
 /**
@@ -29,13 +30,15 @@ class ThriftFactoryTest extends ThriftBundleTestCase
 
     public function testFactory()
     {
-        $factory = new ThriftFactory([
-            'test' => [
-                'definition' => 'Test',
-                'className' => 'TestService',
-                'namespace' => 'ThriftModel\Test',
+        $factory = new ThriftFactory(new Metadata([
+            'services' => [
+                'test' => [
+                    'definition' => 'Test',
+                    'className' => 'TestService',
+                    'namespace' => 'ThriftModel\Test',
+                ],
             ],
-        ]);
+        ]));
 
         $this->assertInstanceOf(
             'ThriftModel\Test\Test',

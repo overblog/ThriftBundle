@@ -37,22 +37,18 @@ class ClientTestCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $services = $this->getContainer()->getParameter('thrift.config.services');
+        $factory = $this->getContainer()->get('thrift.factory');
         $service  = $input->getArgument('service');
+        $metadata = $factory->getMetadata();
+        $serviceMetadata = $metadata->getService($service);
         $method   = $input->getArgument('method');
         $args     = $input->getArgument('args');
 
-        if (!isset($services[$service])) {
-            $output->writeln(sprintf('<error>Unknow service: %s</error>', $service));
+        $clientName = 'test-client-'.time();
 
-            return false;
-        }
-
-        // Instantiate client
-        $thriftClient = new ThriftClient(
-            $this->getContainer()->get('thrift.factory'),
+        $metadata->addClient(
+            $clientName,
             [
-                'service_config' => $services[$service],
                 'service' => $service,
                 'type' => $input->getOption('mode'),
                 'hosts' => [
@@ -64,6 +60,9 @@ class ClientTestCommand extends ContainerAwareCommand
                 ],
             ]
         );
+
+        // Instantiate client
+        $thriftClient = new ThriftClient($this->getContainer()->get('thrift.factory'), $clientName);
 
         $time_start = microtime(true);
 

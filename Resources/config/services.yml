@@ -6,16 +6,17 @@ parameters:
     thrift.classloader.listener.class: Overblog\ThriftBundle\Listener\ClassLoaderListener
     thrift.routing.loader.class: Overblog\ThriftBundle\Routing\ThriftRoutingLoader
     thrift.client_cache_proxy_manager: Overblog\ThriftBundle\Cache\ClientCacheProxyManager
+    thrift.metadata.class: Overblog\ThriftBundle\Metadata\Metadata
     thrift.cache_dir: "%kernel.cache_dir%/thrift"
 
 services:
     thrift.compile_warmer:
         class: "%thrift.compile_warmer.class%"
-        arguments: ["%thrift.cache_dir%", "%kernel.root_dir%", "%thrift.config.compiler.path%", "%thrift.config.services%"]
+        arguments: ["%thrift.cache_dir%", "%kernel.root_dir%", "@thrift.metadata"]
 
     thrift.factory:
         class: "%thrift.factory.class%"
-        arguments: ["%thrift.config.services%", "@thrift.client_cache_proxy_manager"]
+        arguments: ["@thrift.metadata", "@thrift.client_cache_proxy_manager"]
 
     thrift.classloader.listener:
         class: "%thrift.classloader.listener.class%"
@@ -26,7 +27,7 @@ services:
 
     thrift.routing.loader:
         class: "%thrift.routing.loader.class%"
-        arguments: ["%thrift.config.servers%"]
+        arguments: ["@thrift.metadata"]
         tags:
             - { name: routing.loader, priority: 255 }
 
@@ -39,3 +40,21 @@ services:
         class: "%thrift.client_cache_proxy_manager%"
         public: false
         arguments: ["%thrift.cache_dir%/ThriftClientCacheProxy", "@?thrift.cache_adapter"]
+
+    thrift.client.test:
+        class: "%thrift.client.test.class%"
+        public: false
+        parent: thrift.client
+
+    thrift.client:
+        class: "%thrift.client.class%"
+        public: false
+        arguments:
+            - "@thrift.factory"
+            - ~
+
+    thrift.metadata:
+        class: "%thrift.metadata.class%"
+        public: false
+        arguments:
+            - ~

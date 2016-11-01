@@ -11,17 +11,18 @@
 
 namespace Overblog\ThriftBundle\Routing;
 
+use Overblog\ThriftBundle\Metadata\Metadata;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class ThriftRoutingLoader extends Loader
 {
-    protected $services;
+    protected $metadata;
 
-    public function __construct($services)
+    public function __construct(Metadata $metadata)
     {
-        $this->services = $services;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -37,17 +38,17 @@ class ThriftRoutingLoader extends Loader
     public function load($resource, $type = null)
     {
         $coll = new RouteCollection();
-        foreach ($this->services as $path => $service) {
+        foreach ($this->metadata->getServers() as $name => $serverMetadata) {
             $route = new Route(
-                '/'.$path,
-                ['_controller' => 'OverblogThriftBundle:Thrift:server', 'extensionName' => $path],
+                '/'.$name,
+                ['_controller' => 'OverblogThriftBundle:Thrift:server', 'extensionName' => $name],
                 [],
                 [],
                 null,
                 [],
                 ['post']
             );
-            $coll->add('thrift.'.$service['service'], $route);
+            $coll->add('thrift.'.$serverMetadata->getService(), $route);
         }
 
         return $coll;

@@ -13,9 +13,8 @@ namespace Overblog\ThriftBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -36,37 +35,26 @@ class OverblogThriftExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('thrift.config.compiler.path', $config['compiler']['path']);
-        $container->setParameter('thrift.config.services', $config['services']);
-        $container->setParameter('thrift.config.servers', $config['servers']);
-
         // Register clients
         foreach ($config['clients'] as $name => $clientConfig) {
-            $this->loadClient($name, $clientConfig, $container, $config['testMode']);
+            $this->loadClient($name, $container, $config['testMode']);
         }
+
+        $metaDataDefinition = $container->getDefinition('thrift.metadata');
+        $metaDataDefinition->replaceArgument(0, $config);
     }
 
     /**
      * Create client service.
      *
      * @param string           $name
-     * @param array            $clientConfig
      * @param ContainerBuilder $container
      * @param bool             $testMode
      */
-    protected function loadClient($name, array $clientConfig, ContainerBuilder $container, $testMode = false)
+    protected function loadClient($name, ContainerBuilder $container, $testMode = false)
     {
-        $clientDef = new Definition(
-            $container->getParameter(
-                $testMode ? 'thrift.client.test.class' : 'thrift.client.class'
-            )
-        );
-
-        $clientDef->setArguments([new Reference('thrift.factory'), $clientConfig]);
-
-        $container->setDefinition(
-            sprintf('thrift.client.%s', $name),
-            $clientDef
-        );
+        $clientDef = new DefinitionDecorator($testMode ? 'thrift.client.test' : 'thrift.client');
+        $clientDef->replaceArgument(1, $name);
+        $container->setDefinition(sprintf('thrift.client.%s', $name), $clientDef)->setPublic(true);
     }
 }

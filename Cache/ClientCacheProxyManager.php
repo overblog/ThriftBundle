@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the OverblogThriftBundle package.
+ *
+ * (c) Overblog <http://github.com/overblog/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Overblog\ThriftBundle\Cache;
 
 use ProxyManager\Configuration;
@@ -9,7 +18,7 @@ use Symfony\Component\Cache\Adapter\AdapterInterface;
 class ClientCacheProxyManager
 {
     const METHOD_SEND_PREFIX = 'send_';
-    const METHOD_RECEIVE_PREFIX ='recv_';
+    const METHOD_RECEIVE_PREFIX = 'recv_';
 
     /**
      * @var AdapterInterface
@@ -43,10 +52,12 @@ class ClientCacheProxyManager
         return $this->cacheAdapter;
     }
 
-    public function generateCacheKey($client, $method, $params) {
+    public function generateCacheKey($client, $method, $params)
+    {
         // generate a cache key based on the function name and arguments
-        $pieces = array_merge([get_class($client) . '::' . $method], array_map('serialize', $params));
+        $pieces = array_merge([get_class($client).'::'.$method], array_map('serialize', $params));
         $cachedKey = base64_encode(implode('|', $pieces));
+
         return $cachedKey;
     }
 
@@ -81,10 +92,11 @@ class ClientCacheProxyManager
     {
         $class = get_class($client);
         if (!array_key_exists($class, $this->clientServicesMethods)) {
-            $this->clientServicesMethods[$class] = array_filter(get_class_methods($client), function($method) {
-                return strpos($method, static::METHOD_SEND_PREFIX) !== 0 && strpos($method, static::METHOD_RECEIVE_PREFIX) !== 0 &&  '__construct' !== $method;
+            $this->clientServicesMethods[$class] = array_filter(get_class_methods($client), function ($method) {
+                return strpos($method, static::METHOD_SEND_PREFIX) !== 0 && strpos($method, static::METHOD_RECEIVE_PREFIX) !== 0 && '__construct' !== $method;
             });
         }
+
         return $this->clientServicesMethods[$class];
     }
 
@@ -94,6 +106,7 @@ class ClientCacheProxyManager
         $item = $this->getCacheAdapter()->getItem($cacheKey);
         if ($item->isHit()) {
             $returnEarly = true;
+
             return $item->get();
         }
     }

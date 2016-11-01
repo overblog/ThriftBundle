@@ -12,6 +12,8 @@
 namespace Overblog\ThriftBundle\Client;
 
 use Overblog\ThriftBundle\Factory\ThriftFactory;
+use Overblog\ThriftBundle\Metadata\ClientMetadata;
+use Overblog\ThriftBundle\Metadata\ServiceMetadata;
 use Thrift\Transport\TBufferedTransport;
 
 /**
@@ -29,13 +31,6 @@ class ThriftClient
     protected $factory;
 
     /**
-     * Client config.
-     *
-     * @var array
-     */
-    protected $config = [];
-
-    /**
      * Client instance.
      */
     protected $client;
@@ -46,15 +41,26 @@ class ThriftClient
     protected $transport;
 
     /**
+     * @var ClientMetadata
+     */
+    protected $metadata;
+
+    /**
+     * @var string
+     */
+    protected $name;
+
+    /**
      * Register Dependencies.
      *
-     * @param \Overblog\ThriftBundle\Factory\ThriftFactory $factory
-     * @param array                                        $config
+     * @param ThriftFactory $factory
+     * @param string        $name
      */
-    public function __construct(ThriftFactory $factory, array $config)
+    public function __construct(ThriftFactory $factory, $name)
     {
         $this->factory = $factory;
-        $this->config = $config;
+        $this->name = $name;
+        $this->metadata = $factory->getMetadata()->getClient($name);
     }
 
     /**
@@ -101,32 +107,50 @@ class ThriftClient
      */
     protected function clientFactory()
     {
-        if ('http-test' === $this->config['type']) {
+        if ('http-test' === $this->getMetadata()->getType()) {
             $class = '\\Overblog\\ThriftBundle\\Tests\\Thrift\\Client\\HttpClient';
         } else {
-            $class = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->config['type'])));
+            $class = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->getMetadata()->getType())));
         }
 
-        return new $class($this->config);
+        return new $class($this->metadata);
     }
 
     protected function createClient()
     {
-        $service = $this->config['service_config'];
+        $serviceMetadata = $this->getServiceMetadata();
         //Initialisation du client
         $this->transport = $this->clientFactory()->getSocket();
 
-        if (isset($service['buffered_transport']) && true === $service['buffered_transport']) {
+        if ($serviceMetadata->isBufferedTransport()) {
             $this->transport = new TBufferedTransport($this->transport);
         }
 
+        $protocol = $serviceMetadata->getProtocol();
+
         $client = $this->factory->getClientInstance(
-            $this->config['service'],
-            new $service['protocol']($this->transport)
+            $this->getMetadata()->getService(),
+            new $protocol($this->transport)
         );
 
         $this->transport->open();
 
         return $client;
+    }
+
+    /**
+     * @return ClientMetadata
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @return ServiceMetadata
+     */
+    public function getServiceMetadata()
+    {
+        return $this->factory->getMetadata()->getService($this->getMetadata()->getService());
     }
 }

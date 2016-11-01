@@ -49,28 +49,18 @@ class ServerCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $servers = $this->getContainer()->getParameter('thrift.config.servers');
         $config = $input->getArgument('config');
-
-        if (!isset($servers[$config])) {
-            $output->writeln(sprintf('<error>Unknow service: %s</error>', $config));
-
-            return false;
-        }
-
-        $server = $servers[$config];
+        $metadata = $this->getContainer()->get('thrift.factory')->getMetadata();
+        $serverMetadata = $metadata->getServer($config);
 
         $server = new SocketServer(
             $this->getContainer()->get('thrift.factory')->getProcessorInstance(
-                  $server['service'],
-                  $this->getContainer()->get($server['handler'])
-              ),
-            $server
+                $serverMetadata->getService(),
+                $this->getContainer()->get($serverMetadata->getHandler())
+            )
         );
 
-        $server->getHeader();
-
-        $server->run($input->getOption('host'), $input->getOption('port'));
+        $server->run($input->getOption('host'), $input->getOption('port'), $serverMetadata->isFork());
 
         return 0;
     }

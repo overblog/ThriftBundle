@@ -11,8 +11,6 @@
 
 namespace Overblog\ThriftBundle\DependencyInjection\Compiler;
 
-use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
-use Overblog\ThriftBundle\Listener\ClassLoaderListener;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

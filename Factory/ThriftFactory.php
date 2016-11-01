@@ -10,7 +10,9 @@
  */
 
 namespace Overblog\ThriftBundle\Factory;
+
 use Overblog\ThriftBundle\Cache\ClientCacheProxyManager;
+use Overblog\ThriftBundle\Metadata\Metadata;
 
 /**
  * Thrift factory.
@@ -19,7 +21,10 @@ use Overblog\ThriftBundle\Cache\ClientCacheProxyManager;
  */
 class ThriftFactory
 {
-    private $services;
+    /**
+     * @var Metadata
+     */
+    private $metadata;
 
     /**
      * @var ClientCacheProxyManager
@@ -29,12 +34,12 @@ class ThriftFactory
     /**
      * Inject dependencies.
      *
-     * @param array $services
+     * @param Metadata                $metadata
      * @param ClientCacheProxyManager $clientCacheProxyManager
      */
-    public function __construct(array $services, ClientCacheProxyManager $clientCacheProxyManager)
+    public function __construct(Metadata $metadata, ClientCacheProxyManager $clientCacheProxyManager = null)
     {
-        $this->services = $services;
+        $this->metadata = $metadata;
         $this->clientCacheProxyManager = $clientCacheProxyManager;
     }
 
@@ -82,7 +87,11 @@ class ThriftFactory
     {
         $class = $this->getClientClassName($service);
         $client = new $class($protocol);
-        $ttl = isset($this->services[$service]['cache']) ? $this->services[$service]['cache'] : 0;
+        if (null === $this->clientCacheProxyManager) {
+            return $client;
+        }
+
+        $ttl = $this->getMetadata()->getClient($service)->getCache();
         if ($ttl > 0 && !class_exists('ProxyManager\\Factory\\AccessInterceptorValueHolderFactory')) {
             throw new \RuntimeException('To use thrift client cache, the package "ocramius/proxy-manager" is required');
         }
@@ -93,26 +102,25 @@ class ThriftFactory
 
     public function getClientClassName($name)
     {
-        $service = $this->getService($name);
-        $className = sprintf('%s\%sClient', $service['namespace'], $service['className']);
+        $service = $this->getMetadata()->getService($name);
+        $className = sprintf('%s\%sClient', $service->getNamespace(), $service->getClassName());
 
         return $className;
     }
 
     public function getProcessorClassName($name)
     {
-        $service = $this->getService($name);
-        $className = sprintf('%s\%sProcessor', $service['namespace'], $service['className']);
+        $service = $this->getMetadata()->getService($name);
+        $className = sprintf('%s\%sProcessor', $service->getNamespace(), $service->getClassName());
 
         return $className;
     }
 
-    private function getService($name)
+    /**
+     * @return Metadata
+     */
+    public function getMetadata()
     {
-        if (!isset($this->services[$name])) {
-            throw new \InvalidArgumentException(sprintf('Service "%s" not found.', $name));
-        }
-
-        return $this->services[$name];
+        return $this->metadata;
     }
 }

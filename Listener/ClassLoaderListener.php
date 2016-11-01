@@ -11,7 +11,6 @@
 
 namespace Overblog\ThriftBundle\Listener;
 
-use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
 use Symfony\Component\ClassLoader\MapClassLoader;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
