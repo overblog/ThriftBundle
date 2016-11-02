@@ -32,6 +32,12 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('testMode')->defaultFalse()->end()
+                ->arrayNode('definitions')
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                        ->scalarNode('cache_adapter')->defaultNull()->info('Cache adapter service id.')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('compiler')
                     ->addDefaultsIfNotSet()
                     ->children()

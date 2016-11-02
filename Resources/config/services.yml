@@ -31,15 +31,10 @@ services:
         tags:
             - { name: routing.loader, priority: 255 }
 
-#    thrift.cache_adapter:
-#        class: Symfony\Component\Cache\Adapter\FilesystemAdapter
-#        public: false
-#        arguments: ["thrift"]
-
     thrift.client_cache_proxy_manager:
         class: "%thrift.client_cache_proxy_manager%"
         public: false
-        arguments: ["%thrift.cache_dir%/ThriftClientCacheProxy", "@?thrift.cache_adapter"]
+        arguments: ["%thrift.cache_dir%/ThriftClientCacheProxy", ~]
 
     thrift.client.test:
         class: "%thrift.client.test.class%"

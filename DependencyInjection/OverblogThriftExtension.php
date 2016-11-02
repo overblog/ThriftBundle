@@ -11,10 +11,13 @@
 
 namespace Overblog\ThriftBundle\DependencyInjection;
 
+use Overblog\ThriftBundle\Cache\ClientCacheProxyManager;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -34,27 +37,63 @@ class OverblogThriftExtension extends Extension
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
-        // Register clients
-        foreach ($config['clients'] as $name => $clientConfig) {
-            $this->loadClient($name, $container, $config['testMode']);
-        }
-
-        $metaDataDefinition = $container->getDefinition('thrift.metadata');
-        $metaDataDefinition->replaceArgument(0, $config);
+        $this->loadMetadata($config, $container);
+        $this->loadClients($config, $container);
+        $this->loadClientsCacheProxy($config, $container);
     }
 
     /**
-     * Create client service.
+     * Create clients service.
      *
-     * @param string           $name
+     * @param array            $config
      * @param ContainerBuilder $container
-     * @param bool             $testMode
      */
-    protected function loadClient($name, ContainerBuilder $container, $testMode = false)
+    private function loadClients(array $config, ContainerBuilder $container)
     {
-        $clientDef = new DefinitionDecorator($testMode ? 'thrift.client.test' : 'thrift.client');
-        $clientDef->replaceArgument(1, $name);
-        $container->setDefinition(sprintf('thrift.client.%s', $name), $clientDef)->setPublic(true);
+        // Register clients
+        foreach ($config['clients'] as $name => $clientConfig) {
+            $clientDef = new DefinitionDecorator($config['testMode'] ? 'thrift.client.test' : 'thrift.client');
+            $clientDef->replaceArgument(1, $name);
+            $clientDef->setPublic(true);
+            $container->setDefinition(sprintf('thrift.client.%s', $name), $clientDef);
+        }
+    }
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
+     */
+    private function loadMetadata(array $config, ContainerBuilder $container)
+    {
+        $metaDataDefinition = $container->getDefinition('thrift.metadata');
+        $metaDataDefinition->replaceArgument(0, [
+            'services' => $config['services'],
+            'clients' => $config['clients'],
+            'servers' => $config['servers'],
+            'compiler' => $config['compiler'],
+        ]);
+    }
+
+    private function loadClientsCacheProxy(array $config, ContainerBuilder $container)
+    {
+        if (!ClientCacheProxyManager::isRequirementsFulfilled()) {
+            return;
+        }
+        $cacheAdapterID = $config['definitions']['cache_adapter'];
+
+        if (null === $cacheAdapterID) {
+            $cacheAdapterID = 'thrift.default_cache_adapter';
+            $definition = new Definition(
+                'Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter',
+                ['thrift', 0, $container->getParameter('thrift.cache_dir').'/cache']
+            );
+            $definition->setPublic(false);
+            $container->setDefinition('thrift.default_cache_adapter', $definition);
+        }
+
+        $container->setAlias('thrift.cache_adapter', $cacheAdapterID);
+
+        $managerDefinition = $container->getDefinition('thrift.client_cache_proxy_manager');
+        $managerDefinition->replaceArgument(1, new Reference('thrift.cache_adapter'));
     }
 }

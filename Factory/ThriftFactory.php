@@ -92,8 +92,8 @@ class ThriftFactory
         }
 
         $ttl = $this->getMetadata()->getClient($service)->getCache();
-        if ($ttl > 0 && !class_exists('ProxyManager\\Factory\\AccessInterceptorValueHolderFactory')) {
-            throw new \RuntimeException('To use thrift client cache, the package "ocramius/proxy-manager" is required');
+        if ($ttl > 0 && !ClientCacheProxyManager::isRequirementsFulfilled()) {
+            throw new \RuntimeException('To use thrift client cache, package "ocramius/proxy-manager" and "symfony/cache" required.');
         }
         $clientCacheProxy = $this->clientCacheProxyManager->getClientCacheProxy($client, $ttl);
 

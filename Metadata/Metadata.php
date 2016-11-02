@@ -46,7 +46,6 @@ class Metadata
             'clients' => [],
             'servers' => [],
             'compiler' => [],
-            'testMode' => false,
         ]);
         $resolvedOptions = $resolver->resolve($options);
 

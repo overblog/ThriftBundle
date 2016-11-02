@@ -11,6 +11,7 @@
 
 namespace Overblog\ThriftBundle\Client;
 
+use Overblog\ThriftBundle\Cache\ClientCacheProxyManager;
 use Overblog\ThriftBundle\Factory\ThriftFactory;
 use Overblog\ThriftBundle\Metadata\ClientMetadata;
 use Overblog\ThriftBundle\Metadata\ServiceMetadata;
@@ -66,13 +67,17 @@ class ThriftClient
     /**
      * Return client.
      *
+     * @param bool $useCache
+     *
      * @return \Thrift\Transport\TSocket
      */
-    public function getClient()
+    public function getClient($useCache = true)
     {
         if (is_null($this->client)) {
             $this->client = $this->createClient();
         }
+
+        $this->client->{ClientCacheProxyManager::PROPERTY_USE_CACHE} = $useCache;
 
         return $this->client;
     }
@@ -108,7 +113,7 @@ class ThriftClient
     protected function clientFactory()
     {
         if ('http-test' === $this->getMetadata()->getType()) {
-            $class = '\\Overblog\\ThriftBundle\\Tests\\Thrift\\Client\\HttpClient';
+            $class = 'Overblog\\ThriftBundle\\Tests\\Thrift\\Client\\HttpClient';
         } else {
             $class = sprintf('%s\%sClient', __NAMESPACE__, ucfirst(strtolower($this->getMetadata()->getType())));
         }

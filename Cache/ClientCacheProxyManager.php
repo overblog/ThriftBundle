@@ -19,6 +19,7 @@ class ClientCacheProxyManager
 {
     const METHOD_SEND_PREFIX = 'send_';
     const METHOD_RECEIVE_PREFIX = 'recv_';
+    const PROPERTY_USE_CACHE = '___use_cache___';
 
     /**
      * @var AdapterInterface
@@ -31,6 +32,11 @@ class ClientCacheProxyManager
     private $configuration;
 
     /**
+     * @var string
+     */
+    private $proxyCacheDir;
+
+    /**
      * @var array
      */
     private $clientServicesMethods = [];
@@ -39,11 +45,17 @@ class ClientCacheProxyManager
     {
         $this->cacheAdapter = $cacheAdapter;
         if ($cacheAdapter) {
-            if (!is_dir($proxyCacheDir)) {
-                mkdir($proxyCacheDir);
-            }
+            $this->proxyCacheDir = $proxyCacheDir;
             $this->configuration = new Configuration();
             $this->configuration->setProxiesTargetDir($proxyCacheDir);
+            $this->configuration->setProxiesNamespace(__NAMESPACE__);
+        }
+    }
+
+    public function mkProxyCacheDirIfNeeded()
+    {
+        if (!is_dir($this->proxyCacheDir)) {
+            mkdir($this->proxyCacheDir, 0755, true);
         }
     }
 
@@ -52,7 +64,7 @@ class ClientCacheProxyManager
         return $this->cacheAdapter;
     }
 
-    public function generateCacheKey($client, $method, $params)
+    public static function generateCacheKey($client, $method, $params)
     {
         // generate a cache key based on the function name and arguments
         $pieces = array_merge([get_class($client).'::'.$method], array_map('serialize', $params));
@@ -67,16 +79,25 @@ class ClientCacheProxyManager
             return $client;
         }
 
+        $this->mkProxyCacheDirIfNeeded();
+
         spl_autoload_register($this->configuration->getProxyAutoloader());
         $factory = new ProxyFactory($this->configuration);
 
         $clientProxy = $factory->createProxy($client);
 
         $prefixInterceptor = function ($proxy, $client, $method, $params, &$returnEarly) {
+            if (!$this->isClientUsingCache($client)) {
+                return;
+            }
+
             return $this->retrieveCacheItem($client, $method, $params, $returnEarly);
         };
 
         $suffixInterceptor = function ($proxy, $client, $method, $params, $returnValue) use ($cacheExpiresAfter) {
+            if (!$this->isClientUsingCache($client)) {
+                return;
+            }
             $this->saveCacheItemIfNeeded($client, $method, $params, $returnValue, $cacheExpiresAfter);
         };
 
@@ -86,6 +107,26 @@ class ClientCacheProxyManager
         }
 
         return $clientProxy;
+    }
+
+    public function clearCache()
+    {
+        if ($this->getCacheAdapter()) {
+            return;
+        }
+        $this->getCacheAdapter()->clear();
+    }
+
+    public static function isRequirementsFulfilled()
+    {
+        return
+            class_exists('ProxyManager\\Factory\\AccessInterceptorValueHolderFactory') &&
+            class_exists('Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter');
+    }
+
+    private function isClientUsingCache($client)
+    {
+        return isset($client->{self::PROPERTY_USE_CACHE}) && true === $client->{self::PROPERTY_USE_CACHE};
     }
 
     private function getClientServicesMethods($client)
@@ -102,7 +143,7 @@ class ClientCacheProxyManager
 
     private function retrieveCacheItem($client, $method, $params, &$returnEarly)
     {
-        $cacheKey = $this->generateCacheKey($client, $method, $params);
+        $cacheKey = static::generateCacheKey($client, $method, $params);
         $item = $this->getCacheAdapter()->getItem($cacheKey);
         if ($item->isHit()) {
             $returnEarly = true;
@@ -113,7 +154,7 @@ class ClientCacheProxyManager
 
     private function saveCacheItemIfNeeded($client, $method, $params, $returnValue, $expiresAfter = 0)
     {
-        $cacheKey = $this->generateCacheKey($client, $method, $params);
+        $cacheKey = static::generateCacheKey($client, $method, $params);
         $item = $this->getCacheAdapter()->getItem($cacheKey);
         // save only if item cached
         if (!$item->isHit()) {

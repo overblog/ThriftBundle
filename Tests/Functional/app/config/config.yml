@@ -15,6 +15,13 @@ overblog_thrift:
             definitionPath: app/Resources/ThriftDefinition
             transport: Overblog\ThriftBundle\Tests\Thrift\Transport\THttpClient
             server: true
+        download:
+            definition: Download
+            className: DownloadService
+            namespace: ThriftModel\Download
+            definitionPath: app/Resources/ThriftDefinition
+            transport: Overblog\ThriftBundle\Tests\Thrift\Transport\THttpClient
+            server: true
 
     clients:
         alive:
@@ -24,12 +31,25 @@ overblog_thrift:
                 test:
                     host: localhost/api/alive
                     port: 80
+        download:
+            service: download
+            cache: 600
+            type: http-test
+            hosts:
+                test:
+                    host: localhost/api/download
+                    port: 80
+
     servers:
         alive:
             service: alive
             handler: alive.handler
-            #fork: false
+        download:
+            service: download
+            handler: download.handler
 
 services:
     alive.handler:
-        class: Overblog\ThriftBundle\Tests\Functional\AliveHandler
+        class: Overblog\ThriftBundle\Tests\Functional\Handler\AliveHandler
+    download.handler:
+        class: Overblog\ThriftBundle\Tests\Functional\Handler\DownloadHandler
