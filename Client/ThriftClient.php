@@ -158,4 +158,9 @@ class ThriftClient
     {
         return $this->factory->getMetadata()->getService($this->getMetadata()->getService());
     }
+
+    public static function getServiceClientID($name)
+    {
+        return sprintf('thrift.client.%s', $name);
+    }
 }
