@@ -13,7 +13,9 @@ namespace Overblog\ThriftBundle\Server;
 
 use Thrift\Factory\TBinaryProtocolFactory;
 use Thrift\Factory\TTransportFactory;
+use Thrift\Server\TForkingServer;
 use Thrift\Server\TServerSocket;
+use Thrift\Server\TSimpleServer;
 
 /**
  * Socket Server class.
@@ -27,16 +29,20 @@ class SocketServer extends Server
      *
      * @param string $host
      * @param int    $port
+     * @param bool   $isForked
      */
-    public function run($host = 'localhost', $port = 9090)
+    public function run($host = 'localhost', $port = 9090, $isForked = true)
     {
         $transport = new TServerSocket($host, $port);
         $outputTransportFactory = $inputTransportFactory = new TTransportFactory($transport);
         $outputProtocolFactory = $inputProtocolFactory = new TBinaryProtocolFactory();
 
         // Do we use fork ?
-        $fork = 'Thrift\\Server\\'.($this->config['fork'] ? 'TForkingServer' : 'TSimpleServer');
+        $fork = 'Thrift\\Server\\'.($isForked ? 'TForkingServer' : 'TSimpleServer');
 
+        /**
+         * @var TForkingServer|TSimpleServer
+         */
         $server = new $fork(
             $this->processor,
             $transport,

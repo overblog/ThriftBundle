@@ -11,7 +11,6 @@
 
 namespace Overblog\ThriftBundle\Command;
 
-use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -62,26 +61,15 @@ class CompileCommand extends ContainerAwareCommand
         if (($path = $input->getOption('path'))) {
             $compiler->setExecPath($path);
         }
-
-        $service = $input->getArgument('service');
-        $configs = $this->getContainer()->getParameter('thrift.config.services');
-
-        // Get config
-        if (isset($configs[$service])) {
-            $config = $configs[$service];
-        } else {
-            $output->writeln(sprintf('<error>Unknow service %s</error>', $service));
-
-            return 1;
-        }
+        $factory = $this->getContainer()->get('thrift.factory');
+        $service  = $input->getArgument('service');
+        $metadata = $factory->getMetadata();
+        $serviceMetadata = $metadata->getService($service);
 
         // Get definition path
         $definitionPath = $this->getContainer()
                                ->get('thrift.compile_warmer')
-                               ->getDefinitionPath(
-                                       $config['definition'],
-                                       $config['definitionPath']
-                                   );
+                               ->getDefinitionPath($serviceMetadata->getDefinition(), $serviceMetadata->getDefinitionPath());
 
         // Get out path
         if (($bundleName = $input->getOption('bundleNameOut'))) {
@@ -92,7 +80,7 @@ class CompileCommand extends ContainerAwareCommand
         }
 
         //Set Path
-        $compiler->setModelPath(sprintf('%s/%s', $bundlePath, ThriftCompileCacheWarmer::CACHE_SUFFIX));
+        $compiler->setModelPath(sprintf('%s/%s', $bundlePath, 'thrift'));
 
         //Set include dirs
         if (($includeDirs = $input->getOption('includeDir'))) {

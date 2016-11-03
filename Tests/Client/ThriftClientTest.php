@@ -13,6 +13,7 @@ namespace Overblog\ThriftBundle\Tests\Client;
 
 use Overblog\ThriftBundle\Client\ThriftClient;
 use Overblog\ThriftBundle\Factory\ThriftFactory;
+use Overblog\ThriftBundle\Metadata\Metadata;
 use Overblog\ThriftBundle\Tests\ThriftBundleTestCase;
 use Thrift\Factory\TBinaryProtocolFactory;
 use Thrift\Factory\TTransportFactory;
@@ -26,6 +27,9 @@ use Thrift\Server\TSimpleServer;
  */
 class ThriftClientTest extends ThriftBundleTestCase
 {
+    /**
+     * @var ThriftFactory
+     */
     protected $factory;
 
     protected function setUp()
@@ -33,33 +37,60 @@ class ThriftClientTest extends ThriftBundleTestCase
         parent::setUp();
         parent::compile();
 
-        $this->factory = new ThriftFactory([
-            'test' => [
-                'definition' => 'Test',
-                'className' => 'TestService',
-                'namespace' => 'ThriftModel\Test',
+        $metadata = new Metadata([
+            'clients' => [
+                'test-socket' => [
+                    'service' => 'test',
+                    'type' => 'socket',
+                    'hosts' => [
+                        'test' => [
+                            'host' => 'localhost',
+                            'port' => 9090,
+                            'recvTimeout' => 1000,
+                        ],
+                    ],
+                ],
+                'test-http' => [
+                    'service' => 'test',
+                    'type' => 'http',
+                    'hosts' => [
+                        'test' => [
+                            'host' => 'localhost/thrift',
+                            'port' => 80,
+                        ],
+                    ],
+                ],
+                'test-multi-socket' => [
+                    'service' => 'test',
+                    'type' => 'socket',
+                    'hosts' => [
+                        'test' => [
+                            'host' => 'localhost',
+                            'port' => 9090,
+                        ],
+                        'test2' => [
+                            'host' => 'localhost',
+                            'port' => 9091,
+                        ],
+                    ],
+                ],
+            ],
+            'services' => [
+                'test' => [
+                    'definition' => 'Test',
+                    'className' => 'TestService',
+                    'namespace' => 'ThriftModel\Test',
+                    'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated',
+                ],
             ],
         ]);
+
+        $this->factory = new ThriftFactory($metadata);
     }
 
     public function testHttpClient()
     {
-        $thriftClient = new ThriftClient($this->factory, [
-            'service' => 'test',
-            'type' => 'http',
-            'hosts' => [
-                'test' => [
-                    'host' => 'localhost/thrift',
-                    'port' => 80,
-                ],
-            ],
-            'service_config' => [
-                'definition' => 'Test',
-                'className' => 'TestService',
-                'namespace' => 'ThriftModel\Test',
-                'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated',
-            ],
-        ]);
+        $thriftClient = new ThriftClient($this->factory, 'test-http');
 
         $this->assertInstanceOf('ThriftModel\Test\TestServiceClient', $thriftClient->getClient());
 
@@ -78,23 +109,7 @@ class ThriftClientTest extends ThriftBundleTestCase
 
     protected function createSocketServer()
     {
-        return new ThriftClient($this->factory, [
-            'service' => 'test',
-            'type' => 'socket',
-            'hosts' => [
-                'test' => [
-                    'host' => 'localhost',
-                    'port' => 9090,
-                    'recvTimeout' => 1000,
-                ],
-            ],
-            'service_config' => [
-                'definition' => 'Test',
-                'className' => 'Test',
-                'namespace' => 'ThriftModel\Test',
-                'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated',
-            ],
-        ]);
+        return new ThriftClient($this->factory, 'test-socket');
     }
 
     public function testSocketClient__NoServer()
@@ -214,26 +229,7 @@ class ThriftClientTest extends ThriftBundleTestCase
 
     public function testMultiSocketClient()
     {
-        $thriftClient = new ThriftClient($this->factory, [
-            'service' => 'test',
-            'type' => 'socket',
-            'hosts' => [
-                'test' => [
-                    'host' => 'localhost',
-                    'port' => 9090,
-                ],
-                'test2' => [
-                    'host' => 'localhost',
-                    'port' => 9091,
-                ],
-            ],
-            'service_config' => [
-                'definition' => 'Test',
-                'className' => 'TestService',
-                'namespace' => 'ThriftModel\Test',
-                'protocol' => 'Thrift\\Protocol\\TBinaryProtocolAccelerated',
-            ],
-        ]);
+        $thriftClient = new ThriftClient($this->factory, 'test-multi-socket');
 
         $this->assertInstanceOf(
             'ThriftModel\Test\Test',

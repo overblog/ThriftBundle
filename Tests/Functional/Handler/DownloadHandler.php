@@ -9,12 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Overblog\ThriftBundle\Tests\Functional;
+namespace Overblog\ThriftBundle\Tests\Functional\Handler;
 
-class AliveHandler
+class DownloadHandler
 {
-    public function ping()
+    public static $counter = 0;
+
+    public function count()
     {
-        return true;
+        return static::$counter;
+    }
+
+    public static function hit()
+    {
+        ++static::$counter;
     }
 }

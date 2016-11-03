@@ -11,7 +11,6 @@
 
 namespace Overblog\ThriftBundle\Listener;
 
-use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
 use Symfony\Component\ClassLoader\MapClassLoader;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -73,7 +72,7 @@ class ClassLoaderListener
      */
     public static function registerClassLoader($cacheDir)
     {
-        $path = sprintf('%s/%s/classes.map', $cacheDir, ThriftCompileCacheWarmer::CACHE_SUFFIX);
+        $path = sprintf('%s/classes.map', $cacheDir);
         $classMap = require $path;
         $l = new MapClassLoader($classMap);
         $l->register();

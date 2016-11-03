@@ -24,11 +24,7 @@ class ThriftTestClient extends ThriftClient
     public function getClient()
     {
         if (is_null($this->client)) {
-            $className = sprintf(
-                    '%s\%sClient',
-                    $this->config['service_config']['namespace'],
-                    $this->config['service_config']['className']
-                );
+            $className = $this->factory->getClientClassName($this->name);
 
             // Init Mock
             $phpunit = new ThriftTestClientPhpunit();

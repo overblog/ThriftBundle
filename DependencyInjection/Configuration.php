@@ -32,6 +32,12 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('testMode')->defaultFalse()->end()
+                ->arrayNode('definitions')
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                        ->scalarNode('cache_adapter')->defaultNull()->info('Cache adapter service id.')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('compiler')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -85,7 +91,8 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->children()
                             ->scalarNode('service')->isRequired()->end()
-                            ->scalarNode('type')->defaultValue('http')->end()
+                            ->enumNode('type')->defaultValue('http')->values(['http', 'http-test', 'socket'])->end()
+                            ->integerNode('cache')->defaultValue(0)->end()
                             ->arrayNode('hosts')
                                 ->requiresAtLeastOneElement()
                                 ->useAttributeAsKey('name')
@@ -127,22 +134,6 @@ class Configuration implements ConfigurationInterface
                     return false;
                 })
                 ->thenInvalid('Unknown service in clients configuration.')
-            ->end()
-            ->validate()
-                ->always()
-                ->then(function ($v) {
-                    //Servers
-                    foreach ($v['servers'] as $name => $server) {
-                        $v['servers'][$name]['service_config'] = $v['services'][$server['service']];
-                    }
-
-                    //Clients
-                    foreach ($v['clients'] as $name => $client) {
-                        $v['clients'][$name]['service_config'] = $v['services'][$client['service']];
-                    }
-
-                    return $v;
-                })
             ->end();
 
         return $treeBuilder;

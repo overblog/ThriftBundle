@@ -13,6 +13,8 @@ namespace Overblog\ThriftBundle\CacheWarmer;
 
 use Overblog\ThriftBundle\Compiler\ThriftCompiler;
 use Overblog\ThriftBundle\Exception\CompilerException;
+use Overblog\ThriftBundle\Listener\ClassLoaderListener;
+use Overblog\ThriftBundle\Metadata\Metadata;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -25,28 +27,20 @@ class ThriftCompileCacheWarmer
 {
     private $rootDir;
     private $cacheDir;
-    private $path;
-    private $services;
-
-    /**
-     * Cache Suffix for thrift compiled files.
-     */
-    const CACHE_SUFFIX = 'thrift';
+    private $metadata;
 
     /**
      * Register dependencies.
      *
-     * @param string $cacheDir
-     * @param string $rootDir
-     * @param array  $path
-     * @param array  $services
+     * @param string   $cacheDir
+     * @param string   $rootDir
+     * @param Metadata $metadata
      */
-    public function __construct($cacheDir, $rootDir, $path, array $services)
+    public function __construct($cacheDir, $rootDir, Metadata $metadata)
     {
         $this->cacheDir = $cacheDir;
         $this->rootDir = $rootDir;
-        $this->path = $path;
-        $this->services = $services;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -70,40 +64,44 @@ class ThriftCompileCacheWarmer
 
     /**
      * Compile Thrift Model.
+     *
+     * @param bool $loadClasses
+     *
+     * @throws \Overblog\ThriftBundle\Exception\ConfigurationException
      */
-    public function compile()
+    public function compile($loadClasses = false)
     {
         $compiler = new ThriftCompiler();
-        $compiler->setExecPath($this->path);
-        $cacheDir = sprintf('%s/%s', $this->cacheDir, self::CACHE_SUFFIX);
+        $compiler->setExecPath($this->metadata->getCompiler()->getPath());
+        $cacheDir = $this->cacheDir;
 
         // We compile for every Service
-        foreach ($this->services as $config) {
+        foreach ($this->metadata->getServices() as $serviceMetadata) {
             $definitionPath  = $this->getDefinitionPath(
-                $config['definition'],
-                $config['definitionPath']
+                $serviceMetadata->getDefinition(),
+                $serviceMetadata->getDefinitionPath()
             );
 
             //Set Path
             $compiler->setModelPath($cacheDir);
 
             //Set include dirs
-            $compiler->setIncludeDirs($config['includeDirs']);
+            $compiler->setIncludeDirs($serviceMetadata->getIncludeDirs());
 
             //Add validate
-            if ($config['validate']) {
+            if ($serviceMetadata->isValidate()) {
                 $compiler->addValidate();
             }
 
-            $compile = $compiler->compile($definitionPath, $config['server']);
+            $compile = $compiler->compile($definitionPath, $serviceMetadata->isServer());
 
             // Compilation Error
             if (false === $compile) {
                 throw new \RuntimeException(
-                        sprintf('Unable to compile Thrift definition %s.', $definitionPath),
-                        0,
-                        new CompilerException($compiler->getLastOutput())
-                    );
+                    sprintf('Unable to compile Thrift definition %s.', $definitionPath),
+                    0,
+                    new CompilerException($compiler->getLastOutput())
+                );
             }
         }
 
@@ -116,5 +114,10 @@ class ThriftCompileCacheWarmer
 
         // Generate ClassMap
         ClassMapGenerator::dump($cacheDir, sprintf('%s/classes.map', $cacheDir));
+
+        if ($loadClasses) {
+            // Init Class Loader
+            ClassLoaderListener::registerClassLoader($cacheDir);
+        }
     }
 }

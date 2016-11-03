@@ -11,6 +11,7 @@
 
 namespace Overblog\ThriftBundle\Client;
 
+use Overblog\ThriftBundle\Metadata\HostMetadata;
 use Thrift\Transport\THttpClient;
 
 /**
@@ -25,15 +26,18 @@ class HttpClient extends Client
      */
     protected function createSocket()
     {
-        $host = current($this->config['hosts']);
-        $url = parse_url($this->config['type'].'://'.$host['host']);
+        /**
+         * @var HostMetadata
+         */
+        $host = current($this->metadata->getHosts());
+        $url = parse_url($this->metadata->getType().'://'.$host->getHost());
         $class = $this->getSocketClassName();
 
         /** @var THttpClient $socket */
-        $socket = new $class($url['host'], $host['port'], $url['path']);
+        $socket = new $class($url['host'], $host->getPort(), $url['path']);
 
-        if (!empty($host['httpTimeoutSecs'])) {
-            $socket->setTimeoutSecs($host['httpTimeoutSecs']);
+        if ($host->getHttpTimeoutSecs()) {
+            $socket->setTimeoutSecs($host->getHttpTimeoutSecs());
         }
 
         return $socket;

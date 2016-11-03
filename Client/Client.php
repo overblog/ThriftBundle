@@ -11,6 +11,8 @@
 
 namespace Overblog\ThriftBundle\Client;
 
+use Overblog\ThriftBundle\Metadata\ClientMetadata;
+
 /**
  * Abstract class for create a client.
  *
@@ -21,9 +23,9 @@ abstract class Client
     /**
      * Config handler.
      *
-     * @var array
+     * @var ClientMetadata
      */
-    protected $config;
+    protected $metadata;
 
     /**
      * Socket instance.
@@ -35,11 +37,11 @@ abstract class Client
     /**
      * Register dependencies.
      *
-     * @param array $config
+     * @param ClientMetadata $metadata
      */
-    public function __construct(array $config)
+    public function __construct(ClientMetadata $metadata)
     {
-        $this->config = $config;
+        $this->metadata = $metadata;
     }
 
     /**

@@ -11,8 +11,6 @@
 
 namespace Overblog\ThriftBundle\DependencyInjection\Compiler;
 
-use Overblog\ThriftBundle\CacheWarmer\ThriftCompileCacheWarmer;
-use Overblog\ThriftBundle\Listener\ClassLoaderListener;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -32,18 +30,6 @@ class FactoryPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $cacheDir = $container->getParameter('kernel.cache_dir');
-
-        $warmer = new ThriftCompileCacheWarmer(
-                    $cacheDir,
-                    $container->getParameter('kernel.root_dir'),
-                    $container->getParameter('thrift.config.compiler.path'),
-                    $container->getParameter('thrift.config.services')
-                );
-
-        $warmer->compile();
-
-        // Init Class Loader
-        ClassLoaderListener::registerClassLoader($cacheDir);
+        $container->get('thrift.compile_warmer')->compile(true);
     }
 }

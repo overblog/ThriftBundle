@@ -11,6 +11,8 @@
 
 namespace Overblog\ThriftBundle\Controller;
 
+use Overblog\ThriftBundle\Factory\ThriftFactory;
+use Overblog\ThriftBundle\Metadata\Exception\ServerNotFoundException;
 use Overblog\ThriftBundle\Server\HttpServer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,28 +33,30 @@ class ThriftController extends Controller
         if (!($extensionName = $request->get('extensionName'))) {
             throw $this->createNotFoundException('Unable to get config name');
         }
+        /**
+         * @var ThriftFactory
+         */
+        $factory = $this->container->get('thrift.factory');
+        $metadata = $factory->getMetadata();
 
-        $servers = $this->container->getParameter('thrift.config.servers');
-
-        if (!isset($servers[$extensionName])) {
-            throw $this->createNotFoundException(sprintf('Unknown config "%s"', $extensionName));
+        try {
+            $serverMetadata = $metadata->getServer($extensionName);
+        } catch (ServerNotFoundException $e) {
+            throw $this->createNotFoundException(sprintf('Unknown config "%s"', $extensionName), $e);
         }
-
-        $server = $servers[$extensionName];
-
-        $server = new HttpServer(
-            $this->container->get('thrift.factory')->getProcessorInstance(
-                $server['service'],
-                $this->container->get($server['handler'])
-            ),
-            $server['service_config']
-        );
 
         $response = new StreamedResponse();
         $response->headers->set('Content-Type', 'application/x-thrift');
 
-        $response->setCallback(function () use ($server, $request) {
-            $server->run($request->getContent(true));
+        $response->setCallback(function () use ($factory, $serverMetadata, $metadata, $request) {
+            $server = new HttpServer(
+                $factory->getProcessorInstance(
+                    $serverMetadata->getService(),
+                    $this->container->get($serverMetadata->getHandler())
+                )
+            );
+
+            $server->run($metadata->getService($serverMetadata->getService())->getProtocol(), $request->getContent(true));
         });
 
         return $response;
