@@ -34,6 +34,7 @@
     },
     "suggest": {
         "ocramius/proxy-manager": "Required if using client cache.",
-        "symfony/cache": "Required if using client cache."
+        "symfony/cache": "Required if using client cache.",
+        "guzzlehttp/promises": "Required if using async client."
     }
 }

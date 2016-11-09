@@ -75,7 +75,7 @@ class ClientCacheProxyManager
 
     public function getClientCacheProxy($client, $cacheExpiresAfter = 0)
     {
-        if (!$this->cacheAdapter) {
+        if (!$this->getCacheAdapter()) {
             return $client;
         }
 

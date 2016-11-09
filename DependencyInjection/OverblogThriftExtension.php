@@ -12,6 +12,7 @@
 namespace Overblog\ThriftBundle\DependencyInjection;
 
 use Overblog\ThriftBundle\Cache\ClientCacheProxyManager;
+use Overblog\ThriftBundle\Client\ThriftClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -55,7 +56,7 @@ class OverblogThriftExtension extends Extension
             $clientDef = new DefinitionDecorator($config['testMode'] ? 'thrift.client.test' : 'thrift.client');
             $clientDef->replaceArgument(1, $name);
             $clientDef->setPublic(true);
-            $container->setDefinition(sprintf('thrift.client.%s', $name), $clientDef);
+            $container->setDefinition(ThriftClient::getServiceClientID($name), $clientDef);
         }
     }
 

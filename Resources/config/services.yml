@@ -7,6 +7,7 @@ parameters:
     thrift.routing.loader.class: Overblog\ThriftBundle\Routing\ThriftRoutingLoader
     thrift.client_cache_proxy_manager: Overblog\ThriftBundle\Cache\ClientCacheProxyManager
     thrift.metadata.class: Overblog\ThriftBundle\Metadata\Metadata
+    thrift.async_client.class: Overblog\ThriftBundle\Client\AsyncClient
     thrift.cache_dir: "%kernel.cache_dir%/thrift"
 
 services:
@@ -53,3 +54,9 @@ services:
         public: false
         arguments:
             - ~
+
+    thrift.async_client:
+        class: "%thrift.async_client.class%"
+        arguments:
+            - "@thrift.metadata"
+            - "@kernel"
