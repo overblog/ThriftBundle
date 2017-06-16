@@ -21,7 +21,7 @@ class ThriftTestClient extends ThriftClient
     /**
      * {@inheritdoc}
      */
-    public function getClient()
+    public function getClient($useCache = true)
     {
         if (is_null($this->client)) {
             $className = $this->factory->getClientClassName($this->name);
