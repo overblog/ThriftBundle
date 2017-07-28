@@ -4,10 +4,6 @@ sudo: required
 
 dist: xenial
 
-php:
-    - nightly
-    - hhvm
-
 branches:
     only:
         - master
@@ -29,9 +25,10 @@ matrix:
           env: SYMFONY_VERSION=3.0.*
         - php: 7.1
           env: SYMFONY_VERSION=3.1.*
-
-allow_failures:
-    - php: nightly
+        - php: hhvm
+        - php: nightly
+    allow_failures:
+        - php: nightly
 
 cache:
     directories:
@@ -50,4 +47,7 @@ before_install:
 install:
     - composer update --prefer-dist --no-interaction
 
-script: if [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then phpunit -d xdebug.max_nesting_level=1000 --debug --coverage-clover=coverage.clover; else phpunit --debug; fi
+script: if [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then bin/phpunit -d xdebug.max_nesting_level=1000 --debug --coverage-clover=coverage.clover; else bin/phpunit --debug; fi
+
+#after_script:
+#    - if [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
