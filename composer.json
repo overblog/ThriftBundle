@@ -24,5 +24,10 @@
         "apache/thrift": ">=0.9.1",
         "symfony/symfony": "~2.3|~3.0"
     },
-    "require-dev": {}
+    "require-dev": {},
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.9-dev"
+        }
+    }
 }
