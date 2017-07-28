@@ -17,6 +17,7 @@
         ]
     },
     "config" : {
+        "bin-dir": "bin",
         "sort-packages": true
     },
     "require": {
@@ -24,7 +25,9 @@
         "apache/thrift": ">=0.9.1",
         "symfony/symfony": "~2.3|~3.0"
     },
-    "require-dev": {},
+    "require-dev": {
+        "phpunit/phpunit": "^4.1 || ^5.5"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "0.9-dev"
