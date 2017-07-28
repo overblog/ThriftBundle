@@ -4,10 +4,6 @@ sudo: required
 
 dist: xenial
 
-php:
-    - nightly
-    - hhvm
-
 branches:
     only:
         - master
@@ -29,9 +25,10 @@ matrix:
           env: SYMFONY_VERSION=3.0.*
         - php: 7.1
           env: SYMFONY_VERSION=3.1.*
-
-allow_failures:
-    - php: nightly
+        - php: hhvm
+        - php: nightly
+    allow_failures:
+        - php: nightly
 
 cache:
     directories:
