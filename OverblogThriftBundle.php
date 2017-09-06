@@ -12,6 +12,7 @@
 namespace Overblog\ThriftBundle;
 
 use Overblog\ThriftBundle\DependencyInjection\Compiler\FactoryPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -36,6 +37,6 @@ class OverblogThriftBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new FactoryPass());
+        $container->addCompilerPass(new FactoryPass(), PassConfig::TYPE_BEFORE_REMOVING);
     }
 }
