@@ -37,6 +37,6 @@ class OverblogThriftBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new FactoryPass(), PassConfig::TYPE_BEFORE_REMOVING);
+        $container->addCompilerPass(new FactoryPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1000)
     }
 }
