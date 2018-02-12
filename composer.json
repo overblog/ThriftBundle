@@ -2,7 +2,7 @@
     "name": "overblog/thrift-bundle",
     "description": "OverBlog Thrift Bundle",
     "homepage": "https://github.com/overblog/ThriftBundle.git",
-    "type": "library",
+    "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
         {
