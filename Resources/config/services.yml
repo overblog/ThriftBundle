@@ -8,21 +8,25 @@ parameters:
 services:
   thrift.compile_warmer:
     class: '%thrift.compile_warmer.class%'
+    public: true
     arguments: ['%kernel.cache_dir%', '%kernel.root_dir%', '%thrift.config.compiler.path%', '%thrift.config.services%']
 
   thrift.factory:
     class: '%thrift.factory.class%'
+    public: true
     arguments: ['%thrift.config.services%']
 
   thrift.classloader.listener:
     arguments: ['%kernel.cache_dir%']
     class: '%thrift.classloader.listener.class%'
+    public: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
       - { name: kernel.event_listener, event: console.command, method: onConsoleCommand, priority: 255 }
 
   thrift.routing.loader:
     class: Overblog\ThriftBundle\Routing\ThriftRoutingLoader
+    public: true
     arguments: ['%thrift.config.servers%']
     tags:
       - { name: routing.loader, priority: 255 }
