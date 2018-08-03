@@ -11,6 +11,7 @@
 
 namespace Overblog\ThriftBundle\Routing;
 
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -27,18 +28,23 @@ class ThriftRoutingLoader extends Loader
     /**
      * Loads a resource.
      *
-     * @param mixed       $resource The resource
-     * @param string|null $type     The resource type or null if unknown
+     * @param mixed $resource The resource
+     * @param string|null $type The resource type or null if unknown
      *
+     * @return RouteCollection
      * @throws \Exception If something went wrong
      */
     public function load($resource, $type = null)
     {
+        $controllerArg = Kernel::VERSION_ID > 40000 ?
+            'Overblog\ThriftBundle\Controller\ThriftController::serverAction' :
+            'ThriftBundle:Thrift:server';
+
         $coll = new RouteCollection();
         foreach ($this->services as $path => $service) {
             $route = new Route(
                 '/'.$path,
-                ['_controller' => 'ThriftBundle:Thrift:server', 'extensionName' => $path],
+                ['_controller' => $controllerArg, 'extensionName' => $path],
                 [],
                 [],
                 null,
