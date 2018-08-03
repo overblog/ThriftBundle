@@ -11,7 +11,7 @@
 
 namespace Overblog\ThriftBundle\Routing;
 
-use App\Kernel;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
