@@ -36,7 +36,7 @@ class ThriftRoutingLoader extends Loader
      */
     public function load($resource, $type = null)
     {
-        $controllerArg = Kernel::VERSION_ID > 40000 ?
+        $controllerArg = Kernel::VERSION_ID > 30400 ?
             'Overblog\ThriftBundle\Controller\ThriftController::serverAction' :
             'ThriftBundle:Thrift:server';
 
